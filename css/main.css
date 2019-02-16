@@ -1,0 +1,82 @@
+html,
+body {
+  font-size: 0.9rem;
+}
+
+body {
+  background: #ddd;
+}
+
+/* File Input */
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfile + label {
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  display: block;
+  overflow: hidden;
+  border: 1px solid #ced4da;
+  padding: 0;
+}
+
+.inputfile:focus + label,
+.inputfile.has-focus + label {
+  outline: 1px dotted #000;
+  outline: -webkit-focus-ring-color auto 5px;
+}
+
+.inputfile + label svg {
+  width: 1rem;
+  height: 1rem;
+  vertical-align: middle;
+  fill: currentColor;
+  margin-top: -0.25em;
+  margin-right: 0.25em;
+}
+
+.inputfile + label span,
+.inputfile + label div {
+  padding: .5rem .75rem;
+}
+
+.inputfile + label span {
+  min-height: 2rem;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  flex: 1;
+}
+
+.inputfile + label div {
+  height: 100%;
+  display: block;
+}
+
+@media screen and (max-width: 540px) {
+  .inputfile + label {
+    display: block !important;
+  }
+
+  .inputfile + label div {
+    display: block;
+  }
+}
+
+/* Canvas */
+.canvas {
+  max-width: 100%;
+}
+
+.form-control {
+  border-radius: 0;
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/main.css">
+  <title>Meme Generator</title>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="h3 my-4">Meme Generator</h1>
+      </div>
+    </div>
+
+    <div class="row bg-white py-4 border border-light shadow">
+      <div class="col-lg-7 mb-3">
+        <div>
+          <canvas id="canvas" class="canvas"></canvas>
+        </div>
+
+        <!-- <button class="btn btn-primary" id="generateMemeBtn">Generate Meme</button> -->
+      </div>
+
+      <div class="col-lg-5">
+        <input type="file" name="file[]" id="file" class="inputfile" data-multiple-caption="{count} files selected" multiple />
+        <label for="file" class="d-flex align-items-center">
+          <span id="fileName" class="text-muted">
+            No file selected
+          </span>
+
+          <div class="btn btn-secondary rounded-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17">
+              <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+            </svg>
+            Upload image
+          </div>
+        </label>
+
+        <div id="inputsContainer">
+          <input class="form-control mb-3" type="text" data-index="0" data-type="meme-text" autocomplete="off">
+        </div>
+
+        <button class="btn btn-secondary" id="addInputBtn">+ Add Another Textbox</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

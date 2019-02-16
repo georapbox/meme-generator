@@ -1,0 +1,13 @@
+{
+  "name": "meme-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "George Raptis <georapbox@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "~5.14.0"
+  }
+}
