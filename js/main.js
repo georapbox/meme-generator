@@ -122,7 +122,7 @@
 
   addInputBtn.addEventListener('click', onNewInputButtonClicked, false);
 
-  generateMemeBtn.addEventListener('click', generateMeme, false);
+  // generateMemeBtn.addEventListener('click', generateMeme, false);
 
   addInputListeners();
 }());

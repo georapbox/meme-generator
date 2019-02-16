@@ -41,7 +41,15 @@
         </label>
 
         <div id="inputsContainer">
-          <input class="form-control mb-3" type="text" data-index="0" data-type="meme-text" autocomplete="off">
+          <div class="d-flex mb-3" style="height: 40px;">
+            <input class="form-control h-100" type="text" data-index="0" data-type="meme-text" autocomplete="off" placeholder="Textbox">
+
+            <div class="bg-body d-flex px-2">
+              <input class="form-control color-input" type="color" value="#ffffff">
+              <input class="form-control color-input" type="color" value="#000000">
+              <button class="btn btn-secondary settings-button"></button>
+            </div>
+          </div>
         </div>
 
         <button class="btn btn-secondary" id="addInputBtn">+ Add Another Textbox</button>

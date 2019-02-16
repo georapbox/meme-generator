@@ -1,9 +1,11 @@
 html,
 body {
   font-size: 0.9rem;
+  overflow-x: hidden;
 }
 
-body {
+body,
+.bg-body {
   background: #ddd;
 }
 
@@ -79,4 +81,28 @@ body {
 
 .form-control {
   border-radius: 0;
+}
+
+/* Inputs */
+.color-input,
+.settings-button {
+  width: 25px;
+  height: 25px;
+  margin: 8px 2px 0 2px;
+  padding: 0;
+  border: 0;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 0;
+}
+
+.settings-button {
+  background-image: url(../assets/icons/gear.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60%;
 }
