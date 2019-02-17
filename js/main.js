@@ -7,16 +7,30 @@
   var fileInputName = document.getElementById('fileName');
   var addInputBtn = document.getElementById('addInputBtn');
   var inputsContainer = document.getElementById('inputsContainer');
-  var generateMemeBtn = document.getElementById('generateMemeBtn');
+  // var generateMemeBtn = document.getElementById('generateMemeBtn');
   var uploadedImage = null;
-  var memeTexts = [];
+  var memeData = [{}];
+  var forEachNode = Array.prototype.forEach;
 
-  function handleInputChange(evt) {
+  function handleTextChange(evt) {
     var element = evt.target;
     var index = Number(element.getAttribute('data-index'));
-    memeTexts[index] = element.value;
+    memeData[index].text = element.value;
     draw(uploadedImage);
-    console.log(memeTexts);
+  }
+
+  function handleFillColorChange(evt) {
+    var element = evt.target;
+    var index = Number(element.getAttribute('data-index'));
+    memeData[index].fillColor = element.value;
+    draw(uploadedImage);
+  }
+
+  function handleStrokeColorChange(evt) {
+    var element = evt.target;
+    var index = Number(element.getAttribute('data-index'));
+    memeData[index].strokeColor = element.value;
+    draw(uploadedImage);
   }
 
   function draw(image) {
@@ -29,23 +43,23 @@
 
     ctx.font = '30pt Impact';
     ctx.textAlign = 'center';
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 3;
-    ctx.fillStyle = 'white';
+    ctx.lineWidth = 2;
 
     var lineHeight = ctx.measureText('M').width + 20;
 
-    memeTexts.forEach(function (item, index) {
+    memeData.forEach(function (item, index) {
       var multiplier = index + 1;
 
-      ctx.fillText(item, canvas.width / 2, lineHeight * multiplier);
-      ctx.strokeText(item, canvas.width / 2, lineHeight * multiplier);
+      ctx.fillStyle = item.fillColor || 'white';
+      ctx.strokeStyle = item.strokeColor || 'black';
+      ctx.fillText(item.text || '', canvas.width / 2, lineHeight * multiplier);
+      ctx.strokeText(item.text || '', canvas.width / 2, lineHeight * multiplier);
     });
   }
 
-  function generateMeme() {
-    window.open(document.querySelector('canvas').toDataURL());
-  }
+  // function generateMeme() {
+  //   window.open(document.querySelector('canvas').toDataURL());
+  // }
 
   function handleFileSelect(evt) {
     var image = new Image();
@@ -90,32 +104,62 @@
     reader.readAsDataURL(file);
   }
 
-  function addInputListeners() {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-type="meme-text"]'), function (item) {
-      item.addEventListener('input', handleInputChange);
+  function addListeners() {
+    forEachNode.call(document.querySelectorAll('[data-input="text"]'), function (item) {
+      item.addEventListener('input', handleTextChange, false);
+    });
+
+    forEachNode.call(document.querySelectorAll('[data-input="fill-color"]'), function (item) {
+      item.addEventListener('input', handleFillColorChange, false);
+    });
+
+    forEachNode.call(document.querySelectorAll('[data-input="stroke-color"]'), function (item) {
+      item.addEventListener('input', handleStrokeColorChange, false);
     });
   }
 
-  function removeInputListeners() {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-type="meme-text"]'), function (item) {
-      item.removeEventListener('input', handleInputChange);
+  function removeListeners() {
+    forEachNode.call(document.querySelectorAll('[data-input="text"]'), function (item) {
+      item.removeEventListener('input', handleTextChange, false);
+    });
+
+    forEachNode.call(document.querySelectorAll('[data-input="fill-color"]'), function (item) {
+      item.removeEventListener('input', handleFillColorChange, false);
+    });
+
+    forEachNode.call(document.querySelectorAll('[data-input="stroke-color"]'), function (item) {
+      item.removeEventListener('input', handleStrokeColorChange, false);
     });
   }
 
-  function createNewInput() {
-    var el = document.createElement('input');
-    el.className = 'form-control mb-3';
-    el.type = 'text';
-    el.setAttribute('data-index', document.querySelectorAll('[data-type="meme-text"]').length);
-    el.setAttribute('data-type', 'meme-text');
-    el.autocomplete = 'off';
-    return el;
+  function createNewInput(index) {
+    var inputTemplate = '' +
+      '<input class="form-control h-100" type="text" data-index="' + index + '" data-input="text" autocomplete="off" placeholder="Textbox">' +
+      '<div class="bg-body d-flex px-2">' +
+        '<input class="form-control color-input" type="color" value="#ffffff" data-index="' + index + '" data-input="fill-color">' +
+        '<input class="form-control color-input" type="color" value="#000000" data-index="' + index + '" data-input="stroke-color">' +
+        '<button class="btn btn-secondary settings-button"></button>' +
+      '</div>';
+
+    var fragment = document.createDocumentFragment();
+    var div = document.createElement('div');
+    div.className = 'd-flex mb-3';
+    div.style.height = '40px';
+    div.innerHTML = inputTemplate;
+    return fragment.appendChild(div);
   }
 
   function onNewInputButtonClicked() {
-    removeInputListeners();
-    inputsContainer.appendChild(createNewInput());
-    addInputListeners();
+    var textBoxesLength = document.querySelectorAll('[data-input="text"]').length;
+
+    if (textBoxesLength >= 4) {
+      addInputBtn.disabled = true;
+    }
+
+    memeData.push({});
+    removeListeners();
+    inputsContainer.appendChild(createNewInput(textBoxesLength));
+    addListeners();
   }
 
   fileInput.addEventListener('change', handleFileSelect, false);
@@ -124,5 +168,7 @@
 
   // generateMemeBtn.addEventListener('click', generateMeme, false);
 
-  addInputListeners();
+  inputsContainer.appendChild(createNewInput(0));
+
+  addListeners();
 }());
