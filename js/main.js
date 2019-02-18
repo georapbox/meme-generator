@@ -11,30 +11,6 @@
   let uploadedImage = null;
   const memeData = [{}];
 
-  function draw(image) {
-    if (image == null) {
-      return;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-    memeData.forEach(function (item, index) {
-      ctx.font = `${item.fontSize || 50}px ${item.font || 'Impact'}`;
-
-      const multiplier = index + 1;
-      const lineHeight = ctx.measureText('M').width + 20;
-      const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
-
-      ctx.lineWidth = 2;
-      ctx.fillStyle = item.fillColor || 'white';
-      ctx.strokeStyle = item.strokeColor || 'black';
-      ctx.textAlign = item.textAlign || 'center';
-      ctx.fillText(item.text || '', xPos, lineHeight * multiplier);
-      ctx.strokeText(item.text || '', xPos, lineHeight * multiplier);
-    });
-  }
-
   // function generateMeme() {
   //   window.open(document.querySelector('canvas').toDataURL());
   // }
@@ -89,15 +65,15 @@
 
   function createNewInput(index) {
     const inputTemplate =`
-      <div class="d-flex" style="height: 40px;">
-        <input class="form-control h-100" type="text" data-index="${index}" data-input="text" autocomplete="off" placeholder="Textbox">
-        <div class="bg-body d-flex px-2">
-          <input class="form-control color-input" type="color" value="#ffffff" data-index="${index}" data-input="fill-color">
-          <input class="form-control color-input" type="color" value="#000000" data-index="${index}" data-input="stroke-color">
+      <div class="d-flex">
+        <input class="form-control m-2" type="text" data-index="${index}" data-input="text" autocomplete="off" placeholder="Textbox ${index + 1}" style="min-width: 0;">
+        <div class="d-flex align-items-center pr-2">
+          <input class="form-control" type="color" value="#ffffff" data-index="${index}" data-input="fill-color" title="Fill color">
+          <input class="form-control" type="color" value="#000000" data-index="${index}" data-input="stroke-color" title="Outline color">
           <button class="btn btn-secondary settings-button" data-index=${index} data-button="settings"></button>
         </div>
       </div>
-      <div class="bg-body p-3 d-none" data-section="settings_${index}">
+      <div class="p-3 d-none" data-section="settings_${index}">
         <div class="form-inline mb-3">
           <label class="my-1 mr-sm-2">Font: </label>
           <select class="custom-select" data-input="font" data-index="${index}">
@@ -123,6 +99,11 @@
           </select>
         </div>
         <div class="form-inline mb-3">
+          <label class="my-1 mr-sm-2">Outline width: </label>
+          <input class="form-control" type="number" min="0" max="10" value="3" data-input="line-width" data-index="${index}">
+          </select>
+        </div>
+        <div class="form-inline mb-3">
           <label class="my-1 mr-sm-2">Text align: </label>
           <select class="custom-select" data-input="text-align" data-index="${index}">
             <option value="left">Left</option>
@@ -135,7 +116,7 @@
 
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
-    div.className = 'mb-3';
+    div.className = 'bg-body';
     div.innerHTML = inputTemplate;
     return fragment.appendChild(div);
   }
@@ -149,6 +130,34 @@
 
     memeData.push({});
     inputsContainer.appendChild(createNewInput(textBoxesLength));
+  }
+
+  function draw(image) {
+    if (image == null) {
+      return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    memeData.forEach(function (item, index) {
+      ctx.font = `${item.fontSize || 50}px ${item.font || 'Impact'}`;
+
+      const multiplier = index + 1;
+      const lineHeight = ctx.measureText('M').width + 20;
+      const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
+      const lineWidth = !Number.isNaN(Number(item.lineWidth)) ? Number(item.lineWidth) : 3;
+
+      ctx.fillStyle = item.fillColor || 'white';
+      ctx.strokeStyle = item.strokeColor || 'black';
+      ctx.textAlign = item.textAlign || 'center';
+      ctx.fillText(item.text || '', xPos, lineHeight * multiplier);
+
+      if (lineWidth !== 0) {
+        ctx.lineWidth = lineWidth;
+        ctx.strokeText(item.text || '', xPos, lineHeight * multiplier);
+      }
+    });
   }
 
   fileInput.addEventListener('change', handleFileSelect, false);
@@ -176,6 +185,8 @@
       prop = 'fontSize';
     } else if (element.matches('[data-input="text-align"')) {
       prop = 'textAlign';
+    } else if (element.matches('[data-input="line-width"')) {
+      prop = 'lineWidth';
     }
 
     if (prop) {
@@ -191,4 +202,9 @@
       document.querySelector(`[data-section="settings_${evt.target.getAttribute('data-index')}"]`).classList.toggle('d-none');
     }
   }, false);
+
+  ctx.textAlign = 'center';
+  ctx.font = '14px Arial';
+  ctx.fillStyle = '#787878';
+  ctx.fillText('Select a file to generate your meme', canvas.width / 2, canvas.height / 2);
 }());

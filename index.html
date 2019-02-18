@@ -19,6 +19,7 @@
     <div class="row mx-0 mb-5 py-4 bg-white border border-light shadow">
       <div class="col-lg-7 mb-3">
         <div>
+          <input type="file" name="file[]" id="file" class="inputfile" />
           <canvas id="canvas" class="canvas border"></canvas>
         </div>
 
@@ -26,7 +27,7 @@
       </div>
 
       <div class="col-lg-5">
-        <input type="file" name="file[]" id="file" class="inputfile" data-multiple-caption="{count} files selected" multiple />
+        <input type="file" name="file[]" id="file" class="inputfile" />
         <label for="file" class="d-flex align-items-center">
           <span id="fileName" class="text-muted">
             No file selected
@@ -38,9 +39,12 @@
           </div>
         </label>
 
-        <div id="inputsContainer" class="mt-4"></div>
+        <div id="inputsContainer" class="mt-3 border"></div>
 
-        <button class="btn btn-secondary" id="addInputBtn">+ Add Another Textbox</button>
+        <button class="btn btn-secondary mt-3" id="addInputBtn">
+          <img width="20" src="assets/icons/add.svg" alt="Add">
+          Add another textbox
+        </button>
       </div>
     </div>
   </div>

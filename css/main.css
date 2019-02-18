@@ -84,15 +84,19 @@ body,
 }
 
 /* Inputs */
-.color-input,
+input[type="color"],
 .settings-button {
   width: 25px;
   height: 25px;
-  margin: 8px 2px 0 2px;
+  margin: 0 2px;
   padding: 0;
   border: 0;
   line-height: 1;
   cursor: pointer;
+}
+
+input[type="number"] {
+  max-width: 80px;
 }
 
 /* Buttons */
