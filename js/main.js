@@ -20,18 +20,18 @@
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
     memeData.forEach(function (item, index) {
+      ctx.font = `${item.fontSize || 50}px ${item.font || 'Impact'}`;
+
       const multiplier = index + 1;
-
-      ctx.font = `${item.fontSize || 30}px ${item.font || 'Impact'}`;
-
       const lineHeight = ctx.measureText('M').width + 20;
+      const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
 
-      ctx.textAlign = 'center';
       ctx.lineWidth = 2;
       ctx.fillStyle = item.fillColor || 'white';
       ctx.strokeStyle = item.strokeColor || 'black';
-      ctx.fillText(item.text || '', canvas.width / 2, lineHeight * multiplier);
-      ctx.strokeText(item.text || '', canvas.width / 2, lineHeight * multiplier);
+      ctx.textAlign = item.textAlign || 'center';
+      ctx.fillText(item.text || '', xPos, lineHeight * multiplier);
+      ctx.strokeText(item.text || '', xPos, lineHeight * multiplier);
     });
   }
 
@@ -82,28 +82,8 @@
     reader.readAsDataURL(file);
   }
 
-  function handleTextChange(element, index) {
-    memeData[index].text = element.value;
-    draw(uploadedImage);
-  }
-
-  function handleFillColorChange(element, index) {
-    memeData[index].fillColor = element.value;
-    draw(uploadedImage);
-  }
-
-  function handleStrokeColorChange(element, index) {
-    memeData[index].strokeColor = element.value;
-    draw(uploadedImage);
-  }
-
-  function handleFontColorChange(element, index) {
-    memeData[index].font = element.value;
-    draw(uploadedImage);
-  }
-
-  function handleFontSizeChange(element, index) {
-    memeData[index].fontSize = element.value;
+  function handleTextPropChange(element, index, prop) {
+    memeData[index][prop] = element.value;
     draw(uploadedImage);
   }
 
@@ -138,8 +118,16 @@
           </select>
         </div>
         <div class="form-inline mb-3">
-          <label class="my-1 mr-sm-2">Font Size: </label>
-          <input class="form-control" type="number" min="1" max="100" value="30" data-input="font-size" data-index="${index}">
+          <label class="my-1 mr-sm-2">Font size: </label>
+          <input class="form-control" type="number" min="1" max="100" value="50" data-input="font-size" data-index="${index}">
+          </select>
+        </div>
+        <div class="form-inline mb-3">
+          <label class="my-1 mr-sm-2">Text align: </label>
+          <select class="custom-select" data-input="text-align" data-index="${index}">
+            <option value="left">Left</option>
+            <option value="center" selected>Center</option>
+            <option value="right">Right</option>
           </select>
         </div>
       </div>
@@ -174,17 +162,24 @@
   inputsContainer.addEventListener('input', evt => {
     const element = evt.target;
     const index = Number(element.getAttribute('data-index'));
+    let prop;
 
     if (element.matches('[data-input="text"')) {
-      handleTextChange(element, index);
+      prop = 'text';
     } else if (element.matches('[data-input="fill-color"')) {
-      handleFillColorChange(element, index);
+      prop = 'fillColor';
     } else if (element.matches('[data-input="stroke-color"')) {
-      handleStrokeColorChange(element, index);
+      prop = 'strokeColor';
     } else if (element.matches('[data-input="font"')) {
-      handleFontColorChange(element, index);
+      prop = 'font';
     } else if (element.matches('[data-input="font-size"')) {
-      handleFontSizeChange(element, index);
+      prop = 'fontSize';
+    } else if (element.matches('[data-input="text-align"')) {
+      prop = 'textAlign';
+    }
+
+    if (prop) {
+      handleTextPropChange(element, index, prop);
     }
   }, false);
 
