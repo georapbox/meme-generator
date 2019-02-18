@@ -10,7 +10,6 @@
   // var generateMemeBtn = document.getElementById('generateMemeBtn');
   var uploadedImage = null;
   var memeData = [{}];
-  var forEachNode = Array.prototype.forEach;
 
   function handleTextChange(evt) {
     var element = evt.target;
@@ -104,34 +103,6 @@
     reader.readAsDataURL(file);
   }
 
-  function addListeners() {
-    forEachNode.call(document.querySelectorAll('[data-input="text"]'), function (item) {
-      item.addEventListener('input', handleTextChange, false);
-    });
-
-    forEachNode.call(document.querySelectorAll('[data-input="fill-color"]'), function (item) {
-      item.addEventListener('input', handleFillColorChange, false);
-    });
-
-    forEachNode.call(document.querySelectorAll('[data-input="stroke-color"]'), function (item) {
-      item.addEventListener('input', handleStrokeColorChange, false);
-    });
-  }
-
-  function removeListeners() {
-    forEachNode.call(document.querySelectorAll('[data-input="text"]'), function (item) {
-      item.removeEventListener('input', handleTextChange, false);
-    });
-
-    forEachNode.call(document.querySelectorAll('[data-input="fill-color"]'), function (item) {
-      item.removeEventListener('input', handleFillColorChange, false);
-    });
-
-    forEachNode.call(document.querySelectorAll('[data-input="stroke-color"]'), function (item) {
-      item.removeEventListener('input', handleStrokeColorChange, false);
-    });
-  }
-
   function createNewInput(index) {
     var inputTemplate = '' +
       '<input class="form-control h-100" type="text" data-index="' + index + '" data-input="text" autocomplete="off" placeholder="Textbox">' +
@@ -157,9 +128,7 @@
     }
 
     memeData.push({});
-    removeListeners();
     inputsContainer.appendChild(createNewInput(textBoxesLength));
-    addListeners();
   }
 
   fileInput.addEventListener('change', handleFileSelect, false);
@@ -170,5 +139,13 @@
 
   inputsContainer.appendChild(createNewInput(0));
 
-  addListeners();
+  inputsContainer.addEventListener('input', function (evt) {
+    if (evt.target.matches('[data-input="text"')) {
+      handleTextChange(evt);
+    } else if (evt.target.matches('[data-input="fill-color"')) {
+      handleFillColorChange(evt);
+    } else if (evt.target.matches('[data-input="stroke-color"')) {
+      handleStrokeColorChange(evt);
+    }
+  });
 }());
