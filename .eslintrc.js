@@ -3,7 +3,8 @@ module.exports = {
     'eslint:recommended'
   ],
   env: {
-    "browser": true
+    "browser": true,
+    "es6": true
   },
   plugins: [],
   rules: {
