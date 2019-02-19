@@ -9,60 +9,9 @@
   const inputsContainer = document.getElementById('inputsContainer');
   // const generateMemeBtn = document.getElementById('generateMemeBtn');
   let uploadedImage = null;
-  const memeData = [{}];
-  const mouse = captureMouse(canvas);
-
-  function captureMouse(element, callback) {
-    var position, onMouseMove;
-
-    if (!element || element.nodeType !== 1 || element instanceof Element !== true) {
-      throw new TypeError('"element" must be a DOM element');
-    }
-
-    if (callback != null && typeof callback !== 'function') {
-      throw new TypeError('"callback" must be a function');
-    }
-
-    position = { x: 0, y: 0 };
-
-    onMouseMove = function (event) {
-      var x, y;
-      var rect = canvas.getBoundingClientRect();
-
-      if (event.pageX || event.pageY) {
-        x = event.pageX - rect.left;
-        y = event.pageY - rect.top;
-      } else {
-        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - rect.left;
-        y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - rect.top;
-      }
-
-      // x -= element.offsetLeft;
-      // y -= element.offsetTop;
-
-      position.x = x;
-      position.y = y;
-
-      callback && callback.call(this, position);
-    };
-
-    element.addEventListener('mousemove', onMouseMove, false);
-
-    return {
-      position: position,
-      unbind: function (timeout) {
-        if (timeout != null && typeof timeout === 'number') {
-          setTimeout(function () {
-            element.removeEventListener('mousemove', onMouseMove, false);
-          }, timeout);
-        } else {
-          element.removeEventListener('mousemove', onMouseMove, false);
-        }
-
-        return this;
-      }
-    };
-  }
+  const memeData = [{
+    offsetY: 0
+  }];
 
   // function generateMeme() {
   //   window.open(document.querySelector('canvas').toDataURL());
@@ -164,8 +113,12 @@
             <option value="right">Right</option>
           </select>
         </div>
+        <div class="form-inline mb-3">
+          <label class="my-1 mr-sm-2">Top offset: </label>
+          <input class="form-control" type="number" value="0" data-input="offsetY" data-index="${index}">
+        </div>
       </div>
-      `;
+    `;
 
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
@@ -181,7 +134,7 @@
       addInputBtn.disabled = true;
     }
 
-    memeData.push({});
+    memeData.push({ offsetY: 0 });
     inputsContainer.appendChild(createNewInput(textBoxesLength));
   }
 
@@ -204,11 +157,11 @@
       ctx.fillStyle = item.fillColor || 'white';
       ctx.strokeStyle = item.strokeColor || 'black';
       ctx.textAlign = item.textAlign || 'center';
-      ctx.fillText(item.text || '', xPos, lineHeight * multiplier);
+      ctx.fillText(item.text || '', xPos, lineHeight * multiplier + Number(item.offsetY));
 
       if (lineWidth !== 0) {
         ctx.lineWidth = lineWidth;
-        ctx.strokeText(item.text || '', xPos, lineHeight * multiplier);
+        ctx.strokeText(item.text || '', xPos, lineHeight * multiplier + Number(item.offsetY));
       }
     });
   }
@@ -240,6 +193,8 @@
       prop = 'textAlign';
     } else if (element.matches('[data-input="line-width"')) {
       prop = 'lineWidth';
+    } else if (element.matches('[data-input="offsetY"]')) {
+      prop = 'offsetY';
     }
 
     if (prop) {
