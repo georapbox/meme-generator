@@ -10,6 +10,59 @@
   // const generateMemeBtn = document.getElementById('generateMemeBtn');
   let uploadedImage = null;
   const memeData = [{}];
+  const mouse = captureMouse(canvas);
+
+  function captureMouse(element, callback) {
+    var position, onMouseMove;
+
+    if (!element || element.nodeType !== 1 || element instanceof Element !== true) {
+      throw new TypeError('"element" must be a DOM element');
+    }
+
+    if (callback != null && typeof callback !== 'function') {
+      throw new TypeError('"callback" must be a function');
+    }
+
+    position = { x: 0, y: 0 };
+
+    onMouseMove = function (event) {
+      var x, y;
+      var rect = canvas.getBoundingClientRect();
+
+      if (event.pageX || event.pageY) {
+        x = event.pageX - rect.left;
+        y = event.pageY - rect.top;
+      } else {
+        x = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - rect.left;
+        y = event.clientY + document.body.scrollTop + document.documentElement.scrollTop - rect.top;
+      }
+
+      // x -= element.offsetLeft;
+      // y -= element.offsetTop;
+
+      position.x = x;
+      position.y = y;
+
+      callback && callback.call(this, position);
+    };
+
+    element.addEventListener('mousemove', onMouseMove, false);
+
+    return {
+      position: position,
+      unbind: function (timeout) {
+        if (timeout != null && typeof timeout === 'number') {
+          setTimeout(function () {
+            element.removeEventListener('mousemove', onMouseMove, false);
+          }, timeout);
+        } else {
+          element.removeEventListener('mousemove', onMouseMove, false);
+        }
+
+        return this;
+      }
+    };
+  }
 
   // function generateMeme() {
   //   window.open(document.querySelector('canvas').toDataURL());
@@ -202,6 +255,10 @@
       document.querySelector(`[data-section="settings_${evt.target.getAttribute('data-index')}"]`).classList.toggle('d-none');
     }
   }, false);
+
+  // canvas.addEventListener('mousemove', () => {
+  //   console.log(mouse.position);
+  // });
 
   ctx.textAlign = 'center';
   ctx.font = '14px Arial';
