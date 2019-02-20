@@ -7,15 +7,25 @@
   const fileInputName = document.getElementById('fileName');
   const addInputBtn = document.getElementById('addInputBtn');
   const inputsContainer = document.getElementById('inputsContainer');
-  // const generateMemeBtn = document.getElementById('generateMemeBtn');
+  const generateMemeBtn = document.getElementById('generateMemeBtn');
   let uploadedImage = null;
-  const memeData = [{
-    offsetY: 0
-  }];
 
-  // function generateMeme() {
-  //   window.open(document.querySelector('canvas').toDataURL());
-  // }
+  const defaultOptions = {
+    text: '',
+    fillColor: '#ffffff',
+    strokeColor: '#000000',
+    font: 'Impact',
+    fontSize: 50,
+    textAlign: 'center',
+    lineWidth: 3,
+    offsetY: 0
+  };
+
+  const options = [Object.assign({}, defaultOptions)];
+
+  function generateMeme() {
+    window.open(document.querySelector('canvas').toDataURL());
+  }
 
   function handleFileSelect(evt) {
     const image = new Image();
@@ -61,7 +71,7 @@
   }
 
   function handleTextPropChange(element, index, prop) {
-    memeData[index][prop] = element.value;
+    options[index][prop] = element.value;
     draw(uploadedImage);
   }
 
@@ -70,8 +80,8 @@
       <div class="d-flex">
         <input class="form-control m-2" type="text" data-index="${index}" data-input="text" autocomplete="off" placeholder="Textbox ${index + 1}" style="min-width: 0;">
         <div class="d-flex align-items-center pr-2">
-          <input class="form-control" type="color" value="#ffffff" data-index="${index}" data-input="fill-color" title="Fill color">
-          <input class="form-control" type="color" value="#000000" data-index="${index}" data-input="stroke-color" title="Outline color">
+          <input class="form-control" type="color" value="${options[index].fillColor}" data-index="${index}" data-input="fillColor" title="Fill color">
+          <input class="form-control" type="color" value="${options[index].strokeColor}" data-index="${index}" data-input="strokeColor" title="Outline color">
           <button class="btn btn-secondary settings-button" data-index=${index} data-button="settings"></button>
         </div>
       </div>
@@ -79,7 +89,7 @@
         <div class="form-inline mb-3">
           <label class="my-1 mr-sm-2">Font: </label>
           <select class="custom-select" data-input="font" data-index="${index}">
-            <option value="Impact" selected>Impact</option>
+            <option value="Impact">Impact</option>
             <option value="Arial">Arial</option>
             <option value="Helvetica">Helvetica</option>
             <option value="Comic Sans MS">Comic Sans MS</option>
@@ -97,25 +107,23 @@
         </div>
         <div class="form-inline mb-3">
           <label class="my-1 mr-sm-2">Font size: </label>
-          <input class="form-control" type="number" min="1" max="100" value="50" data-input="font-size" data-index="${index}">
-          </select>
+          <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize" data-index="${index}">
         </div>
         <div class="form-inline mb-3">
           <label class="my-1 mr-sm-2">Outline width: </label>
-          <input class="form-control" type="number" min="0" max="10" value="3" data-input="line-width" data-index="${index}">
-          </select>
+          <input class="form-control" type="number" min="0" max="10" value="${options[index].lineWidth}" data-input="lineWidth" data-index="${index}">
         </div>
         <div class="form-inline mb-3">
           <label class="my-1 mr-sm-2">Text align: </label>
-          <select class="custom-select" data-input="text-align" data-index="${index}">
+          <select class="custom-select" data-input="textAlign" data-index="${index}">
             <option value="left">Left</option>
-            <option value="center" selected>Center</option>
+            <option value="center">Center</option>
             <option value="right">Right</option>
           </select>
         </div>
         <div class="form-inline mb-3">
           <label class="my-1 mr-sm-2">Top offset: </label>
-          <input class="form-control" type="number" value="0" data-input="offsetY" data-index="${index}">
+          <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" data-index="${index}">
         </div>
       </div>
     `;
@@ -124,6 +132,8 @@
     const div = document.createElement('div');
     div.className = 'bg-body';
     div.innerHTML = inputTemplate;
+    div.querySelector('[data-input="font"]').value = options[index].font;
+    div.querySelector('[data-input="textAlign"]').value = options[index].textAlign;
     return fragment.appendChild(div);
   }
 
@@ -134,7 +144,8 @@
       addInputBtn.disabled = true;
     }
 
-    memeData.push({ offsetY: 0 });
+    options.push(Object.assign({}, defaultOptions));
+
     inputsContainer.appendChild(createNewInput(textBoxesLength));
   }
 
@@ -146,7 +157,7 @@
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-    memeData.forEach(function (item, index) {
+    options.forEach(function (item, index) {
       ctx.font = `${item.fontSize || 50}px ${item.font || 'Impact'}`;
 
       const multiplier = index + 1;
@@ -170,7 +181,7 @@
 
   addInputBtn.addEventListener('click', onNewInputButtonClicked, false);
 
-  // generateMemeBtn.addEventListener('click', generateMeme, false);
+  generateMemeBtn.addEventListener('click', generateMeme, false);
 
   inputsContainer.appendChild(createNewInput(0));
 
@@ -181,17 +192,17 @@
 
     if (element.matches('[data-input="text"')) {
       prop = 'text';
-    } else if (element.matches('[data-input="fill-color"')) {
+    } else if (element.matches('[data-input="fillColor"')) {
       prop = 'fillColor';
-    } else if (element.matches('[data-input="stroke-color"')) {
+    } else if (element.matches('[data-input="strokeColor"')) {
       prop = 'strokeColor';
     } else if (element.matches('[data-input="font"')) {
       prop = 'font';
-    } else if (element.matches('[data-input="font-size"')) {
+    } else if (element.matches('[data-input="fontSize"')) {
       prop = 'fontSize';
-    } else if (element.matches('[data-input="text-align"')) {
+    } else if (element.matches('[data-input="textAlign"')) {
       prop = 'textAlign';
-    } else if (element.matches('[data-input="line-width"')) {
+    } else if (element.matches('[data-input="lineWidth"')) {
       prop = 'lineWidth';
     } else if (element.matches('[data-input="offsetY"]')) {
       prop = 'offsetY';
@@ -210,10 +221,6 @@
       document.querySelector(`[data-section="settings_${evt.target.getAttribute('data-index')}"]`).classList.toggle('d-none');
     }
   }, false);
-
-  // canvas.addEventListener('mousemove', () => {
-  //   console.log(mouse.position);
-  // });
 
   ctx.textAlign = 'center';
   ctx.font = '14px Arial';
