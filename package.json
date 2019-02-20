@@ -1,10 +1,14 @@
 {
   "name": "meme-generator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Easily add text to images or memes.",
   "main": "index.js",
   "scripts": {},
-  "keywords": [],
+  "keywords": [
+    "meme",
+    "meme-generator",
+    "meme-maker"
+  ],
   "author": "George Raptis <georapbox@gmail.com>",
   "license": "MIT",
   "devDependencies": {
