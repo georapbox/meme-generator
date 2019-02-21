@@ -111,3 +111,23 @@ input[type="number"] {
   background-position: center;
   background-size: 60%;
 }
+
+#captureUserMediaBtn {
+  position: absolute;
+  left: 50%;
+  bottom: 35px;
+  margin-left: -30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-image: url('../assets/icons/camera.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60%;
+  text-indent: -9999px;
+}
+
+/* Modal */
+.modal {
+  background: rgba(0, 0, 0, 0.7);
+}

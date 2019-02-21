@@ -14,13 +14,13 @@
     <div class="row">
       <div class="col-lg-12">
         <h1 class="h3 mt-sm-5 mt-3 mb-0">Meme Generator</h1>
-        <p class="mb-sm-5 mb-3">Easily add text to images or memes.</p>
+        <p class="mb-sm-5 mb-3 text-muted">Easily add text to images or memes.</p>
       </div>
     </div>
 
     <div class="row mx-0 mb-5 py-4 bg-white border border-light shadow">
       <div class="col-lg-7 mb-3">
-        <div>
+        <div class="mb-3">
           <input type="file" name="file[]" id="file" class="inputfile" />
           <canvas id="canvas" class="canvas border"></canvas>
         </div>
@@ -29,24 +29,57 @@
       </div>
 
       <div class="col-lg-5">
-        <input type="file" name="file[]" id="file" class="inputfile" />
-        <label for="file" class="d-flex align-items-center">
-          <span id="fileName" class="text-muted">
-            No file selected
-          </span>
+        <div class="mb-4">
+          <input type="file" name="file[]" id="file" class="inputfile" />
+          <label for="file" class="d-flex align-items-center">
+            <span id="fileName" class="text-muted">
+              No file selected
+            </span>
 
-          <div class="btn btn-secondary rounded-0">
-            <img src="assets/icons/upload.svg" width="20" alt="Upload image" />
-            Upload image
+            <div class="btn btn-secondary rounded-0">
+              <img src="assets/icons/upload.svg" width="20" alt="Upload image" />
+              Upload image
+            </div>
+          </label>
+
+          <div class="d-none" id="captureMediaContainer">
+            <div class="text-center mb-2" style="font-size: 1.1rem;">
+              or
+            </div>
+            <button class="btn btn-secondary btn-block py-2" id="askUserMediaBtn">
+              <img src="assets/icons/camera.svg" width="20" alt="Upload image" class="mr-1" />
+              Take Photo
+            </button>
           </div>
-        </label>
+        </div>
 
-        <div id="inputsContainer" class="mt-3 border"></div>
+        <div id="inputsContainer" class="border"></div>
 
         <button class="btn btn-secondary mt-3" id="addInputBtn">
           <img width="20" src="assets/icons/add.svg" alt="Add">
           Add another textbox
         </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Capture image</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="cancelUserMediaBtn">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <video id="video" class="w-100 shadow" playsinline autoplay></video>
+
+          <button type="button" class="btn btn-primary shadow" id="captureUserMediaBtn">
+            Capture
+          </button>
+        </div>
       </div>
     </div>
   </div>

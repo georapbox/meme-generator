@@ -1,6 +1,10 @@
 (function MemeMaker() {
   'use strict';
 
+  const videoModal = document.getElementById('videoModal');
+  const cancelUserMediaBtn = document.getElementById('cancelUserMediaBtn');
+  const captureUserMediaBtn = document.getElementById('captureUserMediaBtn');
+  const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   const fileInput = document.getElementById('file');
@@ -8,6 +12,8 @@
   const addInputBtn = document.getElementById('addInputBtn');
   const inputsContainer = document.getElementById('inputsContainer');
   const generateMemeBtn = document.getElementById('generateMemeBtn');
+  const captureMediaContainer = document.getElementById('captureMediaContainer');
+  const askUserMediaBtn = document.getElementById('askUserMediaBtn');
   let uploadedImage = null;
 
   const defaultOptions = {
@@ -23,8 +29,43 @@
 
   const options = [Object.assign({}, defaultOptions)];
 
+  function toggleVideoModal(visible) {
+    if (visible) {
+      videoModal.style.display = 'block';
+      videoModal.classList.remove('fade');
+    } else {
+      videoModal.style.display = 'none';
+      videoModal.classList.add('fade');
+    }
+  }
+
   function generateMeme() {
-    window.open(document.querySelector('canvas').toDataURL());
+    window.open(canvas.toDataURL());
+  }
+
+  function onImageLoad(evt) {
+    const MAX_WIDTH = 800;
+    const MAX_HEIGHT = 600;
+    let width = evt.target.width;
+    let height = evt.target.height;
+
+    if (width > height) {
+      if (width > MAX_WIDTH) {
+        height *= MAX_WIDTH / width;
+        width = MAX_WIDTH;
+      }
+    } else {
+      if (height > MAX_HEIGHT) {
+        width *= MAX_HEIGHT / height;
+        height = MAX_HEIGHT;
+      }
+    }
+    canvas.width = width;
+    canvas.height = height;
+
+    draw(evt.target);
+
+    uploadedImage = evt.target;
   }
 
   function handleFileSelect(evt) {
@@ -38,36 +79,38 @@
 
     reader.addEventListener('load', function (evt) {
       const data = evt.target.result;
-
-      image.addEventListener('load', function (evt) {
-        const MAX_WIDTH = 800;
-        const MAX_HEIGHT = 600;
-        let width = image.width;
-        let height = image.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-
-        draw(evt.target);
-
-        uploadedImage = evt.target;
-      });
-
+      image.addEventListener('load', onImageLoad);
       image.src = data;
     });
 
     reader.readAsDataURL(file);
+  }
+
+  function askForUserMedia() {
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    }).then(stream => {
+      toggleVideoModal(true);
+      video.srcObject = stream;
+    }).catch(error => {
+      console.error(error);
+    });
+  }
+
+  function handleCaptureMedia() {
+    toggleVideoModal(false);
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const image = new Image();
+    image.addEventListener('load', onImageLoad);
+    image.src = canvas.toDataURL();
+
+    uploadedImage = video;
+    draw(uploadedImage);
   }
 
   function handleTextPropChange(element, index, prop) {
@@ -132,6 +175,9 @@
     const div = document.createElement('div');
     div.className = 'bg-body';
     div.innerHTML = inputTemplate;
+    setTimeout(() => {
+      uploadedImage && div.querySelector('[data-input="text"]').focus();
+    }, 100);
     div.querySelector('[data-input="font"]').value = options[index].font;
     div.querySelector('[data-input="textAlign"]').value = options[index].textAlign;
     return fragment.appendChild(div);
@@ -178,6 +224,12 @@
   }
 
   fileInput.addEventListener('change', handleFileSelect, false);
+
+  askUserMediaBtn.addEventListener('click', askForUserMedia, false);
+
+  cancelUserMediaBtn.addEventListener('click', toggleVideoModal.bind(null, false), false);
+
+  captureUserMediaBtn.addEventListener('click', handleCaptureMedia, false);
 
   addInputBtn.addEventListener('click', onNewInputButtonClicked, false);
 
@@ -226,4 +278,8 @@
   ctx.font = '14px Arial';
   ctx.fillStyle = '#787878';
   ctx.fillText('Select a file to generate your meme', canvas.width / 2, canvas.height / 2);
+
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    captureMediaContainer.classList.remove('d-none');
+  }
 }());
