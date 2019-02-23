@@ -25,7 +25,8 @@
     fontSize: 50,
     textAlign: 'center',
     lineWidth: 3,
-    offsetY: 0
+    offsetY: 0,
+    offsetX: 0
   };
 
   const options = [Object.assign({}, defaultOptions)];
@@ -155,17 +156,17 @@
             </select>
           </div>
           <div class="col-lg-6 mb-3">
-            <label class="mb-1">Font size: </label>
+            <label class="mb-1">Font size:</label>
             <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize" data-index="${index}">
           </div>
         </div>
         <div class="form-row">
           <div class="col-lg-6 mb-3">
-            <label class="mb-1">Outline width: </label>
+            <label class="mb-1">Outline width:</label>
             <input class="form-control" type="number" min="0" max="10" value="${options[index].lineWidth}" data-input="lineWidth" data-index="${index}">
           </div>
           <div class="col-lg-6 mb-3">
-            <label class="mb-1">Text align: </label>
+            <label class="mb-1">Text align:</label>
             <select class="custom-select" data-input="textAlign" data-index="${index}">
               <option value="left">Left</option>
               <option value="center">Center</option>
@@ -175,8 +176,12 @@
         </div>
         <div class="form-row">
           <div class="col-lg-6 mb-3">
-            <label class="mb-1">Top offset: </label>
+            <label class="mb-1">Vertical offset:</label>
             <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" data-index="${index}">
+          </div>
+          <div class="col-lg-6 mb-3">
+            <label class="mb-1">Horizontal offset:</label>
+            <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX" data-index="${index}">
           </div>
         </div>
       </div>
@@ -220,11 +225,11 @@
       ctx.fillStyle = item.fillColor || 'white';
       ctx.strokeStyle = item.strokeColor || 'black';
       ctx.textAlign = item.textAlign || 'center';
-      ctx.fillText(item.text || '', xPos, lineHeight * multiplier + Number(item.offsetY));
+      ctx.fillText(item.text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
 
       if (lineWidth !== 0) {
         ctx.lineWidth = lineWidth;
-        ctx.strokeText(item.text || '', xPos, lineHeight * multiplier + Number(item.offsetY));
+        ctx.strokeText(item.text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
       }
     });
   }
@@ -267,6 +272,8 @@
       prop = 'lineWidth';
     } else if (element.matches('[data-input="offsetY"]')) {
       prop = 'offsetY';
+    } else if (element.matches('[data-input="offsetX"]')) {
+      prop = 'offsetX';
     }
 
     if (prop) {
