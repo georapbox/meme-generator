@@ -9,20 +9,28 @@
   <link rel="stylesheet" href="css/main.css">
   <title>Meme Generator | Create Your Own Meme</title>
 </head>
-<body>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <h1 class="h3 mt-sm-5 mt-3 mb-0">Meme Generator</h1>
-        <p class="mb-sm-5 mb-3 text-muted">Easily add text to images or memes.</p>
+<body class="bg-body">
+  <nav class="navbar navbar-dark bg-dark fixed-top shadow">
+    <div class="container">
+      <div class="navbar-brand">
+        Meme Generator
       </div>
-    </div>
+      <!-- <span class="text-muted">Easily add text to images or memes.</span> -->
+      <a href="https://github.com/georapbox/meme-generator" class="btn btn-dark d-flex align-items-center bg-transparent border-0 px-0" target="_blank" rel="noopener">
+        <img width="20" class="mr-0 mr-sm-2" src="assets/icons/github.svg" alt="">
+        <span class="d-none d-sm-inline-block">View on Github</span>
+      </a>
 
+    </div>
+  </nav>
+
+
+  <div class="container">
     <div class="row mx-0 mb-5 py-4 bg-white border border-light shadow">
       <div class="col-lg-7 mb-3 mb-lg-0">
         <canvas id="canvas" class="canvas border shadow-sm d-none"></canvas>
 
-        <div id="canvasPlaceholder">
+        <div id="canvasPlaceholder" class="h-100">
           <div class="shadow-sm text-center p-3 d-flex justify-content-center align-items-center">
             <span class="text-muted">
               Select a file to generate your meme
@@ -39,8 +47,8 @@
               No file selected...
             </span>
 
-            <div class="btn btn-primary rounded-0">
-              <img src="assets/icons/upload.svg" width="20" alt="Upload image" />
+            <div class="btn btn-primary rounded-0 d-flex align-items-center">
+              <img class="mr-2" src="assets/icons/upload.svg" width="20" alt="Upload image" />
               Upload image
             </div>
           </label>
@@ -49,14 +57,14 @@
             <div class="text-center mb-2" style="font-size: 1.1rem;">
               or
             </div>
-            <button class="btn btn-primary btn-block py-2" id="askUserMediaBtn">
-              <img src="assets/icons/camera.svg" width="20" alt="Upload image" class="mr-1" />
+            <button class="btn btn-primary btn-block py-2 d-flex align-items-center justify-content-center" id="askUserMediaBtn">
+              <img src="assets/icons/camera.svg" width="20" alt="Upload image" class="mr-2" />
               Take Photo
             </button>
           </div>
         </div>
 
-        <div id="inputsContainer" class="border shadow-sm"></div>
+        <div id="inputsContainer"></div>
 
         <div class="clearfix mt-3">
           <button class="btn btn-outline-secondary float-right ml-1" id="addTextboxBtn" style="font-size: 0.9rem;">
@@ -67,7 +75,7 @@
           </button>
         </div>
 
-        <button type="button" class="btn btn-primary btn-block py-2 mt-5" id="generateMemeBtn" disabled autocomplete="off">
+        <button type="button" class="btn btn-primary btn-block py-2 mt-5 d-flex align-items-center justify-content-center" id="generateMemeBtn" disabled autocomplete="off">
           <img src="assets/icons/save.svg" width="20" alt="Generate meme" class="mr-1" />
           Generate Meme
         </button>

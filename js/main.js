@@ -175,11 +175,11 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="col-lg-6 mb-3">
+          <div class="col-lg-6">
             <label class="mb-1">Vertical offset:</label>
             <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" data-index="${index}">
           </div>
-          <div class="col-lg-6 mb-3">
+          <div class="col-lg-6">
             <label class="mb-1">Horizontal offset:</label>
             <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX" data-index="${index}">
           </div>
@@ -189,7 +189,7 @@
 
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
-    div.className = 'bg-light';
+    div.className = 'bg-light border shadow-sm mb-3';
     div.setAttribute('data-section', `textBox_${index}`);
     div.innerHTML = inputTemplate;
     setTimeout(() => {
