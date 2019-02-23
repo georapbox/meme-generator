@@ -29,6 +29,7 @@ body,
   overflow: hidden;
   border: 1px solid #ced4da;
   padding: 0;
+  background-color: #ffffff;
 }
 
 .inputfile:focus + label,
@@ -87,8 +88,8 @@ body,
 /* Inputs */
 input[type="color"],
 .settings-button {
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   margin: 0 2px;
   padding: 0;
   border: 0;
@@ -127,7 +128,36 @@ input[type="number"] {
   text-indent: -9999px;
 }
 
+.btn-outline-secondary:hover svg path {
+  transition: fill .15s ease-in-out;
+}
+
+.btn-outline-secondary:hover svg path {
+  fill: #ffffff;
+}
+
 /* Modal */
 .modal {
   background: rgba(0, 0, 0, 0.7);
+}
+
+/* Misc */
+#inputsContainer {
+  flex: 1;
+}
+
+#inputsContainer:empty {
+  display: none;
+}
+
+#canvasPlaceholder div {
+  min-height: 300px;
+  border: 3px dashed #dee2e6;
+  font-size: 1rem;
+}
+
+@media screen and (max-width: 576px) {
+  #canvasPlaceholder div {
+    min-height: 150px;
+  }
 }

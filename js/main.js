@@ -6,15 +6,16 @@
   const captureUserMediaBtn = document.getElementById('captureUserMediaBtn');
   const video = document.getElementById('video');
   const canvas = document.getElementById('canvas');
+  const canvasPlaceholder = document.getElementById('canvasPlaceholder');
   const ctx = canvas.getContext('2d');
   const fileInput = document.getElementById('file');
   const fileInputName = document.getElementById('fileName');
-  const addInputBtn = document.getElementById('addInputBtn');
+  const addTextboxBtn = document.getElementById('addTextboxBtn');
   const inputsContainer = document.getElementById('inputsContainer');
   const generateMemeBtn = document.getElementById('generateMemeBtn');
   const captureMediaContainer = document.getElementById('captureMediaContainer');
   const askUserMediaBtn = document.getElementById('askUserMediaBtn');
-  let uploadedImage = null;
+  let selectedImage = null;
 
   const defaultOptions = {
     text: '',
@@ -44,7 +45,7 @@
     win.document.write(`<iframe src="${canvas.toDataURL()}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
   }
 
-  function onImageLoad(evt) {
+  function onImageLoaded(evt) {
     const MAX_WIDTH = 800;
     const MAX_HEIGHT = 600;
     let width = evt.target.width;
@@ -66,7 +67,11 @@
 
     draw(evt.target);
 
-    uploadedImage = evt.target;
+    selectedImage = evt.target;
+
+    generateMemeBtn.classList.remove('d-none');
+    canvas.classList.remove('d-none');
+    canvasPlaceholder.classList.add('d-none');
   }
 
   function handleFileSelect(evt) {
@@ -80,14 +85,14 @@
 
     reader.addEventListener('load', function (evt) {
       const data = evt.target.result;
-      image.addEventListener('load', onImageLoad);
+      image.addEventListener('load', onImageLoaded);
       image.src = data;
     });
 
     reader.readAsDataURL(file);
   }
 
-  function askForUserMedia() {
+  function requestGetUserMedia() {
     navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false
@@ -95,7 +100,7 @@
       toggleVideoModal(true);
       video.srcObject = stream;
     }).catch(error => {
-      console.error(error);
+      alert(error);
     });
   }
 
@@ -107,22 +112,22 @@
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     const image = new Image();
-    image.addEventListener('load', onImageLoad);
+    image.addEventListener('load', onImageLoaded);
     image.src = canvas.toDataURL();
 
-    uploadedImage = video;
-    draw(uploadedImage);
+    selectedImage = video;
+    draw(selectedImage);
   }
 
   function handleTextPropChange(element, index, prop) {
     options[index][prop] = element.value;
-    draw(uploadedImage);
+    draw(selectedImage);
   }
 
   function createNewInput(index) {
     const inputTemplate =`
       <div class="d-flex">
-        <input class="form-control m-2" type="text" data-index="${index}" data-input="text" autocomplete="off" placeholder="Textbox ${index + 1}" style="min-width: 0;">
+        <input class="form-control m-2" type="text" data-index="${index}" data-input="text" autocomplete="off" placeholder="Text #${index + 1}" style="min-width: 0;">
         <div class="d-flex align-items-center pr-2">
           <input class="form-control" type="color" value="${options[index].fillColor}" data-index="${index}" data-input="fillColor" title="Fill color">
           <input class="form-control" type="color" value="${options[index].strokeColor}" data-index="${index}" data-input="strokeColor" title="Outline color">
@@ -174,25 +179,20 @@
 
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
-    div.className = 'bg-body';
+    div.className = 'bg-light';
+    div.setAttribute('data-section', `textBox_${index}`);
     div.innerHTML = inputTemplate;
     setTimeout(() => {
-      uploadedImage && div.querySelector('[data-input="text"]').focus();
+      selectedImage && div.querySelector('[data-input="text"]').focus();
     }, 100);
     div.querySelector('[data-input="font"]').value = options[index].font;
     div.querySelector('[data-input="textAlign"]').value = options[index].textAlign;
     return fragment.appendChild(div);
   }
 
-  function onNewInputButtonClicked() {
+  function onAddTextboxBtnClicked() {
     const textBoxesLength = document.querySelectorAll('[data-input="text"]').length;
-
-    if (textBoxesLength >= 4) {
-      addInputBtn.disabled = true;
-    }
-
     options.push(Object.assign({}, defaultOptions));
-
     inputsContainer.appendChild(createNewInput(textBoxesLength));
   }
 
@@ -226,13 +226,16 @@
 
   fileInput.addEventListener('change', handleFileSelect, false);
 
-  askUserMediaBtn.addEventListener('click', askForUserMedia, false);
+  askUserMediaBtn.addEventListener('click', requestGetUserMedia, false);
 
-  cancelUserMediaBtn.addEventListener('click', toggleVideoModal.bind(null, false), false);
+  cancelUserMediaBtn.addEventListener('click', () => {
+    toggleVideoModal(false);
+    video.srcObject = null;
+  }, false);
 
   captureUserMediaBtn.addEventListener('click', handleCaptureMedia, false);
 
-  addInputBtn.addEventListener('click', onNewInputButtonClicked, false);
+  addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked, false);
 
   generateMemeBtn.addEventListener('click', generateMeme, false);
 
@@ -274,11 +277,6 @@
       document.querySelector(`[data-section="settings_${evt.target.getAttribute('data-index')}"]`).classList.toggle('d-none');
     }
   }, false);
-
-  ctx.textAlign = 'center';
-  ctx.font = '14px Arial';
-  ctx.fillStyle = '#787878';
-  ctx.fillText('Select a file to generate your meme', canvas.width / 2, canvas.height / 2);
 
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     captureMediaContainer.classList.remove('d-none');
