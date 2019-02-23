@@ -41,8 +41,7 @@
   }
 
   function generateMeme() {
-    const win = window.open();
-    win.document.write(`<iframe src="${canvas.toDataURL()}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+    return window.open().document.write(`<iframe src="${canvas.toDataURL()}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
   }
 
   function onImageLoaded(evt) {
@@ -69,7 +68,7 @@
 
     selectedImage = evt.target;
 
-    generateMemeBtn.classList.remove('d-none');
+    generateMemeBtn.disabled = false;
     canvas.classList.remove('d-none');
     canvasPlaceholder.classList.add('d-none');
   }
@@ -134,45 +133,51 @@
           <button class="btn btn-secondary settings-button" data-index=${index} data-button="settings"></button>
         </div>
       </div>
-      <div class="p-3 d-none" data-section="settings_${index}">
-        <div class="form-inline mb-3">
-          <label class="my-1 mr-sm-2">Font: </label>
-          <select class="custom-select" data-input="font" data-index="${index}">
-            <option value="Impact">Impact</option>
-            <option value="Arial">Arial</option>
-            <option value="Helvetica">Helvetica</option>
-            <option value="Comic Sans MS">Comic Sans MS</option>
-            <option value="Times New Roman">Times New Roman</option>
-            <option value="Times">Times</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Verdana">Verdana</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Palatino">Palatino</option>
-            <option value="Garamond">Garamond</option>
-            <option value="Bookman">Bookman</option>
-            <option value="Trebuchet MS">Trebuchet MS</option>
-            <option value="Arial Black">Arial Black</option>
-          </select>
+      <div class="p-2 d-none" data-section="settings_${index}">
+        <div class="form-row">
+          <div class="col-lg-6 mb-3">
+            <label class="mb-1">Font: </label>
+            <select class="custom-select" data-input="font" data-index="${index}">
+              <option value="Impact">Impact</option>
+              <option value="Arial">Arial</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Comic Sans MS">Comic Sans MS</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Times">Times</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Palatino">Palatino</option>
+              <option value="Garamond">Garamond</option>
+              <option value="Bookman">Bookman</option>
+              <option value="Trebuchet MS">Trebuchet MS</option>
+              <option value="Arial Black">Arial Black</option>
+            </select>
+          </div>
+          <div class="col-lg-6 mb-3">
+            <label class="mb-1">Font size: </label>
+            <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize" data-index="${index}">
+          </div>
         </div>
-        <div class="form-inline mb-3">
-          <label class="my-1 mr-sm-2">Font size: </label>
-          <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize" data-index="${index}">
+        <div class="form-row">
+          <div class="col-lg-6 mb-3">
+            <label class="mb-1">Outline width: </label>
+            <input class="form-control" type="number" min="0" max="10" value="${options[index].lineWidth}" data-input="lineWidth" data-index="${index}">
+          </div>
+          <div class="col-lg-6 mb-3">
+            <label class="mb-1">Text align: </label>
+            <select class="custom-select" data-input="textAlign" data-index="${index}">
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
         </div>
-        <div class="form-inline mb-3">
-          <label class="my-1 mr-sm-2">Outline width: </label>
-          <input class="form-control" type="number" min="0" max="10" value="${options[index].lineWidth}" data-input="lineWidth" data-index="${index}">
-        </div>
-        <div class="form-inline mb-3">
-          <label class="my-1 mr-sm-2">Text align: </label>
-          <select class="custom-select" data-input="textAlign" data-index="${index}">
-            <option value="left">Left</option>
-            <option value="center">Center</option>
-            <option value="right">Right</option>
-          </select>
-        </div>
-        <div class="form-inline mb-3">
-          <label class="my-1 mr-sm-2">Top offset: </label>
-          <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" data-index="${index}">
+        <div class="form-row">
+          <div class="col-lg-6 mb-3">
+            <label class="mb-1">Top offset: </label>
+            <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" data-index="${index}">
+          </div>
         </div>
       </div>
     `;

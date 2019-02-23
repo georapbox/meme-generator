@@ -97,13 +97,21 @@ input[type="color"],
   cursor: pointer;
 }
 
-input[type="number"] {
-  max-width: 80px;
+.custom-select {
+  border-radius: 0;
 }
+
+/* input[type="number"] {
+  max-width: 80px;
+} */
 
 /* Buttons */
 .btn {
   border-radius: 0;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
 }
 
 .settings-button {
@@ -151,7 +159,7 @@ input[type="number"] {
 }
 
 #canvasPlaceholder div {
-  min-height: 300px;
+  min-height: 366px;
   border: 3px dashed #dee2e6;
   font-size: 1rem;
 }
