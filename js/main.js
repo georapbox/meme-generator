@@ -243,19 +243,19 @@
     const index = Number(element.getAttribute('data-index'));
     let prop;
 
-    if (element.matches('[data-input="text"')) {
+    if (element.matches('[data-input="text"]')) {
       prop = 'text';
-    } else if (element.matches('[data-input="fillColor"')) {
+    } else if (element.matches('[data-input="fillColor"]')) {
       prop = 'fillColor';
-    } else if (element.matches('[data-input="strokeColor"')) {
+    } else if (element.matches('[data-input="strokeColor"]')) {
       prop = 'strokeColor';
-    } else if (element.matches('[data-input="font"')) {
+    } else if (element.matches('[data-input="font"]')) {
       prop = 'font';
-    } else if (element.matches('[data-input="fontSize"')) {
+    } else if (element.matches('[data-input="fontSize"]')) {
       prop = 'fontSize';
-    } else if (element.matches('[data-input="textAlign"')) {
+    } else if (element.matches('[data-input="textAlign"]')) {
       prop = 'textAlign';
-    } else if (element.matches('[data-input="lineWidth"')) {
+    } else if (element.matches('[data-input="lineWidth"]')) {
       prop = 'lineWidth';
     } else if (element.matches('[data-input="offsetY"]')) {
       prop = 'offsetY';
