@@ -292,7 +292,19 @@
       prop = 'offsetY';
     } else if (element.matches('[data-input="offsetX"]')) {
       prop = 'offsetX';
-    } else if (element.matches('[data-input="allCaps"]')) {
+    }
+
+    if (prop) {
+      handleTextPropChange(element, index, prop);
+    }
+  }, false);
+
+  inputsContainer.addEventListener('change', evt => {
+    const element = evt.target;
+    const index = Number(element.getAttribute('data-index'));
+    let prop;
+
+    if (element.matches('[data-input="allCaps"]')) {
       prop = 'allCaps';
     }
 
