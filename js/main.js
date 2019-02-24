@@ -22,11 +22,12 @@
     fillColor: '#ffffff',
     strokeColor: '#000000',
     font: 'Impact',
-    fontSize: 50,
+    fontSize: 40,
     textAlign: 'center',
     lineWidth: 3,
     offsetY: 0,
-    offsetX: 0
+    offsetX: 0,
+    allCaps: true
   };
 
   const options = [Object.assign({}, defaultOptions)];
@@ -120,7 +121,13 @@
   }
 
   function handleTextPropChange(element, index, prop) {
-    options[index][prop] = element.value;
+    if (element.type === 'checkbox') {
+      options[index][prop] = element.checked;
+      console.log(options);
+    } else {
+      options[index][prop] = element.value;
+    }
+
     draw(selectedImage);
   }
 
@@ -175,13 +182,21 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="col-lg-6">
+          <div class="col-lg-6 mb-3">
             <label class="mb-1">Vertical offset:</label>
             <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" data-index="${index}">
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-6 mb-3">
             <label class="mb-1">Horizontal offset:</label>
             <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX" data-index="${index}">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-lg-12">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="allCapsCheckbox_${index}" data-input="allCaps" data-index="${index}">
+              <label class="custom-control-label" for="allCapsCheckbox_${index}">USE ALL CAPS</label>
+            </div>
           </div>
         </div>
       </div>
@@ -197,6 +212,7 @@
     }, 100);
     div.querySelector('[data-input="font"]').value = options[index].font;
     div.querySelector('[data-input="textAlign"]').value = options[index].textAlign;
+    div.querySelector('[data-input="allCaps"]').checked = options[index].allCaps;
     return fragment.appendChild(div);
   }
 
@@ -215,21 +231,22 @@
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
     options.forEach(function (item, index) {
-      ctx.font = `${item.fontSize || 50}px ${item.font || 'Impact'}`;
+      ctx.font = `${item.fontSize}px ${item.font}`;
 
       const multiplier = index + 1;
       const lineHeight = ctx.measureText('M').width + 20;
       const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
       const lineWidth = !Number.isNaN(Number(item.lineWidth)) ? Number(item.lineWidth) : 3;
+      const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
 
-      ctx.fillStyle = item.fillColor || 'white';
-      ctx.strokeStyle = item.strokeColor || 'black';
-      ctx.textAlign = item.textAlign || 'center';
-      ctx.fillText(item.text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
+      ctx.fillStyle = item.fillColor;
+      ctx.strokeStyle = item.strokeColor;
+      ctx.textAlign = item.textAlign;
+      ctx.fillText(text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
 
       if (lineWidth !== 0) {
         ctx.lineWidth = lineWidth;
-        ctx.strokeText(item.text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
+        ctx.strokeText(text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
       }
     });
   }
@@ -274,6 +291,8 @@
       prop = 'offsetY';
     } else if (element.matches('[data-input="offsetX"]')) {
       prop = 'offsetX';
+    } else if (element.matches('[data-input="allCaps"]')) {
+      prop = 'allCaps';
     }
 
     if (prop) {
