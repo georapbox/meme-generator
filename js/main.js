@@ -20,11 +20,11 @@
   const defaultOptions = {
     text: '',
     fillColor: '#ffffff',
-    strokeColor: '#000000',
+    shadowColor: '#000000',
     font: 'Impact',
     fontSize: 40,
     textAlign: 'center',
-    lineWidth: 3,
+    shadowBlur: 3,
     offsetY: 0,
     offsetX: 0,
     allCaps: true
@@ -121,13 +121,7 @@
   }
 
   function handleTextPropChange(element, index, prop) {
-    if (element.type === 'checkbox') {
-      options[index][prop] = element.checked;
-      console.log(options);
-    } else {
-      options[index][prop] = element.value;
-    }
-
+    options[index][prop] = element.type === 'checkbox' ? element.checked : element.value;
     draw(selectedImage);
   }
 
@@ -137,7 +131,7 @@
         <input class="form-control m-2" type="text" data-index="${index}" data-input="text" autocomplete="off" placeholder="Text #${index + 1}" style="min-width: 0;">
         <div class="d-flex align-items-center pr-2">
           <input class="form-control" type="color" value="${options[index].fillColor}" data-index="${index}" data-input="fillColor" title="Fill color">
-          <input class="form-control" type="color" value="${options[index].strokeColor}" data-index="${index}" data-input="strokeColor" title="Outline color">
+          <input class="form-control" type="color" value="${options[index].shadowColor}" data-index="${index}" data-input="shadowColor" title="Outline color">
           <button class="btn btn-secondary settings-button" data-index=${index} data-button="settings"></button>
         </div>
       </div>
@@ -169,8 +163,8 @@
         </div>
         <div class="form-row">
           <div class="col-lg-6 mb-3">
-            <label class="mb-1">Outline width:</label>
-            <input class="form-control" type="number" min="0" max="10" value="${options[index].lineWidth}" data-input="lineWidth" data-index="${index}">
+            <label class="mb-1">Shadow width:</label>
+            <input class="form-control" type="number" min="0" max="10" value="${options[index].shadowBlur}" data-input="shadowBlur" data-index="${index}">
           </div>
           <div class="col-lg-6 mb-3">
             <label class="mb-1">Text align:</label>
@@ -236,18 +230,22 @@
       const multiplier = index + 1;
       const lineHeight = ctx.measureText('M').width + 20;
       const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
-      const lineWidth = !Number.isNaN(Number(item.lineWidth)) ? Number(item.lineWidth) : 3;
+      const shadowBlur = !Number.isNaN(Number(item.shadowBlur)) ? Number(item.shadowBlur) : 3;
       const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
 
       ctx.fillStyle = item.fillColor;
-      ctx.strokeStyle = item.strokeColor;
       ctx.textAlign = item.textAlign;
-      ctx.fillText(text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
+      ctx.save();
 
-      if (lineWidth !== 0) {
-        ctx.lineWidth = lineWidth;
-        ctx.strokeText(text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
+      if (shadowBlur !== 0) {
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowBlur = shadowBlur;
+        ctx.shadowColor = item.shadowColor;
       }
+
+      ctx.fillText(text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
+      ctx.restore();
     });
   }
 
@@ -277,16 +275,16 @@
       prop = 'text';
     } else if (element.matches('[data-input="fillColor"]')) {
       prop = 'fillColor';
-    } else if (element.matches('[data-input="strokeColor"]')) {
-      prop = 'strokeColor';
+    } else if (element.matches('[data-input="shadowColor"]')) {
+      prop = 'shadowColor';
     } else if (element.matches('[data-input="font"]')) {
       prop = 'font';
     } else if (element.matches('[data-input="fontSize"]')) {
       prop = 'fontSize';
     } else if (element.matches('[data-input="textAlign"]')) {
       prop = 'textAlign';
-    } else if (element.matches('[data-input="lineWidth"]')) {
-      prop = 'lineWidth';
+    } else if (element.matches('[data-input="shadowBlur"]')) {
+      prop = 'shadowBlur';
     } else if (element.matches('[data-input="offsetY"]')) {
       prop = 'offsetY';
     } else if (element.matches('[data-input="offsetX"]')) {
