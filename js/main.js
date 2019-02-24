@@ -131,18 +131,18 @@
   function createNewInput(index) {
     const inputTemplate =`
       <div class="d-flex">
-        <input class="form-control m-2" type="text" data-index="${index}" data-input="text" autocomplete="off" placeholder="Text #${index + 1}" style="min-width: 0;">
+        <input class="form-control m-2" type="text" data-input="text" autocomplete="off" placeholder="Text #${index + 1}" style="min-width: 0;">
         <div class="d-flex align-items-center pr-2">
-          <input class="form-control" type="color" value="${options[index].fillColor}" data-index="${index}" data-input="fillColor" title="Fill color">
-          <input class="form-control" type="color" value="${options[index].shadowColor}" data-index="${index}" data-input="shadowColor" title="Outline color">
-          <button class="btn btn-secondary settings-button" data-index=${index} data-button="settings"></button>
+          <input class="form-control" type="color" value="${options[index].fillColor}" data-input="fillColor" title="Fill color">
+          <input class="form-control" type="color" value="${options[index].shadowColor}" data-input="shadowColor" title="Outline color">
+          <button class="btn btn-secondary settings-button" data-button="settings"></button>
         </div>
       </div>
-      <div class="p-2 d-none" data-section="settings_${index}">
+      <div class="p-2 d-none" data-section="settings">
         <div class="form-row">
           <div class="col-lg-6 mb-3">
             <label class="mb-1">Font: </label>
-            <select class="custom-select" data-input="font" data-index="${index}">
+            <select class="custom-select" data-input="font">
               <option value="Impact">Impact</option>
               <option value="Arial">Arial</option>
               <option value="Helvetica">Helvetica</option>
@@ -161,17 +161,17 @@
           </div>
           <div class="col-lg-6 mb-3">
             <label class="mb-1">Font size:</label>
-            <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize" data-index="${index}">
+            <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize">
           </div>
         </div>
         <div class="form-row">
           <div class="col-lg-6 mb-3">
             <label class="mb-1">Shadow width:</label>
-            <input class="form-control" type="number" min="0" max="10" value="${options[index].shadowBlur}" data-input="shadowBlur" data-index="${index}">
+            <input class="form-control" type="number" min="0" max="10" value="${options[index].shadowBlur}" data-input="shadowBlur">
           </div>
           <div class="col-lg-6 mb-3">
             <label class="mb-1">Text align:</label>
-            <select class="custom-select" data-input="textAlign" data-index="${index}">
+            <select class="custom-select" data-input="textAlign">
               <option value="left">Left</option>
               <option value="center">Center</option>
               <option value="right">Right</option>
@@ -181,17 +181,17 @@
         <div class="form-row">
           <div class="col-lg-6 mb-3">
             <label class="mb-1">Vertical offset:</label>
-            <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" data-index="${index}">
+            <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY">
           </div>
           <div class="col-lg-6 mb-3">
             <label class="mb-1">Horizontal offset:</label>
-            <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX" data-index="${index}">
+            <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX">
           </div>
         </div>
         <div class="form-row">
           <div class="col-lg-12">
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="allCapsCheckbox_${index}" data-input="allCaps" data-index="${index}">
+              <input type="checkbox" class="custom-control-input" id="allCapsCheckbox_${index}" data-input="allCaps">
               <label class="custom-control-label" for="allCapsCheckbox_${index}">USE ALL CAPS</label>
             </div>
           </div>
@@ -202,7 +202,8 @@
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
     div.className = 'bg-light border shadow-sm mb-3';
-    div.setAttribute('data-section', `textBox_${index}`);
+    div.setAttribute('data-section', 'textBox');
+    div.setAttribute('data-index', index);
     div.innerHTML = inputTemplate;
     setTimeout(() => {
       selectedImage && div.querySelector('[data-input="text"]').focus();
@@ -271,7 +272,7 @@
 
   inputsContainer.addEventListener('input', evt => {
     const element = evt.target;
-    const index = Number(element.getAttribute('data-index'));
+    const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
     let prop;
 
     if (element.matches('[data-input="text"]')) {
@@ -301,7 +302,7 @@
 
   inputsContainer.addEventListener('change', evt => {
     const element = evt.target;
-    const index = Number(element.getAttribute('data-index'));
+    const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
     let prop;
 
     if (element.matches('[data-input="allCaps"]')) {
@@ -318,7 +319,7 @@
 
     if (element.matches('[data-button="settings"]')) {
       element.classList.toggle('active');
-      document.querySelector(`[data-section="settings_${evt.target.getAttribute('data-index')}"]`).classList.toggle('d-none');
+      element.closest('[data-section="textBox"]').querySelector('[data-section="settings"]').classList.toggle('d-none');
     }
   }, false);
 
