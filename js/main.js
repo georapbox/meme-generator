@@ -118,9 +118,6 @@
     const image = new Image();
     image.addEventListener('load', onImageLoaded);
     image.src = canvas.toDataURL();
-
-    selectedImage = video;
-    draw(selectedImage);
   }
 
   function handleTextPropChange(element, index, prop) {
