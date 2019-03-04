@@ -75,6 +75,7 @@
 
     generateMemeBtn.disabled = false;
     canvas.classList.remove('d-none');
+    canvasPlaceholder.removeEventListener('click', handleCanvasPlaceholderClick, false);
     canvasPlaceholder.classList.add('d-none');
   }
 
@@ -250,7 +251,21 @@
     });
   }
 
+  function handleCanvasPlaceholderClick(evt) {
+    const element = evt.target;
+
+    evt.preventDefault();
+
+    if (element.matches('[data-trigger="file-upload"]')) {
+      fileInput.click();
+    } else if (element.matches('[data-trigger="photo-capture"]')) {
+      askUserMediaBtn.click();
+    }
+  }
+
   fileInput.addEventListener('change', handleFileSelect, false);
+
+  canvasPlaceholder.addEventListener('click', handleCanvasPlaceholderClick, false);
 
   askUserMediaBtn.addEventListener('click', requestGetUserMedia, false);
 
