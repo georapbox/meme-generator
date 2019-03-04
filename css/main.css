@@ -9,6 +9,12 @@ body {
   background-color: #eae9e9;
 }
 
+@media screen and (min-width: 1200px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
 .page-title {
   font-weight: 300;
   letter-spacing: 2px;
