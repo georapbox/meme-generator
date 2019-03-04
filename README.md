@@ -2,7 +2,7 @@
 
 Meme generator made for fun 😜
 
-![meme](assets/meme.png)
+![meme](assets/meme.jpg)
 
 ## License
 
