@@ -30,7 +30,10 @@
     allCaps: true
   };
 
-  const options = [Object.assign({}, defaultOptions)];
+  const options = [
+    Object.assign({}, defaultOptions),
+    Object.assign({}, defaultOptions)
+  ];
 
   function toggleVideoModal(visible) {
     if (visible) {
@@ -129,7 +132,7 @@
   function createNewInput(index) {
     const inputTemplate =`
       <div class="d-flex">
-        <input class="form-control m-2" type="text" data-input="text" autocomplete="off" placeholder="Text #${index + 1}" style="min-width: 0;">
+        <input class="form-control m-2" type="text" data-input="text" autocomplete="off" placeholder="${index === 0 ? 'Top Text' : index === 1 ? 'Bottom Text' : `Text #${index + 1}`}" style="min-width: 0;">
         <div class="d-flex align-items-center pr-2">
           <input class="form-control" type="color" value="${options[index].fillColor}" data-input="fillColor" title="Fill color">
           <input class="form-control" type="color" value="${options[index].shadowColor}" data-input="shadowColor" title="Outline color">
@@ -246,7 +249,12 @@
         ctx.shadowColor = item.shadowColor;
       }
 
-      ctx.fillText(text || '', xPos + Number(item.offsetX), lineHeight * multiplier + Number(item.offsetY));
+      ctx.fillText(
+        text,
+        xPos + Number(item.offsetX),
+        index === 1 ? canvas.height - 20 + Number(item.offsetY) : lineHeight * (multiplier - 1 || 1) + Number(item.offsetY)
+      );
+
       ctx.restore();
     });
   }
@@ -281,6 +289,7 @@
   generateMemeBtn.addEventListener('click', generateMeme, false);
 
   inputsContainer.appendChild(createNewInput(0));
+  inputsContainer.appendChild(createNewInput(1));
 
   inputsContainer.addEventListener('input', evt => {
     const element = evt.target;
