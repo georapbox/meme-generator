@@ -1,6 +1,7 @@
 (function MemeMaker() {
   'use strict';
 
+  const errorsContainer = document.getElementById('errorsContainer');
   const videoModal = document.getElementById('videoModal');
   const cancelUserMediaBtn = document.getElementById('cancelUserMediaBtn');
   const captureUserMediaBtn = document.getElementById('captureUserMediaBtn');
@@ -36,13 +37,31 @@
   ];
 
   function toggleVideoModal(visible) {
-    if (visible) {
-      videoModal.style.display = 'block';
-      videoModal.classList.remove('fade');
-    } else {
-      videoModal.style.display = 'none';
-      videoModal.classList.add('fade');
-    }
+    videoModal.style.display = visible ? 'block' : 'none';
+  }
+
+  function showError(message) {
+    const errorId = `error_${Date.now()}`;
+
+    const template = `
+      ${message}
+      <button type="button" class="close" data-dismiss="${errorId}" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    `;
+
+    const div = document.createElement('div');
+    div.id = errorId;
+    div.className = 'alert alert-danger alert-dismissible rounded-0 mb-2';
+    div.innerHTML = template;
+    div.querySelector('button').addEventListener('click', hideError, false);
+    errorsContainer.appendChild(div);
+  }
+
+  function hideError(evt) {
+    const target = evt.currentTarget;
+    target.removeEventListener('click', hideError, false);
+    errorsContainer.removeChild(target.parentNode);
   }
 
   function generateMeme() {
@@ -108,7 +127,7 @@
       toggleVideoModal(true);
       video.srcObject = stream;
     }).catch(error => {
-      alert(error);
+      showError(error);
     });
   }
 
