@@ -36,7 +36,13 @@
   ];
 
   function toggleVideoModal(visible) {
-    videoModal.style.display = visible ? 'block' : 'none';
+    if (visible) {
+      videoModal.style.display = 'block';
+      setTimeout(() => videoModal.classList.add('show'), 150);
+    } else {
+      videoModal.classList.remove('show');
+      setTimeout(() => videoModal.style.display = 'none', 200);
+    }
   }
 
   function showError(message) {
