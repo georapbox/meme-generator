@@ -180,3 +180,16 @@ input[type="color"],
 .text-underline {
   text-decoration: underline;
 }
+
+.errorsContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1051;
+  pointer-events: none;
+}
+
+.errorsContainer .alert {
+  pointer-events: all;
+}

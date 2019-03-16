@@ -1,6 +1,7 @@
 (function MemeMaker() {
   'use strict';
 
+  const errorsContainer = document.getElementById('errorsContainer');
   const videoModal = document.getElementById('videoModal');
   const cancelUserMediaBtn = document.getElementById('cancelUserMediaBtn');
   const captureUserMediaBtn = document.getElementById('captureUserMediaBtn');
@@ -13,7 +14,6 @@
   const addTextboxBtn = document.getElementById('addTextboxBtn');
   const inputsContainer = document.getElementById('inputsContainer');
   const generateMemeBtn = document.getElementById('generateMemeBtn');
-  const captureMediaContainer = document.getElementById('captureMediaContainer');
   const askUserMediaBtn = document.getElementById('askUserMediaBtn');
   let selectedImage = null;
 
@@ -38,11 +38,33 @@
   function toggleVideoModal(visible) {
     if (visible) {
       videoModal.style.display = 'block';
-      videoModal.classList.remove('fade');
+      setTimeout(() => videoModal.classList.add('show'), 150);
     } else {
-      videoModal.style.display = 'none';
-      videoModal.classList.add('fade');
+      videoModal.classList.remove('show');
+      setTimeout(() => videoModal.style.display = 'none', 200);
     }
+  }
+
+  function showError(message) {
+    const template = `
+      ${message}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    `;
+
+    const div = document.createElement('div');
+    div.className = 'alert alert-danger alert-dismissible rounded-0 mb-2 fade';
+    div.innerHTML = template;
+    div.querySelector('button').addEventListener('click', hideError, false);
+    errorsContainer.appendChild(div);
+    setTimeout(() => div.classList.add('show'), 100);
+  }
+
+  function hideError(evt) {
+    const target = evt.currentTarget;
+    target.removeEventListener('click', hideError, false);
+    errorsContainer.removeChild(target.parentNode);
   }
 
   function generateMeme() {
@@ -103,12 +125,12 @@
   function requestGetUserMedia() {
     navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: false
+      audio: false,
     }).then(stream => {
       toggleVideoModal(true);
       video.srcObject = stream;
     }).catch(error => {
-      alert(error);
+      showError(error);
     });
   }
 
@@ -343,8 +365,4 @@
       element.closest('[data-section="textBox"]').querySelector('[data-section="settings"]').classList.toggle('d-none');
     }
   }, false);
-
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    captureMediaContainer.classList.remove('d-none');
-  }
 }());

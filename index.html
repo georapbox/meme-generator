@@ -13,6 +13,15 @@
   <title>Meme Generator | Create Your Own Meme</title>
 </head>
 <body class="bg-body">
+  <div class="errorsContainer">
+    <div class="container-fluid mt-2">
+      <div class="row">
+        <div class="col-12" id="errorsContainer" style="max-width: 500px;"></div>
+      </div>
+    </div>
+  </div>
+
+
   <div class="container">
     <div class="row my-4 my-md-5 text-center">
       <div class="col">
@@ -62,15 +71,14 @@
             </div>
           </label>
 
-          <div class="d-none" id="captureMediaContainer">
-            <div class="text-center mb-2" style="font-size: 1.1rem;">
-              or
-            </div>
-            <button class="btn btn-primary btn-block py-2 d-flex align-items-center justify-content-center" id="askUserMediaBtn">
-              <img src="assets/icons/camera.svg" width="20" alt="Upload image" class="mr-2" />
-              Take Photo
-            </button>
+          <div class="text-center mb-2" style="font-size: 1.1rem;">
+            or
           </div>
+
+          <button class="btn btn-primary btn-block py-2 d-flex align-items-center justify-content-center" id="askUserMediaBtn">
+            <img src="assets/icons/camera.svg" width="20" alt="Upload image" class="mr-2" />
+            Take Photo
+          </button>
         </div>
 
         <div id="inputsContainer"></div>
