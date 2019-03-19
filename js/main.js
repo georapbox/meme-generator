@@ -45,6 +45,17 @@
     }
   }
 
+  function startVideoStreaming(videoEl, stream) {
+    videoEl.srcObject = stream;
+  }
+
+  function stopVideoStreaming(videoEl) {
+    const stream = videoEl.srcObject;
+    const tracks = stream != null ? stream.getTracks() : [];
+    tracks.forEach(track => track.stop());
+    videoEl.srcObject = null;
+  }
+
   function showError(message) {
     const template = `
       ${message}
@@ -128,7 +139,7 @@
       audio: false,
     }).then(stream => {
       toggleVideoModal(true);
-      video.srcObject = stream;
+      startVideoStreaming(video, stream);
     }).catch(error => {
       showError(error);
     });
@@ -136,6 +147,7 @@
 
   function handleCaptureMedia() {
     toggleVideoModal(false);
+    stopVideoStreaming(video);
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -301,7 +313,7 @@
 
   cancelUserMediaBtn.addEventListener('click', () => {
     toggleVideoModal(false);
-    video.srcObject = null;
+    stopVideoStreaming(video);
   }, false);
 
   captureUserMediaBtn.addEventListener('click', handleCaptureMedia, false);
