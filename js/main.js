@@ -147,7 +147,6 @@
 
   function handleCaptureMedia() {
     toggleVideoModal(false);
-    stopVideoStreaming(video);
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -156,6 +155,8 @@
     const image = new Image();
     image.addEventListener('load', onImageLoaded);
     image.src = canvas.toDataURL();
+
+    stopVideoStreaming(video);
   }
 
   function handleTextPropChange(element, index, prop) {
