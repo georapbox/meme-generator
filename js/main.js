@@ -47,6 +47,7 @@
 
   function startVideoStreaming(videoEl, stream) {
     videoEl.srcObject = stream;
+    videoEl.play().catch(showError);
   }
 
   function stopVideoStreaming(videoEl) {
