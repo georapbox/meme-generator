@@ -42,9 +42,11 @@
   function toggleModal(modalEl, visible) {
     if (visible) {
       modalEl.style.display = 'block';
+      document.body.classList.add('modal-open');
       setTimeout(() => modalEl.classList.add('show'), 150);
     } else {
       modalEl.classList.remove('show');
+      document.body.classList.remove('modal-open');
       setTimeout(() => modalEl.style.display = 'none', 200);
     }
   }

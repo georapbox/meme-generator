@@ -1,8 +1,11 @@
 html,
 body {
-  font-size: 0.9rem;
-  overflow-x: hidden;
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 0.9rem;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 .bg-body {
