@@ -1,8 +1,9 @@
-(function MemeMaker() {
+(function MemeGenerator() {
   'use strict';
 
   const errorsContainer = document.getElementById('errorsContainer');
   const videoModal = document.getElementById('videoModal');
+  const downloadModal = document.getElementById('downloadModal');
   const cancelUserMediaBtn = document.getElementById('cancelUserMediaBtn');
   const captureUserMediaBtn = document.getElementById('captureUserMediaBtn');
   const video = document.getElementById('video');
@@ -15,6 +16,9 @@
   const inputsContainer = document.getElementById('inputsContainer');
   const generateMemeBtn = document.getElementById('generateMemeBtn');
   const askUserMediaBtn = document.getElementById('askUserMediaBtn');
+  const downloadMemeBtn = document.getElementById('downloadMemeBtn');
+  const downloadMemePreview = document.getElementById('downloadMemePreview');
+  const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
   let selectedImage = null;
 
   const defaultOptions = {
@@ -35,13 +39,13 @@
     Object.assign({}, defaultOptions)
   ];
 
-  function toggleVideoModal(visible) {
+  function toggleModal(modalEl, visible) {
     if (visible) {
-      videoModal.style.display = 'block';
-      setTimeout(() => videoModal.classList.add('show'), 150);
+      modalEl.style.display = 'block';
+      setTimeout(() => modalEl.classList.add('show'), 150);
     } else {
-      videoModal.classList.remove('show');
-      setTimeout(() => videoModal.style.display = 'none', 200);
+      modalEl.classList.remove('show');
+      setTimeout(() => modalEl.style.display = 'none', 200);
     }
   }
 
@@ -80,10 +84,11 @@
   }
 
   function generateMeme() {
-    const win = window.open();
-    win.document.open();
-    win.document.write(`<iframe src="${canvas.toDataURL()}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
-    win.document.close();
+    const downloadLink = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+    downloadMemeBtn.download = 'meme.png';
+    downloadMemeBtn.href = downloadLink;
+    downloadMemePreview.src = downloadLink;
+    toggleModal(downloadModal, true);
   }
 
   function onImageLoaded(evt) {
@@ -139,7 +144,7 @@
       video: true,
       audio: false,
     }).then(stream => {
-      toggleVideoModal(true);
+      toggleModal(videoModal, true);
       startVideoStreaming(video, stream);
     }).catch(error => {
       showError(error);
@@ -147,7 +152,7 @@
   }
 
   function handleCaptureMedia() {
-    toggleVideoModal(false);
+    toggleModal(videoModal, false);
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -314,7 +319,7 @@
   askUserMediaBtn.addEventListener('click', requestGetUserMedia, false);
 
   cancelUserMediaBtn.addEventListener('click', () => {
-    toggleVideoModal(false);
+    toggleModal(videoModal, false);
     stopVideoStreaming(video);
   }, false);
 
@@ -323,6 +328,9 @@
   addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked, false);
 
   generateMemeBtn.addEventListener('click', generateMeme, false);
+
+  downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false), false);
+  downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false), false);
 
   inputsContainer.appendChild(createNewInput(0));
   inputsContainer.appendChild(createNewInput(1));
