@@ -93,7 +93,6 @@
         </div>
 
         <button type="button" class="btn btn-primary btn-block py-2 mt-5 d-flex align-items-center justify-content-center" id="generateMemeBtn" disabled autocomplete="off">
-          <img src="assets/icons/save.svg" width="20" alt="Generate meme" class="mr-1" />
           Generate Meme
         </button>
       </div>
@@ -113,7 +112,7 @@
     <div class="modal-dialog modal-lg shadow-lg">
       <div class="modal-content rounded-0">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Capture image</h5>
+          <h5 class="modal-title">Capture image</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="cancelUserMediaBtn">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -125,6 +124,33 @@
           <button type="button" class="btn btn-primary shadow" id="captureUserMediaBtn">
             Capture
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="downloadModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg shadow-lg">
+      <div class="modal-content rounded-0">
+        <div class="modal-header">
+          <h5 class="modal-title">Download Meme</h5>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="downloadMemeModalCloseBtn">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body text-center">
+          <p>
+            <img class="img-thumbnail" src="" alt="" id="downloadMemePreview">
+          </p>
+
+          <p>
+            <a class="btn btn-primary" href="#" download="" id="downloadMemeBtn">
+              <img src="assets/icons/save.svg" width="20" alt="Generate meme" class="mr-1" />
+              Download
+            </a>
+          </p>
         </div>
       </div>
     </div>
