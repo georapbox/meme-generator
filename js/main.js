@@ -40,14 +40,16 @@
   ];
 
   function toggleModal(modalEl, visible) {
+    captureUserMediaBtn.disabled = true;
+
     if (visible) {
       modalEl.style.display = 'block';
       document.body.classList.add('modal-open');
-      setTimeout(() => modalEl.classList.add('show'), 150);
+      setTimeout(() => modalEl.classList.add('show'), 300);
     } else {
       modalEl.classList.remove('show');
       document.body.classList.remove('modal-open');
-      setTimeout(() => modalEl.style.display = 'none', 200);
+      setTimeout(() => modalEl.style.display = 'none', 300);
     }
   }
 
@@ -389,4 +391,8 @@
       element.closest('[data-section="textBox"]').querySelector('[data-section="settings"]').classList.toggle('d-none');
     }
   }, false);
+
+  video.addEventListener('playing', () => {
+    captureUserMediaBtn.disabled = false;
+  });
 }());
