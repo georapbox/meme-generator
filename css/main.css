@@ -135,18 +135,22 @@ input[type="color"],
 }
 
 #captureUserMediaBtn {
-  position: absolute;
-  left: 50%;
-  bottom: 35px;
-  margin-left: -30px;
   width: 60px;
   height: 60px;
+  margin-top: 1rem;
   border-radius: 50%;
   background-image: url('../assets/icons/camera.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 60%;
-  text-indent: -9999px;
+}
+
+#captureUserMediaBtn[disabled] {
+  background-image: none;
+}
+
+#captureUserMediaBtn:not([disabled]) .spinner-border {
+  display: none;
 }
 
 .btn-outline-secondary:hover svg path,

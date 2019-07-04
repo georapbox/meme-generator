@@ -118,11 +118,13 @@
           </button>
         </div>
 
-        <div class="modal-body">
-          <video id="video" class="w-100 shadow" playsinline></video>
+        <div class="modal-body text-center">
+          <video id="video" class="w-100 shadow d-block" style="background: #000;" playsinline></video>
 
-          <button type="button" class="btn btn-primary shadow" id="captureUserMediaBtn">
-            Capture
+          <button type="button" class="btn btn-primary shadow" id="captureUserMediaBtn" disabled autocomplete="off">
+            <div class="spinner-border text-light" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
           </button>
         </div>
       </div>
