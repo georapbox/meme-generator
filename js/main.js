@@ -65,6 +65,7 @@
       for (const deviceInfo of devices) {
         const option = document.createElement('option');
 
+        videoSelect.innerHTML = '';
         option.value = deviceInfo.deviceId;
 
         if (deviceInfo.kind === 'videoinput') {
