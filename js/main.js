@@ -19,7 +19,6 @@
   const downloadMemeBtn = document.getElementById('downloadMemeBtn');
   const downloadMemePreview = document.getElementById('downloadMemePreview');
   const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
-  const videoSelect = document.getElementById('videoSource');
   let selectedImage = null;
 
   const defaultOptions = {
@@ -52,22 +51,6 @@
       document.body.classList.remove('modal-open');
       setTimeout(() => modalEl.style.display = 'none', 300);
     }
-  }
-
-  function getDevices() { // eslint-disable-line
-    // AFAICT in Safari this only gets default devices until gUM is called :/
-    return navigator.mediaDevices.enumerateDevices().then((devices) => {
-      for (const deviceInfo of devices) {
-        const option = document.createElement('option');
-
-        option.value = deviceInfo.deviceId;
-
-        if (deviceInfo.kind === 'videoinput') {
-          option.text = deviceInfo.label || `Camera ${videoSelect.length + 1}`;
-          videoSelect.appendChild(option);
-        }
-      }
-    });
   }
 
   function startVideoStreaming(videoEl, stream) {
@@ -164,10 +147,7 @@
     // const videoSource = videoSelect.value;
 
     navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: 'user'
-        // deviceId: videoSource ? { exact: videoSource } : undefined
-      },
+      video: true,
       audio: false
     }).then(stream => {
       toggleModal(videoModal, true);
@@ -338,8 +318,6 @@
     }
   }
 
-  // getDevices();
-
   fileInput.addEventListener('change', handleFileSelect, false);
 
   canvasPlaceholder.addEventListener('click', handleCanvasPlaceholderClick, false);
@@ -419,9 +397,4 @@
   video.addEventListener('playing', () => {
     captureUserMediaBtn.disabled = false;
   });
-
-  // videoSelect.addEventListener('change', () => {
-  //   stopVideoStreaming(video);
-  //   requestGetUserMedia();
-  // });
 }());
