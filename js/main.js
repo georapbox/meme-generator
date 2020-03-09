@@ -54,7 +54,7 @@
     }
   }
 
-  function getDevices() {
+  function getDevices() { // eslint-disable-line
     // AFAICT in Safari this only gets default devices until gUM is called :/
     return navigator.mediaDevices.enumerateDevices().then((devices) => {
       for (const deviceInfo of devices) {
@@ -161,12 +161,12 @@
   }
 
   function requestGetUserMedia() {
-    const videoSource = videoSelect.value;
+    // const videoSource = videoSelect.value;
 
     navigator.mediaDevices.getUserMedia({
-      // video: true,
       video: {
-        deviceId: videoSource ? { exact: videoSource } : undefined
+        facingMode: 'user'
+        // deviceId: videoSource ? { exact: videoSource } : undefined
       },
       audio: false
     }).then(stream => {
@@ -338,7 +338,7 @@
     }
   }
 
-  getDevices();
+  // getDevices();
 
   fileInput.addEventListener('change', handleFileSelect, false);
 
@@ -420,8 +420,8 @@
     captureUserMediaBtn.disabled = false;
   });
 
-  videoSelect.addEventListener('change', () => {
-    stopVideoStreaming(video);
-    requestGetUserMedia();
-  });
+  // videoSelect.addEventListener('change', () => {
+  //   stopVideoStreaming(video);
+  //   requestGetUserMedia();
+  // });
 }());
