@@ -19,7 +19,13 @@
   const downloadMemeBtn = document.getElementById('downloadMemeBtn');
   const downloadMemePreview = document.getElementById('downloadMemePreview');
   const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
+  const videoSelect = document.getElementById('videoSource');
   let selectedImage = null;
+
+  videoSelect.addEventListener('change', () => {
+    stopVideoStreaming(video);
+    requestGetUserMedia();
+  });
 
   const defaultOptions = {
     text: '',
@@ -52,6 +58,24 @@
       setTimeout(() => modalEl.style.display = 'none', 300);
     }
   }
+
+  function getDevices() {
+    // AFAICT in Safari this only gets default devices until gUM is called :/
+    return navigator.mediaDevices.enumerateDevices().then((devices) => {
+      for (const deviceInfo of devices) {
+        const option = document.createElement('option');
+
+        option.value = deviceInfo.deviceId;
+
+        if (deviceInfo.kind === 'videoinput') {
+          option.text = deviceInfo.label || `Camera ${videoSelect.length + 1}`;
+          videoSelect.appendChild(option);
+        }
+      }
+    });
+  }
+
+  getDevices();
 
   function startVideoStreaming(videoEl, stream) {
     videoEl.srcObject = stream;
@@ -144,9 +168,14 @@
   }
 
   function requestGetUserMedia() {
+    const videoSource = videoSelect.value;
+
     navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false,
+      // video: true,
+      video: {
+        deviceId: videoSource ? { exact: videoSource } : undefined
+      },
+      audio: false
     }).then(stream => {
       toggleModal(videoModal, true);
       startVideoStreaming(video, stream);
