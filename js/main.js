@@ -22,11 +22,6 @@
   const videoSelect = document.getElementById('videoSource');
   let selectedImage = null;
 
-  videoSelect.addEventListener('change', () => {
-    stopVideoStreaming(video);
-    requestGetUserMedia();
-  });
-
   const defaultOptions = {
     text: '',
     fillColor: '#ffffff',
@@ -65,7 +60,6 @@
       for (const deviceInfo of devices) {
         const option = document.createElement('option');
 
-        videoSelect.innerHTML = '';
         option.value = deviceInfo.deviceId;
 
         if (deviceInfo.kind === 'videoinput') {
@@ -176,7 +170,6 @@
       },
       audio: false
     }).then(stream => {
-      getDevices();
       toggleModal(videoModal, true);
       startVideoStreaming(video, stream);
     }).catch(error => {
@@ -345,6 +338,8 @@
     }
   }
 
+  getDevices();
+
   fileInput.addEventListener('change', handleFileSelect, false);
 
   canvasPlaceholder.addEventListener('click', handleCanvasPlaceholderClick, false);
@@ -423,5 +418,10 @@
 
   video.addEventListener('playing', () => {
     captureUserMediaBtn.disabled = false;
+  });
+
+  videoSelect.addEventListener('change', () => {
+    stopVideoStreaming(video);
+    requestGetUserMedia();
   });
 }());
