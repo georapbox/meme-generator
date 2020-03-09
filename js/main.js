@@ -75,8 +75,6 @@
     });
   }
 
-  getDevices();
-
   function startVideoStreaming(videoEl, stream) {
     videoEl.srcObject = stream;
     videoEl.play().catch(showError);
@@ -177,6 +175,7 @@
       },
       audio: false
     }).then(stream => {
+      getDevices();
       toggleModal(videoModal, true);
       startVideoStreaming(video, stream);
     }).catch(error => {
