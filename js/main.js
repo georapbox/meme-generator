@@ -144,7 +144,9 @@
   }
 
   function requestGetUserMedia() {
-    // const videoSource = videoSelect.value;
+    if (!navigator.mediaDevices) {
+      return showError('The operation is not supported.');
+    }
 
     navigator.mediaDevices.getUserMedia({
       video: true,
