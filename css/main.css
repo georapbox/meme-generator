@@ -134,15 +134,25 @@ input[type="color"],
   background-size: 60%;
 }
 
-#captureUserMediaBtn {
-  width: 60px;
-  height: 60px;
-  margin-top: 1rem;
+#facingModeToggle {
+  min-width: 44px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background-image: url('../assets/icons/camera.svg');
+  padding: 0;
+  border-color: #e3e3e3;
+}
+
+#captureUserMediaBtn {
+  min-width: 70px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-image: url('../assets/icons/aperture.svg');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 60%;
+  background-size: 90%;
+  border-color: #e3e3e3;
 }
 
 #captureUserMediaBtn[disabled] {

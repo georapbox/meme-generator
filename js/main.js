@@ -19,7 +19,8 @@
   const downloadMemeBtn = document.getElementById('downloadMemeBtn');
   const downloadMemePreview = document.getElementById('downloadMemePreview');
   const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
-  const facingModeSelect = document.getElementById('facingModeSelect');
+  const facingModeToggle = document.getElementById('facingModeToggle');
+  let facingModeValue = 'user';
   let selectedImage = null;
 
   const defaultOptions = {
@@ -42,6 +43,7 @@
 
   function toggleModal(modalEl, visible) {
     captureUserMediaBtn.disabled = true;
+    facingModeToggle.disabled = true;
 
     if (visible) {
       modalEl.style.display = 'block';
@@ -64,7 +66,7 @@
       track.applyConstraints({
         video: {
           facingMode: {
-            ideal: facingModeSelect.value || 'user'
+            ideal: facingModeValue || 'user'
           }
         },
         audio: false
@@ -165,7 +167,7 @@
     navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: {
-          ideal: facingModeSelect.value || 'user'
+          ideal: facingModeValue || 'user'
         }
       },
       audio: false
@@ -416,9 +418,11 @@
 
   video.addEventListener('playing', () => {
     captureUserMediaBtn.disabled = false;
+    facingModeToggle.disabled = false;
   });
 
-  facingModeSelect.addEventListener('change', () => {
+  facingModeToggle.addEventListener('click', () => {
+    facingModeValue = facingModeValue === 'user' ? 'environment' : 'user';
     stopVideoStreaming(video);
     requestGetUserMedia();
   }, false);
