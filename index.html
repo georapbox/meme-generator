@@ -118,14 +118,22 @@
           </button>
         </div>
 
-        <div class="modal-body text-center">
+        <div class="modal-body">
+          <select id="facingModeSelect" class="custom-select mb-3" autocomplete="off">
+            <option value="" disabled selected>-- Select camera --</option>
+            <option value="user">Front camera</option>
+            <option value="environment">Rear camera</option>
+          </select>
+
           <video id="video" class="w-100 shadow d-block" style="background: #000;" playsinline></video>
 
-          <button type="button" class="btn btn-primary shadow" id="captureUserMediaBtn" disabled autocomplete="off">
-            <div class="spinner-border text-light" role="status">
-              <span class="sr-only">Loading...</span>
-            </div>
-          </button>
+          <div class="text-center">
+            <button type="button" class="btn btn-primary shadow" id="captureUserMediaBtn" disabled autocomplete="off">
+              <div class="spinner-border text-light" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
     </div>

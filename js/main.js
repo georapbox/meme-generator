@@ -19,6 +19,7 @@
   const downloadMemeBtn = document.getElementById('downloadMemeBtn');
   const downloadMemePreview = document.getElementById('downloadMemePreview');
   const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
+  const facingModeSelect = document.getElementById('facingModeSelect');
   let selectedImage = null;
 
   const defaultOptions = {
@@ -56,11 +57,24 @@
   function startVideoStreaming(videoEl, stream) {
     videoEl.srcObject = stream;
     videoEl.play().catch(showError);
+
+    const tracks = stream != null ? stream.getVideoTracks() : [];
+
+    tracks.forEach(track => {
+      track.applyConstraints({
+        video: {
+          facingMode: {
+            ideal: facingModeSelect.value || 'user'
+          }
+        },
+        audio: false
+      });
+    });
   }
 
   function stopVideoStreaming(videoEl) {
     const stream = videoEl.srcObject;
-    const tracks = stream != null ? stream.getTracks() : [];
+    const tracks = stream != null ? stream.getVideoTracks() : [];
     tracks.forEach(track => track.stop());
     videoEl.srcObject = null;
   }
@@ -149,7 +163,11 @@
     }
 
     navigator.mediaDevices.getUserMedia({
-      video: true,
+      video: {
+        facingMode: {
+          ideal: facingModeSelect.value || 'user'
+        }
+      },
       audio: false
     }).then(stream => {
       toggleModal(videoModal, true);
@@ -399,4 +417,9 @@
   video.addEventListener('playing', () => {
     captureUserMediaBtn.disabled = false;
   });
+
+  facingModeSelect.addEventListener('change', () => {
+    stopVideoStreaming(video);
+    requestGetUserMedia();
+  }, false);
 }());
