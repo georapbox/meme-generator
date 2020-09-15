@@ -140,8 +140,8 @@ input[type="color"],
   height: 44px;
   border-radius: 50%;
   padding: 0;
-  border-color: #e3e3e3;
 }
+
 
 #captureUserMediaBtn {
   min-width: 70px;
@@ -152,7 +152,8 @@ input[type="color"],
   background-repeat: no-repeat;
   background-position: center;
   background-size: 90%;
-  border-color: #e3e3e3;
+  background-color: #c2c3c7;
+  border: 5px solid #ffffff;
 }
 
 #captureUserMediaBtn[disabled] {
