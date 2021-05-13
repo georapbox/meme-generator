@@ -354,7 +354,6 @@
           const filesArray = [img];
 
           if (navigator.canShare && navigator.canShare({ files: filesArray })) {
-            showError('CAN SHARE FILES');
             navigator.share({
               title: document.title,
               text: document.querySelector('meta[name="description"]').content,
@@ -362,8 +361,6 @@
             }).catch(() => {
               showError('There was an error while trying to share your meme.');
             });
-          } else {
-            showError('CANNOT SHARE');
           }
 
           // no longer need to read the blob so it's revoked
