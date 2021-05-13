@@ -361,13 +361,10 @@
             navigator.share({
               title: document.title,
               text: document.querySelector('meta[name="description"]').content,
-              url: document.location.href,
               files: filesArray
-            }).catch(function () {
+            }).catch(() => {
               showError('There was an error while trying to share your meme.');
             });
-          } else {
-            showError('Cannot share');
           }
         };
 
