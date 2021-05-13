@@ -20,6 +20,8 @@
   const downloadMemePreview = document.getElementById('downloadMemePreview');
   const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
   const facingModeToggle = document.getElementById('facingModeToggle');
+  const shareSection = document.getElementById('shareSection');
+  const shareBtn = document.getElementById('shareBtn');
   let facingModeValue = 'user';
   let selectedImage = null;
 
@@ -338,6 +340,37 @@
     } else if (element.matches('[data-trigger="photo-capture"]')) {
       askUserMediaBtn.click();
     }
+  }
+
+  if (navigator.share && new URLSearchParams(window.location.search).has('share')) {
+    shareSection.classList.remove('d-none');
+
+    shareBtn.addEventListener('click', () => {
+      canvas.toBlob(blob => {
+        const img = document.createElement('img');
+        const url = URL.createObjectURL(blob);
+
+        img.onload = () => {
+          // no longer need to read the blob so it's revoked
+          URL.revokeObjectURL(url);
+        };
+
+        img.src = url;
+
+        const filesArray = [img];
+
+        if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+          navigator.share({
+            title: document.title,
+            text: document.querySelector('meta[name="description"]').content,
+            url: document.location.href,
+            files: filesArray
+          }).catch(function () {
+            showError('There was an error while trying to share your meme.');
+          });
+        }
+      }, 'image/png', 1.0);
+    }, false);
   }
 
   fileInput.addEventListener('change', handleFileSelect, false);
