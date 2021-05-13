@@ -346,31 +346,23 @@
     shareSection.classList.remove('d-none');
 
     shareBtn.addEventListener('click', () => {
-      canvas.toBlob(blob => {
-        const img = document.createElement('img');
-        const url = URL.createObjectURL(blob);
+      const file = new File([canvas.toDataURL('image/png')], 'meme.png', {
+        type: 'image/png'
+      });
 
-        img.onload = () => {
-          const filesArray = [img];
+      const filesArray = [file];
 
-          if (navigator.canShare && navigator.canShare({ files: filesArray })) {
-            navigator.share({
-              title: document.title,
-              text: document.querySelector('meta[name="description"]').content,
-              files: filesArray
-            }).then(() => {
-              console.log('Share was successful.');
-            }).catch(() => {
-              showError('There was an error while trying to share your meme.');
-            });
-          }
-
-          // no longer need to read the blob so it's revoked
-          URL.revokeObjectURL(url);
-        };
-
-        img.src = url;
-      }, 'image/png', 1.0);
+      if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+        navigator.share({
+          title: document.title,
+          text: document.querySelector('meta[name="description"]').content,
+          files: filesArray
+        }).then(() => {
+          console.log('Share was successful.');
+        }).catch(() => {
+          showError('There was an error while trying to share your meme.');
+        });
+      }
     }, false);
   }
 
