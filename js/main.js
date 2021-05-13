@@ -352,6 +352,7 @@
 
         img.onload = () => {
           // no longer need to read the blob so it's revoked
+          showError('Image loaded');
           URL.revokeObjectURL(url);
 
           const filesArray = [img];
