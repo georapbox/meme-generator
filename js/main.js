@@ -342,27 +342,34 @@
     }
   }
 
-  if (navigator.share && new URLSearchParams(window.location.search).has('share')) {
+  function urltoFile(url, filename, mimeType){
+    return fetch(url)
+      .then(res => res.arrayBuffer())
+      .then(buf => new File([buf], filename, { type: mimeType }))
+      .catch(err => new Error(err));
+  }
+
+  if (!navigator.share && new URLSearchParams(window.location.search).has('share')) {
     shareSection.classList.remove('d-none');
 
     shareBtn.addEventListener('click', () => {
-      const file = new File([canvas.toDataURL('image/png')], 'meme.png', {
-        type: 'image/png'
+      urltoFile(canvas.toDataURL('image/png'), 'meme.png', 'image/png').then(file => {
+        const filesArray = [file];
+
+        if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+          navigator.share({
+            title: document.title,
+            text: document.querySelector('meta[name="description"]').content,
+            files: filesArray
+          }).then(() => {
+            console.log('Share was successful.');
+          }).catch(() => {
+            showError('There was an error while trying to share your meme.');
+          });
+        }
+      }).catch(() => {
+        showError('Unable to convert to file.');
       });
-
-      const filesArray = [file];
-
-      if (navigator.canShare && navigator.canShare({ files: filesArray })) {
-        navigator.share({
-          title: document.title,
-          text: document.querySelector('meta[name="description"]').content,
-          files: filesArray
-        }).then(() => {
-          console.log('Share was successful.');
-        }).catch(() => {
-          showError('There was an error while trying to share your meme.');
-        });
-      }
     }, false);
   }
 
