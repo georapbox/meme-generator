@@ -364,7 +364,7 @@
           }).then(() => {
             console.log('Share was successful.');
           }).catch(err => {
-            alert(JSON.stringify(err));
+            alert(err.message);
             showError('There was an error while trying to share your meme.');
           });
         }
