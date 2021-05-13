@@ -363,7 +363,8 @@
             files: filesArray
           }).then(() => {
             console.log('Share was successful.');
-          }).catch(() => {
+          }).catch(err => {
+            alert(JSON.stringify(err));
             showError('There was an error while trying to share your meme.');
           });
         }
