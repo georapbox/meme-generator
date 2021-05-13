@@ -353,22 +353,24 @@
         img.onload = () => {
           // no longer need to read the blob so it's revoked
           URL.revokeObjectURL(url);
+
+          const filesArray = [img];
+
+          if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+            navigator.share({
+              title: document.title,
+              text: document.querySelector('meta[name="description"]').content,
+              url: document.location.href,
+              files: filesArray
+            }).catch(function () {
+              showError('There was an error while trying to share your meme.');
+            });
+          } else {
+            showError('Cannot share');
+          }
         };
 
         img.src = url;
-
-        const filesArray = [img];
-
-        if (navigator.canShare && navigator.canShare({ files: filesArray })) {
-          navigator.share({
-            title: document.title,
-            text: document.querySelector('meta[name="description"]').content,
-            url: document.location.href,
-            files: filesArray
-          }).catch(function () {
-            showError('There was an error while trying to share your meme.');
-          });
-        }
       }, 'image/png', 1.0);
     }, false);
   }
