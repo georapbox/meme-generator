@@ -358,6 +358,8 @@
               title: document.title,
               text: document.querySelector('meta[name="description"]').content,
               files: filesArray
+            }).then(() => {
+              console.log('Share was successful.');
             }).catch(() => {
               showError('There was an error while trying to share your meme.');
             });
