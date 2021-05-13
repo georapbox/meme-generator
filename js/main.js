@@ -349,7 +349,7 @@
       .catch(err => new Error(err));
   }
 
-  if (navigator.share && new URLSearchParams(window.location.search).has('share')) {
+  if (navigator.share) {
     shareSection.classList.remove('d-none');
 
     shareBtn.addEventListener('click', () => {
@@ -363,9 +363,10 @@
             files: filesArray
           }).then(() => {
             console.log('Share was successful.');
-          }).catch(err => {
-            alert(err.name);
-            showError('There was an error while trying to share your meme.');
+          }).catch(error => {
+            if (error.name !== 'AbortError') {
+              showError('There was an error while trying to share your meme.');
+            }
           });
         }
       }).catch(() => {
