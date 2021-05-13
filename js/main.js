@@ -349,7 +349,7 @@
       .catch(err => new Error(err));
   }
 
-  if (!navigator.share && new URLSearchParams(window.location.search).has('share')) {
+  if (navigator.share && new URLSearchParams(window.location.search).has('share')) {
     shareSection.classList.remove('d-none');
 
     shareBtn.addEventListener('click', () => {
