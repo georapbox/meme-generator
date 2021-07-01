@@ -203,7 +203,7 @@
   function createNewInput(index) {
     const inputTemplate =`
       <div class="d-flex">
-        <input class="form-control m-2" type="text" data-input="text" autocomplete="off" placeholder="${index === 0 ? 'Top Text' : index === 1 ? 'Bottom Text' : `Text #${index + 1}`}" style="min-width: 0;">
+        <input class="form-control m-2" type="text" value="${options[index].text}" data-input="text" autocomplete="off" placeholder="${index === 0 ? 'Top Text' : index === 1 ? 'Bottom Text' : `Text #${index + 1}`}" style="min-width: 0;">
         <div class="d-flex align-items-center pr-2">
           <input class="form-control" type="color" value="${options[index].fillColor}" data-input="fillColor" title="Fill color">
           <input class="form-control" type="color" value="${options[index].shadowColor}" data-input="shadowColor" title="Outline color">
