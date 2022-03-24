@@ -12,6 +12,9 @@
   "author": "George Raptis <georapbox@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "~7.8.1"
+    "eslint": "~8.11.0"
+  },
+  "dependencies": {
+    "@georapbox/web-share-element": "~1.0.1"
   }
 }

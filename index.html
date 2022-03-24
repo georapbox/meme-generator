@@ -71,7 +71,7 @@
             </span>
 
             <div class="btn btn-primary rounded-0 d-flex align-items-center">
-              <img class="mr-2" src="assets/icons/upload.svg" width="20" alt="Upload image" />
+              <img class="mr-2" src="assets/icons/upload.svg" width="20" height="20" alt="Upload image" />
               Upload image
             </div>
           </label>
@@ -81,7 +81,7 @@
           </div>
 
           <button class="btn btn-primary btn-block py-2 d-flex align-items-center justify-content-center" id="askUserMediaBtn">
-            <img src="assets/icons/camera.svg" width="20" alt="Upload image" class="mr-2" />
+            <img src="assets/icons/camera.svg" width="20" height="20" alt="Upload image" class="mr-2" />
             Take Photo
           </button>
         </div>
@@ -162,23 +162,16 @@
 
           <p class="d-flex justify-content-center align-items-center">
             <a class="btn btn-primary" href="#" download="" id="downloadMemeBtn">
-              <img src="assets/icons/save.svg" width="20" alt="Generate meme" class="mr-1" />
+              <img src="assets/icons/save.svg" width="20" height="20" alt="Generate meme" class="mr-1" />
               Download
             </a>
 
-            <span class="d-none" id="shareSection">
-              <strong class="px-2">
-                or
-              </strong>
-
-              <button type="button" class="btn btn-dark" id="shareBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20">
-                  <path d="M0 0h24v24H0V0z" fill="none"/>
-                  <path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
-                </svg>
+            <web-share hide-if-unsupported class="ml-1">
+              <button slot="button" behavior="button" type="button" class="btn btn-dark">
+                <img src="assets/icons/share.svg" width="20" height="20" alt="Share" />
                 Share
               </button>
-            </span>
+            </web-share>
           </p>
         </div>
       </div>
@@ -186,6 +179,6 @@
   </div>
 
   <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/main.js" type="module"></script>
 </body>
 </html>
