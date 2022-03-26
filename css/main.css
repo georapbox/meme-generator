@@ -114,10 +114,6 @@ input[type="color"],
   border-radius: 0;
 }
 
-/* input[type="number"] {
-  max-width: 80px;
-} */
-
 /* Buttons */
 .btn {
   border-radius: 0;
@@ -132,36 +128,6 @@ input[type="color"],
   background-repeat: no-repeat;
   background-position: center;
   background-size: 60%;
-}
-
-#facingModeToggle {
-  min-width: 44px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  padding: 0;
-}
-
-
-#captureUserMediaBtn {
-  min-width: 70px;
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background-image: url('../assets/icons/aperture.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 90%;
-  background-color: #c2c3c7;
-  border: 5px solid #ffffff;
-}
-
-#captureUserMediaBtn[disabled] {
-  background-image: none;
-}
-
-#captureUserMediaBtn:not([disabled]) .spinner-border {
-  display: none;
 }
 
 .btn-outline-secondary:hover svg path,
@@ -210,4 +176,66 @@ input[type="color"],
 
 .errorsContainer .alert {
   pointer-events: all;
+}
+
+/* capture-photo */
+capture-photo:not(:defined) {
+  display: none;
+}
+
+capture-photo {
+  overflow: hidden;
+}
+
+capture-photo::part(video) {
+  width: 100%;
+  background-color: #000000;
+}
+
+capture-photo::part(actions-container) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+capture-photo::part(capture-button),
+capture-photo::part(facing-mode-button) {
+  text-indent: -9999px;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.30);
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+capture-photo::part(capture-button) {
+  min-width: 70px;
+  width: 70px;
+  height: 70px;
+  background-image: url(../assets/icons/aperture.svg);
+  background-size: 90%;
+  background-color: #c2c3c7;
+  border: 5px solid #ffffff;
+}
+
+capture-photo::part(facing-mode-button) {
+  margin-right: calc(-50px - 2rem); /* facing mode button width + actions buttons gap */
+  min-width: 50px;
+  width: 50px;
+  height: 50px;
+  background-image: url(../assets/icons/camera-reverse.svg);
+  background-size: 70%;
+  background-color: #ffffff;
+  border: 0;
+}
+
+capture-photo:after {
+  content: 'asdasdasdasd';
+  color: white;
 }

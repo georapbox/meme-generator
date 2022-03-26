@@ -80,7 +80,7 @@
             or
           </div>
 
-          <button class="btn btn-primary btn-block py-2 d-flex align-items-center justify-content-center" id="askUserMediaBtn">
+          <button class="btn btn-primary btn-block py-2 d-flex align-items-center justify-content-center" id="openVideoModalBtn">
             <img src="assets/icons/camera.svg" width="20" height="20" alt="Upload image" class="mr-2" />
             Take Photo
           </button>
@@ -113,33 +113,17 @@
     </div>
   </div>
 
-  <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
+  <div class="modal" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal" aria-hidden="true">
     <div class="modal-dialog modal-lg shadow-lg">
       <div class="modal-content rounded-0">
         <div class="modal-header">
           <h5 class="modal-title">Capture image</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="cancelUserMediaBtn">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeVideoModalBtn">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
 
-        <div class="modal-body">
-          <video id="video" class="w-100 shadow d-block" style="background: #000;" playsinline></video>
-
-          <div class="text-center d-flex justify-content-center align-items-center mt-3">
-            <button type="button" class="btn btn-light shadow" id="facingModeToggle" title="Toggle camera">
-              <img src="assets/icons/camera-reverse.svg" width="30" height="30" alt="Toggle camera" />
-            </button>
-
-            <button type="button" class="btn btn-light shadow mx-4 mx-md-5" id="captureUserMediaBtn" disabled autocomplete="off">
-              <div class="spinner-border text-light" role="status">
-                <span class="sr-only">Loading...</span>
-              </div>
-            </button>
-
-            <div style="width: 44px; height: 44px; visibility: hidden;"></div>
-          </div>
-        </div>
+        <div class="modal-body"></div>
       </div>
     </div>
   </div>

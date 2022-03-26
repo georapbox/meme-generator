@@ -1,13 +1,13 @@
 import { WebShare } from 'https://unpkg.com/@georapbox/web-share-element/dist/web-share.min.js';
+import { CapturePhoto } from 'https://unpkg.com/@georapbox/capture-photo-element/dist/capture-photo.min.js';
 
 WebShare.defineCustomElement();
+CapturePhoto.defineCustomElement();
 
 const errorsContainer = document.getElementById('errorsContainer');
 const videoModal = document.getElementById('videoModal');
 const downloadModal = document.getElementById('downloadModal');
-const cancelUserMediaBtn = document.getElementById('cancelUserMediaBtn');
-const captureUserMediaBtn = document.getElementById('captureUserMediaBtn');
-const video = document.getElementById('video');
+const closeVideoModalBtn = document.getElementById('closeVideoModalBtn');
 const canvas = document.getElementById('canvas');
 const canvasPlaceholder = document.getElementById('canvasPlaceholder');
 const ctx = canvas.getContext('2d');
@@ -16,13 +16,11 @@ const fileInputName = document.getElementById('fileName');
 const addTextboxBtn = document.getElementById('addTextboxBtn');
 const inputsContainer = document.getElementById('inputsContainer');
 const generateMemeBtn = document.getElementById('generateMemeBtn');
-const askUserMediaBtn = document.getElementById('askUserMediaBtn');
+const openVideoModalBtn = document.getElementById('openVideoModalBtn');
 const downloadMemeBtn = document.getElementById('downloadMemeBtn');
 const downloadMemePreview = document.getElementById('downloadMemePreview');
 const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
-const facingModeToggle = document.getElementById('facingModeToggle');
 const webShareComponent = document.querySelector('web-share');
-let facingModeValue = 'user';
 let selectedImage = null;
 let generatedFileName = 'meme.png';
 
@@ -45,47 +43,33 @@ const options = [
 ];
 
 function toggleModal(modalEl, visible) {
-  captureUserMediaBtn.disabled = true;
-  facingModeToggle.disabled = true;
-
   if (visible) {
     modalEl.style.display = 'block';
+    modalEl.removeAttribute('aria-hidden');
     document.body.classList.add('modal-open');
-    setTimeout(() => modalEl.classList.add('show'), 300);
+
+    modalEl.dispatchEvent(new CustomEvent('modal-open', {
+      bubbles: true,
+      detail: {
+        modalId: modalEl.id
+      }
+    }));
   } else {
-    modalEl.classList.remove('show');
+    modalEl.style.display = 'none';
+    modalEl.setAttribute('aria-hidden', '');
     document.body.classList.remove('modal-open');
-    setTimeout(() => modalEl.style.display = 'none', 300);
+
+    modalEl.dispatchEvent(new CustomEvent('modal-close', {
+      bubbles: true,
+      detail: {
+        modalId: modalEl.id
+      }
+    }));
   }
 }
 
-function startVideoStreaming(videoEl, stream) {
-  videoEl.srcObject = stream;
-  videoEl.play().catch(showError);
-
-  const tracks = stream != null ? stream.getVideoTracks() : [];
-
-  tracks.forEach(track => {
-    track.applyConstraints({
-      video: {
-        facingMode: {
-          ideal: facingModeValue || 'user'
-        }
-      },
-      audio: false
-    });
-  });
-}
-
-function stopVideoStreaming(videoEl) {
-  const stream = videoEl.srcObject;
-  const tracks = stream != null ? stream.getVideoTracks() : [];
-  tracks.forEach(track => track.stop());
-  videoEl.srcObject = null;
-}
-
 function showError(message) {
-  const template = `
+  const template = /*template*/`
     ${message}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
@@ -95,14 +79,14 @@ function showError(message) {
   const div = document.createElement('div');
   div.className = 'alert alert-danger alert-dismissible rounded-0 mb-2 fade';
   div.innerHTML = template;
-  div.querySelector('button').addEventListener('click', hideError, false);
+  div.querySelector('button').addEventListener('click', hideError);
   errorsContainer.appendChild(div);
   setTimeout(() => div.classList.add('show'), 100);
 }
 
 function hideError(evt) {
   const target = evt.currentTarget;
-  target.removeEventListener('click', hideError, false);
+  target.removeEventListener('click', hideError);
   errorsContainer.removeChild(target.parentNode);
 }
 
@@ -156,7 +140,7 @@ function onImageLoaded(evt) {
 
   generateMemeBtn.disabled = false;
   canvas.classList.remove('d-none');
-  canvasPlaceholder.removeEventListener('click', handleCanvasPlaceholderClick, false);
+  canvasPlaceholder.removeEventListener('click', handleCanvasPlaceholderClick);
   canvasPlaceholder.classList.add('d-none');
 }
 
@@ -178,38 +162,11 @@ function handleFileSelect(evt) {
   reader.readAsDataURL(file);
 }
 
-function requestGetUserMedia() {
-  if (!navigator.mediaDevices) {
-    return showError('The operation is not supported.');
-  }
-
-  navigator.mediaDevices.getUserMedia({
-    video: {
-      facingMode: {
-        ideal: facingModeValue || 'user'
-      }
-    },
-    audio: false
-  }).then(stream => {
-    toggleModal(videoModal, true);
-    startVideoStreaming(video, stream);
-  }).catch(error => {
-    showError(error);
-  });
-}
-
-function handleCaptureMedia() {
-  toggleModal(videoModal, false);
-
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  const image = new Image();
-  image.addEventListener('load', onImageLoaded);
-  image.src = canvas.toDataURL();
-
-  stopVideoStreaming(video);
+function onOpenVideoModalButonClick() {
+  const capturePhotoComponent = document.createElement('capture-photo');
+  capturePhotoComponent.outputDisabled = true;
+  videoModal.querySelector('.modal-body').appendChild(capturePhotoComponent);
+  toggleModal(videoModal, true);
 }
 
 function handleTextPropChange(element, index, prop) {
@@ -218,7 +175,7 @@ function handleTextPropChange(element, index, prop) {
 }
 
 function createNewInput(index) {
-  const inputTemplate =`
+  const inputTemplate = /*template*/`
     <div class="d-flex">
       <input class="form-control m-2" type="text" value="${options[index].text}" data-input="text" autocomplete="off" placeholder="${index === 0 ? 'Top Text' : index === 1 ? 'Bottom Text' : `Text #${index + 1}`}" style="min-width: 0;">
       <div class="d-flex align-items-center pr-2">
@@ -290,16 +247,16 @@ function createNewInput(index) {
 
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
+
   div.className = 'bg-light border shadow-sm mb-3';
   div.setAttribute('data-section', 'textBox');
   div.setAttribute('data-index', index);
   div.innerHTML = inputTemplate;
-  setTimeout(() => {
-    selectedImage && div.querySelector('[data-input="text"]').focus();
-  }, 100);
+  setTimeout(() => selectedImage && div.querySelector('[data-input="text"]').focus(), 100);
   div.querySelector('[data-input="font"]').value = options[index].font;
   div.querySelector('[data-input="textAlign"]').value = options[index].textAlign;
   div.querySelector('[data-input="allCaps"]').checked = options[index].allCaps;
+
   return fragment.appendChild(div);
 }
 
@@ -348,14 +305,14 @@ function draw(image) {
 }
 
 function handleCanvasPlaceholderClick(evt) {
-  const element = evt.target;
-
   evt.preventDefault();
+
+  const element = evt.target;
 
   if (element.matches('[data-trigger="file-upload"]')) {
     fileInput.click();
   } else if (element.matches('[data-trigger="photo-capture"]')) {
-    askUserMediaBtn.click();
+    openVideoModalBtn.click();
   }
 }
 
@@ -366,25 +323,14 @@ async function urltoFile(url, filename, mimeType) {
   return file;
 }
 
-fileInput.addEventListener('change', handleFileSelect, false);
-
-canvasPlaceholder.addEventListener('click', handleCanvasPlaceholderClick, false);
-
-askUserMediaBtn.addEventListener('click', requestGetUserMedia, false);
-
-cancelUserMediaBtn.addEventListener('click', () => {
-  toggleModal(videoModal, false);
-  stopVideoStreaming(video);
-}, false);
-
-captureUserMediaBtn.addEventListener('click', handleCaptureMedia, false);
-
-addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked, false);
-
-generateMemeBtn.addEventListener('click', generateMeme, false);
-
-downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false), false);
-downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false), false);
+fileInput.addEventListener('change', handleFileSelect);
+canvasPlaceholder.addEventListener('click', handleCanvasPlaceholderClick);
+openVideoModalBtn.addEventListener('click', onOpenVideoModalButonClick);
+closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
+addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked);
+generateMemeBtn.addEventListener('click', generateMeme);
+downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false));
+downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false));
 
 inputsContainer.appendChild(createNewInput(0));
 inputsContainer.appendChild(createNewInput(1));
@@ -417,7 +363,7 @@ inputsContainer.addEventListener('input', evt => {
   if (prop) {
     handleTextPropChange(element, index, prop);
   }
-}, false);
+});
 
 inputsContainer.addEventListener('change', evt => {
   const element = evt.target;
@@ -431,7 +377,7 @@ inputsContainer.addEventListener('change', evt => {
   if (prop) {
     handleTextPropChange(element, index, prop);
   }
-}, false);
+});
 
 inputsContainer.addEventListener('click', evt => {
   const element = evt.target;
@@ -440,21 +386,35 @@ inputsContainer.addEventListener('click', evt => {
     element.classList.toggle('active');
     element.closest('[data-section="textBox"]').querySelector('[data-section="settings"]').classList.toggle('d-none');
   }
-}, false);
-
-video.addEventListener('playing', () => {
-  captureUserMediaBtn.disabled = false;
-  facingModeToggle.disabled = false;
 });
 
-facingModeToggle.addEventListener('click', () => {
-  facingModeValue = facingModeValue === 'user' ? 'environment' : 'user';
-  stopVideoStreaming(video);
-  requestGetUserMedia();
-}, false);
-
-webShareComponent.addEventListener('web-share:error', evt => {
+document.addEventListener('web-share:error', evt => {
   if (evt.detail.error.name !== 'AbortError') {
     showError('There was an error while trying to share your meme.');
+  }
+});
+
+document.addEventListener('capture-photo:error', evt => {
+  console.error(evt.detail.error);
+  showError(evt.detail.error.message);
+});
+
+document.addEventListener('capture-photo:success', evt => {
+  toggleModal(videoModal, false);
+  const image = new Image();
+  image.addEventListener('load', onImageLoaded);
+  image.src = evt.detail.dataURI;
+});
+
+document.addEventListener('modal-close', evt => {
+  if (evt.detail.modalId === 'videoModal') {
+    const capturePhotoComponent = videoModal.querySelector('capture-photo');
+    capturePhotoComponent.remove();
+  }
+});
+
+document.addEventListener('keyup', evt => {
+  if (evt.code === 'Escape' && !videoModal.hasAttribute('aria-hidden')) {
+    toggleModal(videoModal, false);
   }
 });
