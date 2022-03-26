@@ -198,7 +198,6 @@ capture-photo::part(actions-container) {
   align-items: center;
   gap: 2rem;
   padding: 1rem 0;
-  margin-bottom: 1rem;
 }
 
 capture-photo::part(capture-button),
@@ -233,9 +232,4 @@ capture-photo::part(facing-mode-button) {
   background-size: 70%;
   background-color: #ffffff;
   border: 0;
-}
-
-capture-photo:after {
-  content: 'asdasdasdasd';
-  color: white;
 }
