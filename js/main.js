@@ -45,7 +45,7 @@ const options = [
 function toggleModal(modalEl, visible) {
   if (visible) {
     modalEl.style.display = 'block';
-    modalEl.removeAttribute('aria-hidden');
+    modalEl.setAttribute('data-open', '');
     document.body.classList.add('modal-open');
 
     modalEl.dispatchEvent(new CustomEvent('modal-open', {
@@ -56,7 +56,7 @@ function toggleModal(modalEl, visible) {
     }));
   } else {
     modalEl.style.display = 'none';
-    modalEl.setAttribute('aria-hidden', '');
+    modalEl.removeAttribute('data-open');
     document.body.classList.remove('modal-open');
 
     modalEl.dispatchEvent(new CustomEvent('modal-close', {
@@ -410,11 +410,5 @@ document.addEventListener('modal-close', evt => {
   if (evt.detail.modalId === 'videoModal') {
     const capturePhotoComponent = videoModal.querySelector('capture-photo');
     capturePhotoComponent.remove();
-  }
-});
-
-document.addEventListener('keyup', evt => {
-  if (evt.code === 'Escape' && !videoModal.hasAttribute('aria-hidden')) {
-    toggleModal(videoModal, false);
   }
 });
