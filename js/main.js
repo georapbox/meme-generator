@@ -412,3 +412,17 @@ document.addEventListener('modal-close', evt => {
     capturePhotoComponent.remove();
   }
 });
+
+document.addEventListener('keyup', evt => {
+  if (evt.code !== 'Escape') {
+    return;
+  }
+
+  if (videoModal.hasAttribute('data-open')) {
+    toggleModal(videoModal, false);
+  }
+
+  if (downloadModal.hasAttribute('data-open')) {
+    toggleModal(downloadModal, false);
+  }
+});

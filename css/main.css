@@ -205,7 +205,7 @@ capture-photo::part(facing-mode-button) {
   text-indent: -9999px;
   overflow: hidden;
   border-radius: 50%;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.30);
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.30);
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
@@ -214,7 +214,6 @@ capture-photo::part(facing-mode-button) {
 }
 
 capture-photo::part(capture-button) {
-  min-width: 70px;
   width: 70px;
   height: 70px;
   background-image: url(../assets/icons/aperture.svg);
@@ -225,11 +224,23 @@ capture-photo::part(capture-button) {
 
 capture-photo::part(facing-mode-button) {
   margin-right: calc(-50px - 2rem); /* facing mode button width + actions buttons gap */
-  min-width: 50px;
   width: 50px;
   height: 50px;
   background-image: url(../assets/icons/camera-reverse.svg);
-  background-size: 70%;
+  background-size: 60%;
   background-color: #ffffff;
   border: 0;
+}
+
+capture-photo[loading]::part(video) {
+  background-image: url(../assets/icons/spinner.svg);
+  background-size: 60px;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+capture-photo[loading]::part(capture-button),
+capture-photo[loading]::part(facing-mode-button) {
+  opacity: 0.6;
+  pointer-events: none;
 }
