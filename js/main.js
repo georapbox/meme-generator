@@ -1,5 +1,5 @@
-import { WebShare } from 'https://unpkg.com/@georapbox/web-share-element/dist/web-share.min.js';
-import { CapturePhoto } from 'https://unpkg.com/@georapbox/capture-photo-element/dist/capture-photo.min.js';
+import { WebShare } from 'https://unpkg.com/@georapbox/web-share-element@1.1.0/dist/web-share.min.js';
+import { CapturePhoto } from 'https://unpkg.com/@georapbox/capture-photo-element@1.1.0/dist/capture-photo.min.js';
 
 WebShare.defineCustomElement();
 CapturePhoto.defineCustomElement();
