@@ -1,4 +1,5 @@
-import { WebShare } from 'https://unpkg.com/@georapbox/web-share-element@1.1.0/dist/web-share.min.js';
+import { isWebShareSupported } from 'https://unpkg.com/@georapbox/web-share-element@2.0.0/dist/is-web-share-supported.min.js';
+import { WebShare } from 'https://unpkg.com/@georapbox/web-share-element@2.0.0/dist/web-share.min.js';
 import { CapturePhoto } from 'https://unpkg.com/@georapbox/capture-photo-element@1.1.0/dist/capture-photo.min.js';
 
 WebShare.defineCustomElement();
@@ -100,12 +101,13 @@ async function generateMeme() {
   downloadMemePreview.src = downloadLink;
 
   // Prepare for sharing file
-  if (WebShare.isSupported()) {
+  if (isWebShareSupported()) {
     try {
       const file = await urltoFile(dataUrl, generatedFileName, 'image/png');
       webShareComponent.shareFiles = [file];
       webShareComponent.shareUrl = window.location.href;
       webShareComponent.shareTitle = document.title;
+      webShareComponent.classList.remove('d-none');
     } catch (error) {
       console.error(error);
     }
