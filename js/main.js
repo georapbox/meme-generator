@@ -390,10 +390,8 @@ inputsContainer.addEventListener('click', evt => {
   }
 });
 
-document.addEventListener('web-share:error', evt => {
-  if (evt.detail.error.name !== 'AbortError') {
-    showError('There was an error while trying to share your meme.');
-  }
+document.addEventListener('web-share:error', () => {
+  showError('There was an error while trying to share your meme.');
 });
 
 document.addEventListener('capture-photo:error', evt => {
