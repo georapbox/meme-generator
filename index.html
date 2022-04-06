@@ -63,18 +63,8 @@
       </div>
 
       <div class="col-lg-4">
-        <div class="mb-4 bg-light py-4 px-3 border shadow-sm">
-          <input type="file" name="file[]" id="file" class="inputfile" />
-          <label for="file" class="d-flex align-items-center">
-            <span id="fileName" class="text-muted">
-              No file selected
-            </span>
-
-            <div class="btn btn-primary rounded-0 d-flex align-items-center">
-              <img class="mr-2" src="assets/icons/upload.svg" width="20" height="20" alt="Upload image" />
-              Upload image
-            </div>
-          </label>
+        <div class="mb-4 bg-light py-4 px-3 border shadow-sm rounded">
+          <input type="file" name="file[]" id="file" autocomplete="off" class="form-control p-2 h-auto" accept=".jpg, .jpeg, .png, .apng, .gif, .webp, .avif" />
 
           <div class="text-center mb-2" style="font-size: 1.1rem;">
             or

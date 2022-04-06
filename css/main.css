@@ -24,69 +24,34 @@ body {
 }
 
 /* File Input */
-.inputfile {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
-
-.inputfile + label {
-  width: 100%;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+input[type="file"] {
   cursor: pointer;
-  display: block;
-  overflow: hidden;
-  border: 1px solid #ced4da;
-  padding: 0;
-  background-color: #ffffff;
 }
 
-.inputfile:focus + label,
-.inputfile.has-focus + label {
-  outline: 1px dotted #000;
-  outline: -webkit-focus-ring-color auto 5px;
+input[type="file"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
-.inputfile + label svg {
-  width: 1rem;
-  height: 1rem;
-  vertical-align: middle;
-  fill: currentColor;
-  margin-top: -0.25em;
-  margin-right: 0.25em;
+input[type="file"]::-webkit-file-upload-button {
+  color: #ffffff;
+  background-color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 0.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  -webkit-appearance: none;
 }
 
-.inputfile + label span,
-.inputfile + label div {
-  padding: .5rem .75rem;
+input[type="file"]:not(:disabled)::-webkit-file-upload-button:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
 }
 
-.inputfile + label span {
-  min-height: 2rem;
-  display: block;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  flex: 1;
-}
-
-.inputfile + label div {
-  height: 100%;
-  display: block;
-}
-
-@media screen and (max-width: 540px) {
-  .inputfile + label {
-    display: block !important;
-  }
-
-  .inputfile + label div {
-    display: block;
-  }
+input[type="file"]:disabled::-webkit-file-upload-button {
+  cursor: not-allowed;
 }
 
 /* Canvas */

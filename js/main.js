@@ -13,7 +13,6 @@ const canvas = document.getElementById('canvas');
 const canvasPlaceholder = document.getElementById('canvasPlaceholder');
 const ctx = canvas.getContext('2d');
 const fileInput = document.getElementById('file');
-const fileInputName = document.getElementById('fileName');
 const addTextboxBtn = document.getElementById('addTextboxBtn');
 const inputsContainer = document.getElementById('inputsContainer');
 const generateMemeBtn = document.getElementById('generateMemeBtn');
@@ -150,10 +149,6 @@ function handleFileSelect(evt) {
   const image = new Image();
   const file = evt.target.files[0];
   const reader = new FileReader();
-
-  if (file && file.name) {
-    fileInputName.textContent = file.name;
-  }
 
   reader.addEventListener('load', function (evt) {
     const data = evt.target.result;
@@ -404,6 +399,10 @@ document.addEventListener('capture-photo:success', evt => {
   const image = new Image();
   image.addEventListener('load', onImageLoaded);
   image.src = evt.detail.dataURI;
+
+  if (fileInput.value) {
+    fileInput.value = ''; // Clear any previously selected files
+  }
 });
 
 document.addEventListener('modal-close', evt => {
