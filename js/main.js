@@ -22,7 +22,8 @@ const downloadMemePreview = document.getElementById('downloadMemePreview');
 const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
 const webShareComponent = document.querySelector('web-share');
 let selectedImage = null;
-let generatedFileName = 'meme.png';
+const DEFAULT_GENERATED_FILE_NAME = 'meme.png';
+let generatedFileName = DEFAULT_GENERATED_FILE_NAME;
 
 const defaultOptions = {
   text: '',
@@ -102,7 +103,7 @@ async function generateMeme() {
   // Prepare for sharing file
   if (isWebShareSupported()) {
     try {
-      const file = await urltoFile(dataUrl, generatedFileName, 'image/png');
+      const file = await urltoFile(dataUrl, DEFAULT_GENERATED_FILE_NAME, 'image/png');
       webShareComponent.shareFiles = [file];
       webShareComponent.shareUrl = window.location.href;
       webShareComponent.shareTitle = document.title;
@@ -149,6 +150,8 @@ function handleFileSelect(evt) {
   const image = new Image();
   const file = evt.target.files[0];
   const reader = new FileReader();
+
+  generatedFileName = `${file.name.replace(/\.[^.]+$/, '')}-meme.png`;
 
   reader.addEventListener('load', function (evt) {
     const data = evt.target.result;
@@ -403,7 +406,8 @@ document.addEventListener('capture-photo:success', evt => {
   image.src = evt.detail.dataURI;
 
   if (fileInput.value) {
-    fileInput.value = ''; // Clear any previously selected files
+    fileInput.value = fileInput.defaultValue;
+    generatedFileName = DEFAULT_GENERATED_FILE_NAME;
   }
 });
 
