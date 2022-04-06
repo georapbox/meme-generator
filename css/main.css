@@ -94,10 +94,6 @@ body {
   max-width: 100%;
 }
 
-.form-control {
-  border-radius: 0;
-}
-
 /* Inputs */
 input[type="color"],
 .settings-button {
@@ -110,15 +106,7 @@ input[type="color"],
   cursor: pointer;
 }
 
-.custom-select {
-  border-radius: 0;
-}
-
 /* Buttons */
-.btn {
-  border-radius: 0;
-}
-
 .btn:disabled {
   cursor: not-allowed;
 }
@@ -132,7 +120,7 @@ input[type="color"],
 
 .btn-outline-secondary:hover svg path,
 .btn-outline-dark:hover svg path {
-  transition: fill .15s ease-in-out;
+  transition: fill 0.15s ease-in-out;
 }
 
 .btn-outline-secondary:hover svg path,
@@ -157,7 +145,7 @@ input[type="color"],
 #canvasPlaceholder div {
   min-height: 150px;
   height: 100%;
-  border: 3px dashed #dee2e6;
+  border: 2px dashed #dee2e6;
   font-size: 1.2rem;
 }
 

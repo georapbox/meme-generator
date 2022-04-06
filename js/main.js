@@ -78,7 +78,7 @@ function showError(message) {
   `;
 
   const div = document.createElement('div');
-  div.className = 'alert alert-danger alert-dismissible rounded-0 mb-2 fade';
+  div.className = 'alert alert-danger alert-dismissible mb-2 fade';
   div.innerHTML = template;
   div.querySelector('button').addEventListener('click', hideError);
   errorsContainer.appendChild(div);
@@ -250,7 +250,7 @@ function createNewInput(index) {
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
 
-  div.className = 'bg-light border shadow-sm mb-3';
+  div.className = 'bg-light border shadow-sm mb-3 rounded';
   div.setAttribute('data-section', 'textBox');
   div.setAttribute('data-index', index);
   div.innerHTML = inputTemplate;
