@@ -172,7 +172,9 @@ function handleTextPropChange(element, index, prop) {
 }
 
 function createNewInput(index) {
-  const inputTemplate = /*template*/`
+  const html = String.raw;
+
+  const inputTemplate = html`
     <div class="d-flex">
       <input class="form-control m-2" type="text" value="${options[index].text}" data-input="text" autocomplete="off" placeholder="${index === 0 ? 'Top Text' : index === 1 ? 'Bottom Text' : `Text #${index + 1}`}" style="min-width: 0;">
       <div class="d-flex align-items-center pr-2">
@@ -183,8 +185,8 @@ function createNewInput(index) {
     </div>
     <div class="p-2 d-none" data-section="settings">
       <div class="form-row">
-        <div class="col-lg-6 mb-3">
-          <label class="mb-1">Font: </label>
+        <div class="col-6 mb-3">
+          <label class="mb-1 d-block text-truncate">Font: </label>
           <select class="custom-select" data-input="font">
             <option value="Impact">Impact</option>
             <option value="Arial">Arial</option>
@@ -202,18 +204,18 @@ function createNewInput(index) {
             <option value="Arial Black">Arial Black</option>
           </select>
         </div>
-        <div class="col-lg-6 mb-3">
-          <label class="mb-1">Font size:</label>
+        <div class="col-6 mb-3">
+          <label class="mb-1 d-block text-truncate">Font size:</label>
           <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize">
         </div>
       </div>
       <div class="form-row">
-        <div class="col-lg-6 mb-3">
-          <label class="mb-1">Shadow width:</label>
+        <div class="col-6 mb-3">
+          <label class="mb-1 d-block text-truncate">Shadow width:</label>
           <input class="form-control" type="number" min="0" max="10" value="${options[index].shadowBlur}" data-input="shadowBlur">
         </div>
-        <div class="col-lg-6 mb-3">
-          <label class="mb-1">Text align:</label>
+        <div class="col-6 mb-3">
+          <label class="mb-1 d-block text-truncate">Text align:</label>
           <select class="custom-select" data-input="textAlign">
             <option value="left">Left</option>
             <option value="center">Center</option>
@@ -222,12 +224,12 @@ function createNewInput(index) {
         </div>
       </div>
       <div class="form-row">
-        <div class="col-lg-6 mb-3">
-          <label class="mb-1">Vertical offset:</label>
+        <div class="col-6 mb-3">
+          <label class="mb-1 d-block text-truncate">Vertical offset:</label>
           <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY">
         </div>
-        <div class="col-lg-6 mb-3">
-          <label class="mb-1">Horizontal offset:</label>
+        <div class="col-6 mb-3">
+          <label class="mb-1 d-block text-truncate">Horizontal offset:</label>
           <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX">
         </div>
       </div>
