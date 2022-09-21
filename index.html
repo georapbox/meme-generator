@@ -47,12 +47,12 @@
 
     <div class="row mx-0 mb-5 py-4 bg-white border border-light rounded shadow">
       <div class="col-lg-8 mb-3 mb-lg-0">
-        <canvas id="canvas" class="canvas border shadow-sm d-none"></canvas>
-
         <div id="canvasPlaceholder" class="h-100">
-          <div class="shadow-sm text-center p-3 d-flex justify-content-center align-items-center rounded">
+          <canvas id="canvas" class="canvas border shadow-sm d-none"></canvas>
+
+          <div id="instructions" class="text-center p-3 d-flex justify-content-center align-items-center rounded">
             <span class="text-muted">
-              <a href="#" data-trigger="file-upload">Upload an image</a> or <a href="#" data-trigger="photo-capture">take a photo</a> to generate your meme
+              <a href="#" data-trigger="file-upload">Drag & Drop an image</a> or <a href="#" data-trigger="photo-capture">take a photo</a> to generate your meme
               <br>
               <small>
                 <em>The images are processed without being stored on any server.</em>
@@ -64,7 +64,7 @@
 
       <div class="col-lg-4">
         <div class="mb-4 bg-light py-4 px-3 border shadow-sm rounded">
-          <input type="file" name="file[]" id="file" autocomplete="off" class="form-control p-2 h-auto" accept=".jpg, .jpeg, .png, .apng, .gif, .webp, .avif" />
+          <input type="file" name="file[]" id="file" autocomplete="off" class="form-control p-2 h-auto" />
 
           <div class="text-center mb-2" style="font-size: 1.1rem;">
             or

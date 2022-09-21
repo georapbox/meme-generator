@@ -11,6 +11,7 @@ const downloadModal = document.getElementById('downloadModal');
 const closeVideoModalBtn = document.getElementById('closeVideoModalBtn');
 const canvas = document.getElementById('canvas');
 const canvasPlaceholder = document.getElementById('canvasPlaceholder');
+const instructionsEl = document.getElementById('instructions');
 const ctx = canvas.getContext('2d');
 const fileInput = document.getElementById('file');
 const addTextboxBtn = document.getElementById('addTextboxBtn');
@@ -24,6 +25,10 @@ const webShareComponent = document.querySelector('web-share');
 let selectedImage = null;
 const DEFAULT_GENERATED_FILE_NAME = 'meme.png';
 let generatedFileName = DEFAULT_GENERATED_FILE_NAME;
+
+const acceptedMimeTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/apng', 'image/gif', 'image/webp', 'image/avif'];
+
+fileInput.accept = acceptedMimeTypes.join(',');
 
 const defaultOptions = {
   text: '',
@@ -43,7 +48,7 @@ const options = [
   Object.assign({}, defaultOptions)
 ];
 
-function toggleModal(modalEl, visible) {
+const toggleModal = (modalEl, visible) => {
   if (visible) {
     modalEl.style.display = 'block';
     modalEl.setAttribute('data-open', '');
@@ -67,9 +72,15 @@ function toggleModal(modalEl, visible) {
       }
     }));
   }
-}
+};
 
-function showError(message) {
+const hideError = evt => {
+  const target = evt.currentTarget;
+  target.removeEventListener('click', hideError);
+  errorsContainer.removeChild(target.parentNode);
+};
+
+const showError = (message = '') => {
   const template = /*template*/`
     ${message}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -83,15 +94,16 @@ function showError(message) {
   div.querySelector('button').addEventListener('click', hideError);
   errorsContainer.appendChild(div);
   setTimeout(() => div.classList.add('show'), 100);
-}
+};
 
-function hideError(evt) {
-  const target = evt.currentTarget;
-  target.removeEventListener('click', hideError);
-  errorsContainer.removeChild(target.parentNode);
-}
+const urltoFile = async (url, filename, mimeType) => {
+  const request = await fetch(url);
+  const buffer = await request.arrayBuffer();
+  const file = new File([buffer], filename, { type: mimeType });
+  return file;
+};
 
-async function generateMeme() {
+const generateMeme = async () => {
   const dataUrl = canvas.toDataURL('image/png');
 
   // Prepare download link
@@ -114,9 +126,59 @@ async function generateMeme() {
   }
 
   toggleModal(downloadModal, true);
-}
+};
 
-function onImageLoaded(evt) {
+const draw = image => {
+  if (image == null) {
+    return;
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  options.forEach(function (item, index) {
+    ctx.font = `${item.fontSize}px ${item.font}`;
+
+    const multiplier = index + 1;
+    const lineHeight = ctx.measureText('M').width + 20;
+    const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
+    const shadowBlur = !Number.isNaN(Number(item.shadowBlur)) ? Number(item.shadowBlur) : 3;
+    const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
+
+    ctx.fillStyle = item.fillColor;
+    ctx.textAlign = item.textAlign;
+    ctx.save();
+
+    if (shadowBlur !== 0) {
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.shadowBlur = shadowBlur;
+      ctx.shadowColor = item.shadowColor;
+    }
+
+    ctx.fillText(
+      text,
+      xPos + Number(item.offsetX),
+      index === 1 ? canvas.height - 20 + Number(item.offsetY) : lineHeight * (multiplier - 1 || 1) + Number(item.offsetY)
+    );
+
+    ctx.restore();
+  });
+};
+
+const handleCanvasPlaceholderClick = evt => {
+  evt.preventDefault();
+
+  const element = evt.target;
+
+  if (element.matches('[data-trigger="file-upload"]')) {
+    fileInput.click();
+  } else if (element.matches('[data-trigger="photo-capture"]')) {
+    openVideoModalBtn.click();
+  }
+};
+
+const onImageLoaded = evt => {
   const MAX_WIDTH = 800;
   const MAX_HEIGHT = 600;
   let width = evt.target.width;
@@ -143,12 +205,12 @@ function onImageLoaded(evt) {
   generateMemeBtn.disabled = false;
   canvas.classList.remove('d-none');
   canvasPlaceholder.removeEventListener('click', handleCanvasPlaceholderClick);
-  canvasPlaceholder.classList.add('d-none');
-}
 
-function handleFileSelect(evt) {
+  instructionsEl && instructionsEl.remove();
+};
+
+const handleFileSelect = file => {
   const image = new Image();
-  const file = evt.target.files[0];
   const reader = new FileReader();
 
   generatedFileName = `${file.name.replace(/\.[^.]+$/, '')}-meme.png`;
@@ -160,21 +222,21 @@ function handleFileSelect(evt) {
   });
 
   reader.readAsDataURL(file);
-}
+};
 
-function onOpenVideoModalButonClick() {
+const onOpenVideoModalButonClick = () => {
   const capturePhotoComponent = document.createElement('capture-photo');
   capturePhotoComponent.outputDisabled = true;
   videoModal.querySelector('.modal-body').appendChild(capturePhotoComponent);
   toggleModal(videoModal, true);
-}
+};
 
-function handleTextPropChange(element, index, prop) {
+const handleTextPropChange = (element, index, prop) => {
   options[index][prop] = element.type === 'checkbox' ? element.checked : element.value;
   draw(selectedImage);
-}
+};
 
-function createNewInput(index) {
+const createNewInput = index => {
   const html = String.raw;
 
   const inputTemplate = html`
@@ -260,72 +322,15 @@ function createNewInput(index) {
   div.querySelector('[data-input="allCaps"]').checked = options[index].allCaps;
 
   return fragment.appendChild(div);
-}
+};
 
-function onAddTextboxBtnClicked() {
+const onAddTextboxBtnClicked = () => {
   const textBoxesLength = document.querySelectorAll('[data-input="text"]').length;
   options.push(Object.assign({}, defaultOptions));
   inputsContainer.appendChild(createNewInput(textBoxesLength));
-}
+};
 
-function draw(image) {
-  if (image == null) {
-    return;
-  }
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-  options.forEach(function (item, index) {
-    ctx.font = `${item.fontSize}px ${item.font}`;
-
-    const multiplier = index + 1;
-    const lineHeight = ctx.measureText('M').width + 20;
-    const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
-    const shadowBlur = !Number.isNaN(Number(item.shadowBlur)) ? Number(item.shadowBlur) : 3;
-    const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
-
-    ctx.fillStyle = item.fillColor;
-    ctx.textAlign = item.textAlign;
-    ctx.save();
-
-    if (shadowBlur !== 0) {
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      ctx.shadowBlur = shadowBlur;
-      ctx.shadowColor = item.shadowColor;
-    }
-
-    ctx.fillText(
-      text,
-      xPos + Number(item.offsetX),
-      index === 1 ? canvas.height - 20 + Number(item.offsetY) : lineHeight * (multiplier - 1 || 1) + Number(item.offsetY)
-    );
-
-    ctx.restore();
-  });
-}
-
-function handleCanvasPlaceholderClick(evt) {
-  evt.preventDefault();
-
-  const element = evt.target;
-
-  if (element.matches('[data-trigger="file-upload"]')) {
-    fileInput.click();
-  } else if (element.matches('[data-trigger="photo-capture"]')) {
-    openVideoModalBtn.click();
-  }
-}
-
-async function urltoFile(url, filename, mimeType) {
-  const request = await fetch(url);
-  const buffer = await request.arrayBuffer();
-  const file = new File([buffer], filename, { type: mimeType });
-  return file;
-}
-
-fileInput.addEventListener('change', handleFileSelect);
+fileInput.addEventListener('change', evt => handleFileSelect(evt.target.files[0]));
 canvasPlaceholder.addEventListener('click', handleCanvasPlaceholderClick);
 openVideoModalBtn.addEventListener('click', onOpenVideoModalButonClick);
 closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
@@ -333,6 +338,28 @@ addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked);
 generateMemeBtn.addEventListener('click', generateMeme);
 downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false));
 downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false));
+
+canvasPlaceholder.addEventListener('dragover', evt => {
+  evt.stopPropagation();
+  evt.preventDefault();
+  evt.dataTransfer.dropEffect = 'copy';
+});
+
+canvasPlaceholder.addEventListener('drop', evt => {
+  evt.stopPropagation();
+  evt.preventDefault();
+
+  const fileList = evt.dataTransfer.files;
+  const [file] = fileList;
+
+  if (!acceptedMimeTypes.includes(file.type)) {
+    return;
+  }
+
+  fileInput.value = '';
+
+  handleFileSelect(file);
+});
 
 inputsContainer.appendChild(createNewInput(0));
 inputsContainer.appendChild(createNewInput(1));
