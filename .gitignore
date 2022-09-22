@@ -63,3 +63,4 @@ lib
 
 # misc
 .DS_Store
+.parcel-cache
