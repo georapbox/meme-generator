@@ -2,8 +2,8 @@ import { isWebShareSupported } from 'https://unpkg.com/@georapbox/web-share-elem
 import { WebShare } from 'https://unpkg.com/@georapbox/web-share-element@2.0.0/dist/web-share.min.js';
 import { CapturePhoto } from 'https://unpkg.com/@georapbox/capture-photo-element@1.1.0/dist/capture-photo.min.js';
 
-WebShare.defineCustomElement();
-CapturePhoto.defineCustomElement();
+WebShare && WebShare.defineCustomElement();
+CapturePhoto && CapturePhoto.defineCustomElement();
 
 const errorsContainer = document.getElementById('errorsContainer');
 const videoModal = document.getElementById('videoModal');
@@ -14,6 +14,7 @@ const canvasPlaceholder = document.getElementById('canvasPlaceholder');
 const instructionsEl = document.getElementById('instructions');
 const ctx = canvas.getContext('2d');
 const fileInput = document.getElementById('file');
+const imageUrlForm = document.getElementById('imageUrlForm');
 const addTextboxBtn = document.getElementById('addTextboxBtn');
 const inputsContainer = document.getElementById('inputsContainer');
 const generateMemeBtn = document.getElementById('generateMemeBtn');
@@ -89,7 +90,7 @@ const showError = (message = '') => {
   `;
 
   const div = document.createElement('div');
-  div.className = 'alert alert-danger alert-dismissible mb-2 fade';
+  div.className = 'alert alert-danger alert-dismissible text-break mb-2 fade';
   div.innerHTML = template;
   div.querySelector('button').addEventListener('click', hideError);
   errorsContainer.appendChild(div);
@@ -330,7 +331,49 @@ const onAddTextboxBtnClicked = () => {
   inputsContainer.appendChild(createNewInput(textBoxesLength));
 };
 
-fileInput.addEventListener('change', evt => handleFileSelect(evt.target.files[0]));
+const handleImageUploadFromURL = async evt => {
+  evt.preventDefault();
+
+  const form = evt.target;
+  const submitButton = form.querySelector('button[type="submit"]');
+  const imageUrl = form['imageUrl'].value;
+
+  if (!imageUrl.trim()) {
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.querySelector('.spinner').classList.remove('d-none');
+  submitButton.querySelector('.label').classList.add('d-none');
+
+  try {
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    const mimeType = blob.type || '';
+
+    if (!acceptedMimeTypes.includes(mimeType)) {
+      return showError(`This is not an accepted image format. Accepted MIME types are: ${acceptedMimeTypes.join(', ')}`);
+    }
+
+    const fileExtension = mimeType.split('/')[1];
+    const file = new File([blob], `${imageUrl}.${fileExtension}`, blob);
+
+    file && handleFileSelect(file);
+
+    fileInput.value = fileInput.defaultValue;
+  } catch (err) {
+    showError(`Failed to load image from "${imageUrl}".`);
+  } finally {
+    submitButton.disabled = false;
+    submitButton.querySelector('.spinner').classList.add('d-none');
+    submitButton.querySelector('.label').classList.remove('d-none');
+  }
+};
+
+fileInput.addEventListener('change', evt => {
+  imageUrlForm['imageUrl'].value = '';
+  handleFileSelect(evt.target.files[0]);
+});
 canvasPlaceholder.addEventListener('click', handleCanvasPlaceholderClick);
 openVideoModalBtn.addEventListener('click', onOpenVideoModalButonClick);
 closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
@@ -338,6 +381,7 @@ addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked);
 generateMemeBtn.addEventListener('click', generateMeme);
 downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false));
 downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false));
+imageUrlForm.addEventListener('submit', handleImageUploadFromURL);
 
 canvasPlaceholder.addEventListener('dragover', evt => {
   evt.stopPropagation();
@@ -356,7 +400,8 @@ canvasPlaceholder.addEventListener('drop', evt => {
     return;
   }
 
-  fileInput.value = '';
+  fileInput.value = fileInput.defaultValue;
+  imageUrlForm['imageUrl'].value = '';
 
   handleFileSelect(file);
 });
@@ -434,6 +479,7 @@ document.addEventListener('capture-photo:success', evt => {
 
   if (fileInput.value) {
     fileInput.value = fileInput.defaultValue;
+    imageUrlForm['imageUrl'].value = '';
     generatedFileName = DEFAULT_GENERATED_FILE_NAME;
   }
 });

@@ -63,29 +63,52 @@
       </div>
 
       <div class="col-lg-4">
-        <div class="mb-4 bg-light py-4 px-3 border shadow-sm rounded">
-          <input type="file" name="file[]" id="file" autocomplete="off" class="form-control p-2 h-auto" />
+        <details class="mb-4" open>
+          <summary>Image upload options</summary>
 
-          <div class="text-center mb-2" style="font-size: 1.1rem;">
-            or
+          <div class="bg-light py-4 px-3 border shadow-sm rounded">
+            <input type="file" name="file[]" id="file" autocomplete="off" class="form-control p-2 h-auto" />
+
+            <div class="text-center my-2" style="font-size: 1.1rem;">or</div>
+
+            <form id="imageUrlForm" class="form-inline flex-nowrap">
+              <label class="sr-only" for="imageUrl">Image URL</label>
+
+              <input type="url" name="imageUrl" id="imageUrl" autocomplete="off" placeholder="Enter image URL" class="form-control mr-2 p-2 h-auto w-100" />
+
+              <button type="submit" class="btn btn-primary py-2" style="min-width: 75px;">
+                <div class="spinner d-none">
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <span class="label">Submit</span>
+              </button>
+            </form>
+
+            <div class="text-center my-2" style="font-size: 1.1rem;">or</div>
+
+            <button class="btn btn-primary btn-block py-2 d-flex align-items-center justify-content-center" id="openVideoModalBtn">
+              <img src="assets/icons/camera.svg" width="20" height="20" alt="Upload image" class="mr-2" />
+              Take Photo
+            </button>
           </div>
+        </details>
 
-          <button class="btn btn-primary btn-block py-2 d-flex align-items-center justify-content-center" id="openVideoModalBtn">
-            <img src="assets/icons/camera.svg" width="20" height="20" alt="Upload image" class="mr-2" />
-            Take Photo
-          </button>
-        </div>
+        <details open>
+          <summary>Captions options</summary>
 
-        <div id="inputsContainer"></div>
+          <div id="inputsContainer"></div>
 
-        <div class="clearfix mt-3">
-          <button class="btn btn-outline-secondary float-right ml-1" id="addTextboxBtn" style="font-size: 0.9rem;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20">
-              <path fill="#6c757d" d="M416 277.333H277.333V416h-42.666V277.333H96v-42.666h138.667V96h42.666v138.667H416v42.666z" />
-            </svg>
-            Add another textbox
-          </button>
-        </div>
+          <div class="clearfix mt-3">
+            <button class="btn btn-outline-secondary float-right ml-1" id="addTextboxBtn" style="font-size: 0.9rem;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20">
+                <path fill="#6c757d"
+                  d="M416 277.333H277.333V416h-42.666V277.333H96v-42.666h138.667V96h42.666v138.667H416v42.666z" />
+              </svg>
+              Add another textbox
+            </button>
+          </div>
+        </details>
 
         <button type="button" class="btn btn-primary btn-block py-2 mt-5 d-flex align-items-center justify-content-center" id="generateMemeBtn" disabled autocomplete="off">
           Generate Meme
