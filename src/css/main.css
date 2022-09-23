@@ -1,7 +1,6 @@
 html,
 body {
-  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-size: 0.9rem;
+  font-size: 14px;
 }
 
 body {
@@ -10,6 +9,10 @@ body {
 
 .bg-body {
   background-color: #eae9e9;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 @media screen and (min-width: 1200px) {
@@ -35,18 +38,13 @@ input[type="file"]:disabled {
 
 input[type="file"]::-webkit-file-upload-button {
   color: #ffffff;
-  background-color: #007bff;
-  border: 1px solid #007bff;
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
   border-radius: 0.25rem;
   line-height: 1.5;
   cursor: pointer;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   -webkit-appearance: none;
-}
-
-input[type="file"]:not(:disabled)::-webkit-file-upload-button:hover {
-  background-color: #0069d9;
-  border-color: #0062cc;
 }
 
 input[type="file"]:disabled::-webkit-file-upload-button {
@@ -109,13 +107,12 @@ input[type="color"],
 
 #canvasPlaceholder {
   padding: 0.25rem;
-  border: 2px dashed #dee2e6;
+  border: 2px dashed #c0c0c0;
 }
 
 #instructions {
-  min-height: 150px;
+  min-height: 200px;
   height: 100%;
-  font-size: 1.2rem;
 }
 
 .text-underline {
@@ -136,7 +133,7 @@ input[type="color"],
 }
 
 details[open] summary {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 /* capture-photo */

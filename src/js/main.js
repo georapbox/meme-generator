@@ -15,6 +15,7 @@ const canvas = document.getElementById('canvas');
 const canvasPlaceholder = document.getElementById('canvasPlaceholder');
 const instructionsEl = document.getElementById('instructions');
 const ctx = canvas.getContext('2d');
+const imageUploadMethodSelect = document.getElementById('imageUploadMethodSelect');
 const fileInput = document.getElementById('file');
 const imageUrlForm = document.getElementById('imageUrlForm');
 const addTextboxBtn = document.getElementById('addTextboxBtn');
@@ -169,18 +170,6 @@ const draw = image => {
   });
 };
 
-const handleCanvasPlaceholderClick = evt => {
-  evt.preventDefault();
-
-  const element = evt.target;
-
-  if (element.matches('[data-trigger="file-upload"]')) {
-    fileInput.click();
-  } else if (element.matches('[data-trigger="photo-capture"]')) {
-    openVideoModalBtn.click();
-  }
-};
-
 const onImageLoaded = evt => {
   const MAX_WIDTH = 800;
   const MAX_HEIGHT = 600;
@@ -207,7 +196,6 @@ const onImageLoaded = evt => {
 
   generateMemeBtn.disabled = false;
   canvas.classList.remove('d-none');
-  canvasPlaceholder.removeEventListener('click', handleCanvasPlaceholderClick);
 
   instructionsEl && instructionsEl.remove();
 };
@@ -376,7 +364,6 @@ fileInput.addEventListener('change', evt => {
   imageUrlForm['imageUrl'].value = '';
   handleFileSelect(evt.target.files[0]);
 });
-canvasPlaceholder.addEventListener('click', handleCanvasPlaceholderClick);
 openVideoModalBtn.addEventListener('click', onOpenVideoModalButonClick);
 closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
 addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked);
@@ -459,9 +446,25 @@ inputsContainer.addEventListener('click', evt => {
   const element = evt.target;
 
   if (element.matches('[data-button="settings"]')) {
-    element.classList.toggle('active');
-    element.closest('[data-section="textBox"]').querySelector('[data-section="settings"]').classList.toggle('d-none');
+    const textBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
+    const textBoxEls = document.querySelectorAll('[data-section="textBox"]');
+
+    textBoxEls.forEach(el => {
+      const settingsEl = el.querySelector('[data-section="settings"]');
+
+      if (el.getAttribute('data-index') === textBoxIndex) {
+        settingsEl.classList.toggle('d-none');
+      } else {
+        settingsEl.classList.add('d-none');
+      }
+    });
   }
+});
+
+imageUploadMethodSelect.addEventListener('change', evt => {
+  document.querySelectorAll('.upload-method').forEach(el => {
+    el.hidden = el.id !== evt.target.value;
+  });
 });
 
 document.addEventListener('web-share:error', () => {
