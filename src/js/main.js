@@ -167,7 +167,7 @@ const draw = image => {
     const multiplier = index + 1;
     const lineHeight = ctx.measureText('M').width + 20;
     const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
-    const shadowBlur = !Number.isNaN(Number(item.shadowBlur)) ? Number(item.shadowBlur) : 3;
+    const shadowBlur = item.shadowBlur;
     const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
 
     ctx.fillStyle = item.fillColor;
@@ -183,8 +183,8 @@ const draw = image => {
 
     ctx.fillText(
       text,
-      xPos + Number(item.offsetX),
-      index === 1 ? canvas.height - 20 + Number(item.offsetY) : lineHeight * (multiplier - 1 || 1) + Number(item.offsetY)
+      xPos + item.offsetX,
+      index === 1 ? canvas.height - 20 + item.offsetY : lineHeight * (multiplier - 1 || 1) + item.offsetY
     );
 
     ctx.restore();
@@ -244,14 +244,19 @@ const onOpenVideoModalButonClick = () => {
 };
 
 const handleTextPropChange = (element, index, prop) => {
-  options[index][prop] = element.type === 'checkbox' ? element.checked : element.value;
+  if (element.type === 'checkbox') {
+    options[index][prop] = element.checked;
+  } else if (element.type === 'number') {
+    options[index][prop] = Number(element.value);
+  } else {
+    options[index][prop] = element.value;
+  }
+
   draw(selectedImage);
 };
 
 const createNewInput = index => {
-  const html = String.raw;
-
-  const inputTemplate = html`
+  const inputTemplate = /* html */`
     <div class="d-flex">
       <input class="form-control m-2" type="text" value="${options[index].text}" data-input="text" autocomplete="off" placeholder="${index === 0 ? 'Top Text' : index === 1 ? 'Bottom Text' : `Text #${index + 1}`}" style="min-width: 0;">
       <div class="d-flex align-items-center pr-2">
@@ -329,7 +334,7 @@ const createNewInput = index => {
         <div class="col-lg-12">
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="allCapsCheckbox_${index}" data-input="allCaps">
-            <label class="custom-control-label" for="allCapsCheckbox_${index}">USE ALL CAPS</label>
+            <label class="custom-control-label" for="allCapsCheckbox_${index}">ALL CAPS</label>
           </div>
         </div>
       </div>
@@ -400,12 +405,19 @@ fileInput.addEventListener('change', evt => {
   imageUrlForm['imageUrl'].value = '';
   handleFileSelect(evt.target.files[0]);
 });
+
 openVideoModalBtn.addEventListener('click', onOpenVideoModalButonClick);
+
 closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
+
 addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked);
+
 generateMemeBtn.addEventListener('click', generateMeme);
+
 downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false));
+
 downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false));
+
 imageUrlForm.addEventListener('submit', handleImageUploadFromURL);
 
 canvasPlaceholder.addEventListener('dragover', evt => {
