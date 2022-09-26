@@ -1,3 +1,14 @@
+import AntonRegular from 'url:../assets/fonts/Anton/Anton-Regular.ttf';
+import OswaldRegular from 'url:../assets/fonts/Oswald/Oswald-Regular.ttf';
+import OswaldBold from 'url:../assets/fonts/Oswald/Oswald-Bold.ttf';
+import RobotoRegular from 'url:../assets/fonts/Roboto/Roboto-Regular.ttf';
+import RobotoBold from 'url:../assets/fonts/Roboto/Roboto-Bold.ttf';
+import RobotoCondensedRegular from 'url:../assets/fonts/RobotoCondensed/RobotoCondensed-Regular.ttf';
+import RobotoCondensedBold from 'url:../assets/fonts/RobotoCondensed/RobotoCondensed-Bold.ttf';
+import CourierPrimeRegular from 'url:../assets/fonts/CourierPrime/CourierPrime-Regular.ttf';
+import CourierPrimeBold from 'url:../assets/fonts/CourierPrime/CourierPrime-Bold.ttf';
+import OpenSansRegular from 'url:../assets/fonts/OpenSans/OpenSans-Regular.ttf';
+import OpenSansBold from 'url:../assets/fonts/OpenSans/OpenSans-Bold.ttf';
 import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.min.js';
 import { WebShare } from '@georapbox/web-share-element/dist/web-share.min.js';
 import { CapturePhoto } from '@georapbox/capture-photo-element/dist/capture-photo.min.js';
@@ -38,7 +49,7 @@ const defaultOptions = {
   text: '',
   fillColor: '#ffffff',
   shadowColor: '#000000',
-  font: 'Impact',
+  font: 'Anton',
   fontSize: 40,
   textAlign: 'center',
   shadowBlur: 3,
@@ -51,6 +62,16 @@ const options = [
   Object.assign({}, defaultOptions),
   Object.assign({}, defaultOptions)
 ];
+
+const loadFonts = async (name, path, options = {}) => {
+  try {
+    const font = new FontFace(name, `url(${path})`, { ...options });
+    await font.load();
+    document.fonts.add(font);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 const toggleModal = (modalEl, visible) => {
   if (visible) {
@@ -244,20 +265,35 @@ const createNewInput = index => {
         <div class="col-6 mb-3">
           <label class="mb-1 d-block text-truncate">Font: </label>
           <select class="custom-select" data-input="font">
-            <option value="Impact">Impact</option>
-            <option value="Arial">Arial</option>
-            <option value="Helvetica">Helvetica</option>
-            <option value="Comic Sans MS">Comic Sans MS</option>
-            <option value="Times New Roman">Times New Roman</option>
-            <option value="Times">Times</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Verdana">Verdana</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Palatino">Palatino</option>
-            <option value="Garamond">Garamond</option>
-            <option value="Bookman">Bookman</option>
-            <option value="Trebuchet MS">Trebuchet MS</option>
-            <option value="Arial Black">Arial Black</option>
+            <optgroup label="Web fonts">
+              <option value="Impact">Impact</option>
+              <option value="Arial">Arial</option>
+              <option value="Arial Black">Arial Black</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Comic Sans MS">Comic Sans MS</option>
+              <option value="Times">Times</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Palatino">Palatino</option>
+              <option value="Garamond">Garamond</option>
+              <option value="Bookman">Bookman</option>
+              <option value="Trebuchet MS">Trebuchet MS</option>
+            </optgroup>
+            <optgroup label="Google fonts">
+              <option value="Anton">Anton</option>
+              <option value="Oswald-Regular">Oswald Regular</option>
+              <option value="Oswald-Bold">Oswald Bold</option>
+              <option value="Roboto-Regular">Roboto Regular</option>
+              <option value="Roboto-Bold">Roboto Bold</option>
+              <option value="RobotoCondensed-Regular">Roboto Condensed Regular</option>
+              <option value="RobotoCondensed-Bold">Roboto Condensed Bold</option>
+              <option value="CourierPrime-Regular">Courier Prime Regular</option>
+              <option value="CourierPrime-Bold">Courier Prime Bold</option>
+              <option value="OpenSans-Regular">Open Sans Regular</option>
+              <option value="OpenSans-Bold">Open Sans Bold</option>
+            </optgroup>
           </select>
         </div>
         <div class="col-6 mb-3">
@@ -509,3 +545,15 @@ document.addEventListener('keyup', evt => {
     toggleModal(downloadModal, false);
   }
 });
+
+loadFonts('Anton', AntonRegular, {style: 'normal', weight: '400'});
+loadFonts('Oswald-Regular', OswaldRegular, {style: 'normal', weight: '400'});
+loadFonts('Oswald-Bold', OswaldBold, {style: 'normal', weight: '700'});
+loadFonts('Roboto-Regular', RobotoRegular, {style: 'normal', weight: '400'});
+loadFonts('Roboto-Bold', RobotoBold, {style: 'normal', weight: '700'});
+loadFonts('RobotoCondensed-Regular', RobotoCondensedRegular, {style: 'normal', weight: '400'});
+loadFonts('RobotoCondensed-Bold', RobotoCondensedBold, {style: 'normal', weight: '700'});
+loadFonts('CourierPrime-Regular', CourierPrimeRegular, {style: 'normal', weight: '400'});
+loadFonts('CourierPrime-Bold', CourierPrimeBold, {style: 'normal', weight: '700'});
+loadFonts('OpenSans-Regular', OpenSansRegular, {style: 'normal', weight: '400'});
+loadFonts('OpenSans-Bold', OpenSansBold, {style: 'normal', weight: '400'});
