@@ -40,6 +40,7 @@ const webShareComponent = document.querySelector('web-share');
 const DEFAULT_GENERATED_FILE_NAME = 'meme.png';
 let selectedImage = null;
 let generatedFileName = DEFAULT_GENERATED_FILE_NAME;
+let reqAnimFrame = null;
 
 const acceptedMimeTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/apng', 'image/gif', 'image/webp', 'image/avif'];
 
@@ -268,8 +269,8 @@ const createNewInput = index => {
     <div class="p-2 d-none" data-section="settings">
       <div class="form-row">
         <div class="col-6 mb-3">
-          <label class="mb-1 d-block text-truncate">Font: </label>
-          <select class="custom-select" data-input="font">
+          <label for="fontInput_${index}" class="mb-1 d-block text-truncate">Font: </label>
+          <select class="custom-select" data-input="font" id="fontInput_${index}">
             <optgroup label="Web fonts">
               <option value="Impact">Impact</option>
               <option value="Arial">Arial</option>
@@ -302,18 +303,18 @@ const createNewInput = index => {
           </select>
         </div>
         <div class="col-6 mb-3">
-          <label class="mb-1 d-block text-truncate">Font size:</label>
-          <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize">
+          <label for="fontSizeInput_${index}" class="mb-1 d-block text-truncate">Font size:</label>
+          <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize" id="fontSizeInput_${index}">
         </div>
       </div>
       <div class="form-row">
         <div class="col-6 mb-3">
-          <label class="mb-1 d-block text-truncate">Shadow width:</label>
-          <input class="form-control" type="number" min="0" max="10" value="${options[index].shadowBlur}" data-input="shadowBlur">
+          <label for="shadowWidthInput_${index}" class="mb-1 d-block text-truncate">Shadow width:</label>
+          <input class="form-control" type="number" min="0" max="10" value="${options[index].shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${index}">
         </div>
         <div class="col-6 mb-3">
-          <label class="mb-1 d-block text-truncate">Text align:</label>
-          <select class="custom-select" data-input="textAlign">
+          <label for="textAlignInput_${index}" class="mb-1 d-block text-truncate">Text align:</label>
+          <select class="custom-select" data-input="textAlign" id="textAlignInput_${index}">
             <option value="left">Left</option>
             <option value="center">Center</option>
             <option value="right">Right</option>
@@ -322,12 +323,20 @@ const createNewInput = index => {
       </div>
       <div class="form-row">
         <div class="col-6 mb-3">
-          <label class="mb-1 d-block text-truncate">Vertical offset:</label>
-          <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY">
+          <label class="mb-1 d-block text-truncate" for="offsetYInput_${index}">Vertical offset:</label>
+          <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" id="offsetYInput_${index}">
         </div>
         <div class="col-6 mb-3">
-          <label class="mb-1 d-block text-truncate">Horizontal offset:</label>
-          <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX">
+          <label class="mb-1 d-block text-truncate" for="offsetXInput_${index}">Horizontal offset:</label>
+          <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX" id="offsetXInput_${index}">
+        </div>
+        <div class="col-12">
+          <div class="move-text-actions mb-3">
+            <button type="button" class="btn btn-secondary" data-move="offsetY" data-sign="-" aria-label="Up"></button>
+            <button type="button" class="btn btn-secondary" data-move="offsetX" data-sign="+" aria-label="Right"></button>
+            <button type="button" class="btn btn-secondary" data-move="offsetY" data-sign="+" aria-label="Down"></button>
+            <button type="button" class="btn btn-secondary" data-move="offsetX" data-sign="-" aria-label="Left"></button>
+          </div>
         </div>
       </div>
       <div class="form-row">
@@ -399,6 +408,40 @@ const handleImageUploadFromURL = async evt => {
     submitButton.querySelector('.spinner').classList.add('d-none');
     submitButton.querySelector('.label').classList.remove('d-none');
   }
+};
+
+const moveText = (offsetDir, sign, index) => () => {
+  const textBoxSection = document.querySelectorAll('[data-section="textBox"]')[index];
+  const offsetYInput = textBoxSection.querySelector('[data-input="offsetY"]');
+  const offsetXInput = textBoxSection.querySelector('[data-input="offsetX"]');
+
+  if (offsetDir === 'offsetY') {
+    if (sign === '-') {
+      options[index].offsetY -= 1;
+    }
+
+    if (sign === '+') {
+      options[index].offsetY += 1;
+    }
+
+    offsetYInput.value = options[index].offsetY;
+  }
+
+  if (offsetDir === 'offsetX') {
+    if (sign === '-') {
+      options[index].offsetX -= 1;
+    }
+
+    if (sign === '+') {
+      options[index].offsetX += 1;
+    }
+
+    offsetXInput.value = options[index].offsetX;
+  }
+
+  draw(selectedImage);
+
+  reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
 };
 
 fileInput.addEventListener('change', evt => {
@@ -508,6 +551,50 @@ inputsContainer.addEventListener('click', evt => {
     });
   }
 });
+
+inputsContainer.addEventListener('pointerdown', evt => {
+  const element = evt.target;
+  const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
+  const isOffsetYButton = element.matches('[data-move="offsetY"]');
+  const isOffsetXButton = element.matches('[data-move="offsetX"]');
+
+  if (!isOffsetYButton && !isOffsetXButton) {
+    return;
+  }
+
+  const offsetDir = element.getAttribute('data-move');
+  const sign = element.getAttribute('data-sign');
+
+  reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
+});
+
+inputsContainer.addEventListener('pointerup', evt => {
+  const element = evt.target;
+  const isOffsetYButton = element.matches('[data-move="offsetY"]');
+  const isOffsetXButton = element.matches('[data-move="offsetX"]');
+
+  if (!isOffsetYButton && !isOffsetXButton) {
+    return;
+  }
+
+  cancelAnimationFrame(reqAnimFrame);
+  reqAnimFrame = null;
+});
+
+inputsContainer.addEventListener('pointerout', evt => {
+  const element = evt.target;
+  const isOffsetYButton = element.matches('[data-move="offsetY"]');
+  const isOffsetXButton = element.matches('[data-move="offsetX"]');
+
+  if (!isOffsetYButton && !isOffsetXButton || !reqAnimFrame) {
+    return;
+  }
+
+  cancelAnimationFrame(reqAnimFrame);
+  reqAnimFrame = null;
+});
+
+
 
 imageUploadMethodSelect.addEventListener('change', evt => {
   document.querySelectorAll('.upload-method').forEach(el => {
