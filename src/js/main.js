@@ -52,6 +52,7 @@ const defaultOptions = {
   shadowColor: '#000000',
   font: 'Anton',
   fontSize: 40,
+  fontWeight: 'normal',
   textAlign: 'center',
   shadowBlur: 3,
   offsetY: 0,
@@ -163,7 +164,7 @@ const draw = image => {
   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
   options.forEach(function (item, index) {
-    ctx.font = `${item.fontSize}px ${item.font}`;
+    ctx.font = `${item.fontWeight} ${item.fontSize}px ${item.font}`;
 
     const multiplier = index + 1;
     const lineHeight = ctx.measureText('M').width + 20;
@@ -268,7 +269,7 @@ const createNewInput = index => {
     </div>
     <div class="p-2 d-none" data-section="settings">
       <div class="form-row">
-        <div class="col-6 mb-3">
+        <div class="col-4 mb-3">
           <label for="fontInput_${index}" class="mb-1 d-block text-truncate">Font: </label>
           <select class="custom-select" data-input="font" id="fontInput_${index}">
             <optgroup label="Web fonts">
@@ -302,9 +303,16 @@ const createNewInput = index => {
             </optgroup>
           </select>
         </div>
-        <div class="col-6 mb-3">
-          <label for="fontSizeInput_${index}" class="mb-1 d-block text-truncate">Font size:</label>
+        <div class="col-4 mb-3">
+          <label for="fontSizeInput_${index}" class="mb-1 d-block text-truncate">Size:</label>
           <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize" id="fontSizeInput_${index}">
+        </div>
+        <div class="col-4 mb-3">
+          <label for="fontWeightInput_${index}" class="mb-1 d-block text-truncate">Weight:</label>
+          <select class="custom-select" data-input="fontWeight" id="fontWeightInput_${index}">
+            <option value="normal" selected>Normal</option>
+            <option value="bold">Bold</option>
+          </select>
         </div>
       </div>
       <div class="form-row">
@@ -504,6 +512,8 @@ inputsContainer.addEventListener('input', evt => {
     prop = 'font';
   } else if (element.matches('[data-input="fontSize"]')) {
     prop = 'fontSize';
+  } else if (element.matches('[data-input="fontWeight"]')) {
+    prop = 'fontWeight';
   } else if (element.matches('[data-input="textAlign"]')) {
     prop = 'textAlign';
   } else if (element.matches('[data-input="shadowBlur"]')) {
