@@ -1,6 +1,7 @@
 import { customFonts } from './custom-fonts.js';
+import { defaultTextOptions } from './text-options.js';
 
-export const createTextBox = (index, options = {}) => {
+export const createTextBox = (index, options = defaultTextOptions) => {
   const inputTemplate = /* html */`
     <div class="d-flex">
       <input class="form-control m-2" type="text" value="${options[index].text}" data-input="text" autocomplete="off" placeholder="${index === 0 ? 'Top Text' : index === 1 ? 'Bottom Text' : `Text #${index + 1}`}" style="min-width: 0;">

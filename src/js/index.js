@@ -3,8 +3,9 @@ import '@georapbox/web-share-element/dist/web-share-defined.min.js';
 import '@georapbox/capture-photo-element/dist/capture-photo-defined.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
-import { ACCEPTED_MIME_TYPES, DEFAULT_OPTIONS, DEFAULT_GENERATED_FILE_NAME } from './constants.js';
+import { ACCEPTED_MIME_TYPES, DEFAULT_GENERATED_FILE_NAME } from './constants.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
+import { textOptions, defaultTextOptions } from './text-options.js';
 import { fileFromUrl } from './file-from-url.js';
 import { toastAlert } from './toast-alert.js';
 import { toggleModal } from './toggle-modal.js';
@@ -28,16 +29,12 @@ const downloadMemeBtn = document.getElementById('downloadMemeBtn');
 const downloadMemePreview = document.getElementById('downloadMemePreview');
 const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
 const webShareComponent = document.querySelector('web-share');
+const galleryEl = document.getElementById('gallery');
 let selectedImage = null;
 let generatedFileName = DEFAULT_GENERATED_FILE_NAME;
 let reqAnimFrame = null;
 
 fileInput.accept = ACCEPTED_MIME_TYPES.join(',');
-
-const options = [
-  Object.assign({}, DEFAULT_OPTIONS),
-  Object.assign({}, DEFAULT_OPTIONS)
-];
 
 const generateMeme = async () => {
   const dataUrl = canvas.toDataURL('image/png');
@@ -79,7 +76,7 @@ const draw = image => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-  options.forEach(function (item, index) {
+  textOptions.forEach(function (item, index) {
     ctx.font = `${item.fontWeight} ${item.fontSize}px ${item.font}`;
 
     const multiplier = index + 1;
@@ -167,11 +164,11 @@ const onOpenVideoModalButonClick = () => {
 
 const handleTextPropChange = (element, index, prop) => {
   if (element.type === 'checkbox') {
-    options[index][prop] = element.checked;
+    textOptions[index][prop] = element.checked;
   } else if (element.type === 'number') {
-    options[index][prop] = Number(element.value);
+    textOptions[index][prop] = Number(element.value);
   } else {
-    options[index][prop] = element.value;
+    textOptions[index][prop] = element.value;
   }
 
   draw(selectedImage);
@@ -179,8 +176,8 @@ const handleTextPropChange = (element, index, prop) => {
 
 const onAddTextboxBtnClicked = () => {
   const textBoxesLength = document.querySelectorAll('[data-input="text"]').length;
-  options.push(Object.assign({}, DEFAULT_OPTIONS));
-  inputsContainer.appendChild(createTextBox(textBoxesLength, options));
+  textOptions.push({ ...defaultTextOptions });
+  inputsContainer.appendChild(createTextBox(textBoxesLength, textOptions));
 };
 
 const handleImageUploadFromURL = async evt => {
@@ -223,26 +220,26 @@ const moveText = (offsetDir, sign, index) => () => {
 
   if (offsetDir === 'offsetY') {
     if (sign === '-') {
-      options[index].offsetY -= 1;
+      textOptions[index].offsetY -= 1;
     }
 
     if (sign === '+') {
-      options[index].offsetY += 1;
+      textOptions[index].offsetY += 1;
     }
 
-    offsetYInput.value = options[index].offsetY;
+    offsetYInput.value = textOptions[index].offsetY;
   }
 
   if (offsetDir === 'offsetX') {
     if (sign === '-') {
-      options[index].offsetX -= 1;
+      textOptions[index].offsetX -= 1;
     }
 
     if (sign === '+') {
-      options[index].offsetX += 1;
+      textOptions[index].offsetX += 1;
     }
 
-    offsetXInput.value = options[index].offsetX;
+    offsetXInput.value = textOptions[index].offsetX;
   }
 
   draw(selectedImage);
@@ -292,8 +289,8 @@ canvasPlaceholder.addEventListener('drop', evt => {
   handleFileSelect(file);
 });
 
-inputsContainer.appendChild(createTextBox(0, options));
-inputsContainer.appendChild(createTextBox(1, options));
+inputsContainer.appendChild(createTextBox(0, textOptions));
+inputsContainer.appendChild(createTextBox(1, textOptions));
 
 inputsContainer.addEventListener('input', evt => {
   const element = evt.target;
@@ -406,6 +403,32 @@ imageUploadMethodSelect.addEventListener('change', evt => {
   document.querySelectorAll('.upload-method').forEach(el => {
     el.hidden = el.id !== evt.target.value;
   });
+});
+
+galleryEl.addEventListener('click', async evt => {
+  const target = evt.target;
+  const isButton = target.matches('button');
+  const isImage = target.matches('img');
+
+  if (!isButton && !isImage) {
+    return;
+  }
+
+  const img = isButton ? target.querySelector('img') : target;
+
+  try {
+    const file = await fileFromUrl({
+      url: img.src
+    }).catch(err => toastAlert(err.message, 'danger'));
+
+    if (file) {
+      handleFileSelect(file);
+      fileInput.value = fileInput.defaultValue;
+      imageUrlForm['imageUrl'].value = '';
+    }
+  } catch (err) {
+    toastAlert(`Failed to load image: "${img.alt}".`, 'danger');
+  }
 });
 
 document.addEventListener('web-share:error', () => {
