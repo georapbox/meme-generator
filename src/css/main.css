@@ -20,10 +20,8 @@ body {
   display: none !important;
 }
 
-@media screen and (min-width: 1200px) {
-  .container {
-    max-width: 1280px;
-  }
+.container {
+  max-width: 1400px;
 }
 
 .page-title {
@@ -141,6 +139,17 @@ details[open] summary {
   margin-bottom: 0.5rem;
 }
 
+button[data-button="delete-text-box"] {
+  width: 25px;
+  min-width: 25px;
+  height: 25px;
+  padding: 0;
+  background-image: url(../assets/icons/trash.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: 0.7rem;
+}
+
 /* Gallery */
 #gallery {
   display: flex;
@@ -159,9 +168,11 @@ details[open] summary {
 
 #gallery img {
   display: block;
+  min-width: 80px;
   height: 80px;
   border-radius: 0.25rem;
   cursor: pointer;
+  color: var(--light);
 
 }
 

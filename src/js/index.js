@@ -3,9 +3,9 @@ import '@georapbox/web-share-element/dist/web-share-defined.min.js';
 import '@georapbox/capture-photo-element/dist/capture-photo-defined.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
+import { arrayRemove } from './utils/array-remove.js';
 import { ACCEPTED_MIME_TYPES, DEFAULT_GENERATED_FILE_NAME } from './constants.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
-import { textOptions, defaultTextOptions } from './text-options.js';
 import { fileFromUrl } from './file-from-url.js';
 import { toastAlert } from './toast-alert.js';
 import { toggleModal } from './toggle-modal.js';
@@ -33,6 +33,29 @@ const galleryEl = document.getElementById('gallery');
 let selectedImage = null;
 let generatedFileName = DEFAULT_GENERATED_FILE_NAME;
 let reqAnimFrame = null;
+
+const defaultTextOptions = {
+  _isSettingsOpen: false,
+  text: '',
+  fillColor: '#ffffff',
+  shadowColor: '#000000',
+  font: 'Anton',
+  fontSize: 40,
+  fontWeight: 'normal',
+  textAlign: 'center',
+  shadowBlur: 3,
+  offsetY: 0,
+  offsetX: 0,
+  allCaps: true
+};
+
+let textOptions = [
+  { ...defaultTextOptions }
+];
+
+textOptions.forEach((item, index) => {
+  inputsContainer.appendChild(createTextBox(index, item));
+});
 
 fileInput.accept = ACCEPTED_MIME_TYPES.join(',');
 
@@ -99,7 +122,7 @@ const draw = image => {
     ctx.fillText(
       text,
       xPos + item.offsetX,
-      index === 1 ? canvas.height - 20 + item.offsetY : lineHeight * (multiplier - 1 || 1) + item.offsetY
+      lineHeight * multiplier + item.offsetY
     );
 
     ctx.restore();
@@ -175,9 +198,12 @@ const handleTextPropChange = (element, index, prop) => {
 };
 
 const onAddTextboxBtnClicked = () => {
-  const textBoxesLength = document.querySelectorAll('[data-input="text"]').length;
+  const textOptionsLength = textOptions.length;
+  const newTextBox = createTextBox(textOptionsLength, defaultTextOptions);
+
   textOptions.push({ ...defaultTextOptions });
-  inputsContainer.appendChild(createTextBox(textBoxesLength, textOptions));
+  inputsContainer.appendChild(newTextBox);
+  newTextBox.querySelector('[data-input="text"]').focus();
 };
 
 const handleImageUploadFromURL = async evt => {
@@ -289,9 +315,6 @@ canvasPlaceholder.addEventListener('drop', evt => {
   handleFileSelect(file);
 });
 
-inputsContainer.appendChild(createTextBox(0, textOptions));
-inputsContainer.appendChild(createTextBox(1, textOptions));
-
 inputsContainer.addEventListener('input', evt => {
   const element = evt.target;
   const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
@@ -345,20 +368,44 @@ inputsContainer.addEventListener('click', evt => {
     const textBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
     const textBoxEls = document.querySelectorAll('[data-section="textBox"]');
 
-    textBoxEls.forEach(el => {
+    textBoxEls.forEach((el, index) => {
       const settingsEl = el.querySelector('[data-section="settings"]');
 
       if (el.getAttribute('data-index') === textBoxIndex) {
         settingsEl.classList.toggle('d-none');
+        textOptions[index]._isSettingsOpen = !textOptions[index]._isSettingsOpen;
       } else {
         settingsEl.classList.add('d-none');
+        textOptions[index]._isSettingsOpen = false;
       }
     });
+  }
+
+  if (element.matches('[data-button="delete-text-box"]')) {
+    const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
+    let confirm = true;
+
+    if (textOptions[index].text.trim()) {
+      confirm = window.confirm('Are you sure you want to remove this text box?');
+    }
+
+    if (confirm) {
+      textOptions = arrayRemove(textOptions, index);
+      inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
+      textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
+      draw(selectedImage);
+    }
   }
 });
 
 inputsContainer.addEventListener('pointerdown', evt => {
   const element = evt.target;
+  const textBoxEl = element.closest('[data-section="textBox"]');
+
+  if (!textBoxEl) {
+    return;
+  }
+
   const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
   const isOffsetYButton = element.matches('[data-move="offsetY"]');
   const isOffsetXButton = element.matches('[data-move="offsetX"]');
