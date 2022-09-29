@@ -16,7 +16,7 @@ export const createTextBox = (index, data = {}) => {
 
     <div class="p-2 ${data._isSettingsOpen ? '' : 'd-none'}" data-section="settings">
       <div class="form-row">
-        <div class="col-4 mb-3">
+        <div class="col-6 mb-3">
           <label for="fontInput_${index}" class="mb-1 d-block text-truncate">Font: </label>
 
           <select class="custom-select" data-input="font" id="fontInput_${index}">
@@ -42,12 +42,12 @@ export const createTextBox = (index, data = {}) => {
           </select>
         </div>
 
-        <div class="col-4 mb-3">
+        <div class="col-3 mb-3">
           <label for="fontSizeInput_${index}" class="mb-1 d-block text-truncate">Size:</label>
           <input class="form-control" type="number" min="1" max="100" value="${data.fontSize}" data-input="fontSize" id="fontSizeInput_${index}">
         </div>
 
-        <div class="col-4 mb-3">
+        <div class="col-3 mb-3">
           <label for="fontWeightInput_${index}" class="mb-1 d-block text-truncate">Weight:</label>
           <select class="custom-select" data-input="fontWeight" id="fontWeightInput_${index}">
             <option value="normal" selected>Normal</option>
