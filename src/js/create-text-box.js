@@ -1,20 +1,24 @@
 import { customFonts } from './custom-fonts.js';
-import { defaultTextOptions } from './text-options.js';
 
-export const createTextBox = (index, options = defaultTextOptions) => {
+export const createTextBox = (index, data = {}) => {
   const inputTemplate = /* html */`
-    <div class="d-flex">
-      <input class="form-control m-2" type="text" value="${options[index].text}" data-input="text" autocomplete="off" placeholder="${index === 0 ? 'Top Text' : index === 1 ? 'Bottom Text' : `Text #${index + 1}`}" style="min-width: 0;">
+    <div class="d-flex align-items-center">
+      <button class="btn" data-button="delete-text-box" aria-label="Remove"></button>
+
+      <input class="form-control m-2" type="text" value="${data.text}" data-input="text" autocomplete="off" placeholder="${`Text #${index + 1}`}" style="min-width: 0;">
+
       <div class="d-flex align-items-center pr-2">
-        <input class="form-control" type="color" value="${options[index].fillColor}" data-input="fillColor" title="Fill color">
-        <input class="form-control" type="color" value="${options[index].shadowColor}" data-input="shadowColor" title="Outline color">
-        <button class="btn btn-secondary settings-button" data-button="settings"></button>
+        <input class="form-control" type="color" value="${data.fillColor}" data-input="fillColor" title="Fill color">
+        <input class="form-control" type="color" value="${data.shadowColor}" data-input="shadowColor" title="Outline color">
+        <button class="btn btn-secondary settings-button" data-button="settings" aria-label="Settings"></button>
       </div>
     </div>
-    <div class="p-2 d-none" data-section="settings">
+
+    <div class="p-2 ${data._isSettingsOpen ? '' : 'd-none'}" data-section="settings">
       <div class="form-row">
         <div class="col-4 mb-3">
           <label for="fontInput_${index}" class="mb-1 d-block text-truncate">Font: </label>
+
           <select class="custom-select" data-input="font" id="fontInput_${index}">
             <optgroup label="Web fonts">
               <option value="Impact">Impact</option>
@@ -37,10 +41,12 @@ export const createTextBox = (index, options = defaultTextOptions) => {
             </optgroup>
           </select>
         </div>
+
         <div class="col-4 mb-3">
           <label for="fontSizeInput_${index}" class="mb-1 d-block text-truncate">Size:</label>
-          <input class="form-control" type="number" min="1" max="100" value="${options[index].fontSize}" data-input="fontSize" id="fontSizeInput_${index}">
+          <input class="form-control" type="number" min="1" max="100" value="${data.fontSize}" data-input="fontSize" id="fontSizeInput_${index}">
         </div>
+
         <div class="col-4 mb-3">
           <label for="fontWeightInput_${index}" class="mb-1 d-block text-truncate">Weight:</label>
           <select class="custom-select" data-input="fontWeight" id="fontWeightInput_${index}">
@@ -49,11 +55,13 @@ export const createTextBox = (index, options = defaultTextOptions) => {
           </select>
         </div>
       </div>
+
       <div class="form-row">
         <div class="col-6 mb-3">
           <label for="shadowWidthInput_${index}" class="mb-1 d-block text-truncate">Shadow width:</label>
-          <input class="form-control" type="number" min="0" max="10" value="${options[index].shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${index}">
+          <input class="form-control" type="number" min="0" max="10" value="${data.shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${index}">
         </div>
+
         <div class="col-6 mb-3">
           <label for="textAlignInput_${index}" class="mb-1 d-block text-truncate">Text align:</label>
           <select class="custom-select" data-input="textAlign" id="textAlignInput_${index}">
@@ -63,15 +71,18 @@ export const createTextBox = (index, options = defaultTextOptions) => {
           </select>
         </div>
       </div>
+
       <div class="form-row">
         <div class="col-6 mb-3">
           <label class="mb-1 d-block text-truncate" for="offsetYInput_${index}">Vertical offset:</label>
-          <input class="form-control" type="number" value="${options[index].offsetY}" data-input="offsetY" id="offsetYInput_${index}">
+          <input class="form-control" type="number" value="${data.offsetY}" data-input="offsetY" id="offsetYInput_${index}">
         </div>
+
         <div class="col-6 mb-3">
           <label class="mb-1 d-block text-truncate" for="offsetXInput_${index}">Horizontal offset:</label>
-          <input class="form-control" type="number" value="${options[index].offsetX}" data-input="offsetX" id="offsetXInput_${index}">
+          <input class="form-control" type="number" value="${data.offsetX}" data-input="offsetX" id="offsetXInput_${index}">
         </div>
+
         <div class="col-12">
           <div class="move-text-actions mb-3">
             <button type="button" class="btn btn-secondary" data-move="offsetY" data-sign="-" aria-label="Up"></button>
@@ -81,6 +92,7 @@ export const createTextBox = (index, options = defaultTextOptions) => {
           </div>
         </div>
       </div>
+
       <div class="form-row">
         <div class="col-lg-12">
           <div class="custom-control custom-checkbox">
@@ -99,9 +111,9 @@ export const createTextBox = (index, options = defaultTextOptions) => {
   div.setAttribute('data-section', 'textBox');
   div.setAttribute('data-index', index);
   div.innerHTML = inputTemplate;
-  div.querySelector('[data-input="font"]').value = options[index].font;
-  div.querySelector('[data-input="textAlign"]').value = options[index].textAlign;
-  div.querySelector('[data-input="allCaps"]').checked = options[index].allCaps;
+  div.querySelector('[data-input="font"]').value = data.font;
+  div.querySelector('[data-input="textAlign"]').value = data.textAlign;
+  div.querySelector('[data-input="allCaps"]').checked = data.allCaps;
 
   return fragment.appendChild(div);
 };
