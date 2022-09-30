@@ -61,14 +61,36 @@
           <div class="bg-light py-4 px-3 border shadow-sm rounded">
             <div class="form-group">
               <select class="custom-select" id="imageUploadMethodSelect" autocomplete="off">
-                <option value="file" selected>Upload from file</option>
-                <option value="imageUrlForm">Upload from URL</option>
                 <option value="gallery">Upload from gallery</option>
+                <option value="fileInput">Upload from file</option>
+                <option value="imageUrlForm">Upload from URL</option>
                 <option value="openVideoModalBtn">Take photo</option>
               </select>
             </div>
 
-            <input type="file" name="file[]" id="file" autocomplete="off" class="upload-method form-control h-auto" />
+            <div class="upload-method" id="gallery">
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/matrix-morpheus.jpg" alt="Matrix Morpheus"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/batman-slapping-robin.jpg" alt="Batman slapping Robin"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/captain-picard-facepalm.jpg" alt="Captain Picard Facepalm.jpg"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/x-x-everywhere.jpg" alt="X X everywhere"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/always-has-been.jpg" alt="Always has been"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/anakin-padme.jpg" alt="Anakin Padme"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/bad-luck-brian.jpg" alt="Bad luck Brian"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/car-drift.jpg" alt="Car drift"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/disaster-girl.jpg" alt="Disaster girl"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/drake-hotline-bling.jpg" alt="Drake Hotline Bling"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/gibson-jesus.jpg" alt="Mel Gibson - Jesus Christ"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/i-dont-always.jpg" alt="I don't always"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/nervous.jpg" alt="Nervous"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/office-congrats.jpg" alt="Office congratulations"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/sad-pablo-escobar.jpg" alt="Sad Pablo Escobar"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/say-that-again-i-dare-you.jpg" alt="Say that again I dare you"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/success-kid.jpg" alt="Success kid"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/think-about-it.jpg" alt="Think about it"></button>
+              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/two-buttons.jpg" alt="Two buttons"></button>
+            </div>
+
+            <input type="file" name="file[]" id="fileInput" autocomplete="off" class="upload-method form-control h-auto" hidden />
 
             <form id="imageUrlForm" class="upload-method form-inline flex-nowrap" hidden>
               <label class="sr-only" for="imageUrl">Image URL</label>
@@ -88,28 +110,6 @@
               <img src="assets/icons/camera.svg" width="20" height="20" alt="Upload image" class="mr-2" />
               Take Photo
             </button>
-
-            <div class="upload-method" id="gallery" hidden>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/always-has-been.png" alt="Always has been"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/anakin-padme.png" alt="Anakin Padme"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/bad-luck-brian.jpg" alt="Bad luck Brian"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/batman-slapping-robin.jpg" alt="Batman slapping Robin"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/captain-picard-facepalm.jpg" alt="Captain Picard Facepalm.jpg"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/car-drift.jpg" alt="Car drift"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/disaster-girl.jpg" alt="Disaster girl"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/drake-hotline-bling.jpg" alt="Drake Hotline Bling"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/gibson-jesus.jpg" alt="Mel Gibson - Jesus Christ"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/i-dont-always.jpg" alt="I don't always"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/matrix-morpheus.jpg" alt="Matrix Morpheus"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/nervous.jpg" alt="Nervous"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/office-congrats.jpg" alt="Office congratulations"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/sad-pablo-escobar.jpg" alt="Sad Pablo Escobar"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/say-that-again-i-dare-you.jpg" alt="Say that again I dare you"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/success-kid.jpg" alt="Success kid"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/think-about-it.jpg" alt="Think about it"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/two-buttons.jpg" alt="Two buttons"></button>
-              <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/x-x-everywhere.jpg" alt="X X everywhere"></button>
-            </div>
           </div>
         </details>
 

@@ -19,7 +19,7 @@ const canvasPlaceholder = document.getElementById('canvasPlaceholder');
 const instructionsEl = document.getElementById('instructions');
 const ctx = canvas.getContext('2d');
 const imageUploadMethodSelect = document.getElementById('imageUploadMethodSelect');
-const fileInput = document.getElementById('file');
+const fileInput = document.getElementById('fileInput');
 const imageUrlForm = document.getElementById('imageUrlForm');
 const addTextboxBtn = document.getElementById('addTextboxBtn');
 const inputsContainer = document.getElementById('inputsContainer');
@@ -30,6 +30,7 @@ const downloadMemePreview = document.getElementById('downloadMemePreview');
 const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
 const webShareComponent = document.querySelector('web-share');
 const galleryEl = document.getElementById('gallery');
+const uploadMethodEls = document.querySelectorAll('.upload-method');
 let selectedImage = null;
 let generatedFileName = DEFAULT_GENERATED_FILE_NAME;
 let reqAnimFrame = null;
@@ -52,12 +53,6 @@ const defaultTextOptions = {
 let textOptions = [
   { ...defaultTextOptions }
 ];
-
-textOptions.forEach((item, index) => {
-  inputsContainer.appendChild(createTextBox(index, item));
-});
-
-fileInput.accept = ACCEPTED_MIME_TYPES.join(',');
 
 const generateMeme = async () => {
   const dataUrl = canvas.toDataURL('image/png');
@@ -197,7 +192,7 @@ const handleTextPropChange = (element, index, prop) => {
   draw(selectedImage);
 };
 
-const onAddTextboxBtnClicked = () => {
+const onAddTextboxBtnClick = () => {
   const textOptionsLength = textOptions.length;
   const newTextBox = createTextBox(textOptionsLength, defaultTextOptions);
 
@@ -273,32 +268,22 @@ const moveText = (offsetDir, sign, index) => () => {
   reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
 };
 
-fileInput.addEventListener('change', evt => {
+const onUploadMethodChange = evt => {
+  uploadMethodEls.forEach(el => el.hidden = el.id !== evt.target.value);
+};
+
+const onFileUploadInputChange = evt => {
   imageUrlForm['imageUrl'].value = '';
   handleFileSelect(evt.target.files[0]);
-});
+};
 
-openVideoModalBtn.addEventListener('click', onOpenVideoModalButonClick);
-
-closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
-
-addTextboxBtn.addEventListener('click', onAddTextboxBtnClicked);
-
-generateMemeBtn.addEventListener('click', generateMeme);
-
-downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false));
-
-downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false));
-
-imageUrlForm.addEventListener('submit', handleImageUploadFromURL);
-
-canvasPlaceholder.addEventListener('dragover', evt => {
+const onCanvasPlaceholderDragover = evt => {
   evt.stopPropagation();
   evt.preventDefault();
   evt.dataTransfer.dropEffect = 'copy';
-});
+};
 
-canvasPlaceholder.addEventListener('drop', evt => {
+const onCanvasPlaceholderDrop = evt => {
   evt.stopPropagation();
   evt.preventDefault();
 
@@ -313,9 +298,9 @@ canvasPlaceholder.addEventListener('drop', evt => {
   imageUrlForm['imageUrl'].value = '';
 
   handleFileSelect(file);
-});
+};
 
-inputsContainer.addEventListener('input', evt => {
+const onInputsContainerInput = evt => {
   const element = evt.target;
   const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
   let prop;
@@ -345,9 +330,9 @@ inputsContainer.addEventListener('input', evt => {
   if (prop) {
     handleTextPropChange(element, index, prop);
   }
-});
+};
 
-inputsContainer.addEventListener('change', evt => {
+const onInputsContainerChange = evt => {
   const element = evt.target;
   const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
   let prop;
@@ -359,9 +344,9 @@ inputsContainer.addEventListener('change', evt => {
   if (prop) {
     handleTextPropChange(element, index, prop);
   }
-});
+};
 
-inputsContainer.addEventListener('click', evt => {
+const onInputsContainerClick = evt => {
   const element = evt.target;
 
   if (element.matches('[data-button="settings"]')) {
@@ -396,9 +381,9 @@ inputsContainer.addEventListener('click', evt => {
       draw(selectedImage);
     }
   }
-});
+};
 
-inputsContainer.addEventListener('pointerdown', evt => {
+const onInputsContainerPointerdown = evt => {
   const element = evt.target;
   const textBoxEl = element.closest('[data-section="textBox"]');
 
@@ -418,9 +403,9 @@ inputsContainer.addEventListener('pointerdown', evt => {
   const sign = element.getAttribute('data-sign');
 
   reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
-});
+};
 
-inputsContainer.addEventListener('pointerup', evt => {
+const onInputsContainerPointerup = evt => {
   const element = evt.target;
   const isOffsetYButton = element.matches('[data-move="offsetY"]');
   const isOffsetXButton = element.matches('[data-move="offsetX"]');
@@ -431,9 +416,9 @@ inputsContainer.addEventListener('pointerup', evt => {
 
   cancelAnimationFrame(reqAnimFrame);
   reqAnimFrame = null;
-});
+};
 
-inputsContainer.addEventListener('pointerout', evt => {
+const onInputsContainerPointerout = evt => {
   const element = evt.target;
   const isOffsetYButton = element.matches('[data-move="offsetY"]');
   const isOffsetXButton = element.matches('[data-move="offsetX"]');
@@ -444,15 +429,9 @@ inputsContainer.addEventListener('pointerout', evt => {
 
   cancelAnimationFrame(reqAnimFrame);
   reqAnimFrame = null;
-});
+};
 
-imageUploadMethodSelect.addEventListener('change', evt => {
-  document.querySelectorAll('.upload-method').forEach(el => {
-    el.hidden = el.id !== evt.target.value;
-  });
-});
-
-galleryEl.addEventListener('click', async evt => {
+const onGalleryClick = async evt => {
   const target = evt.target;
   const isButton = target.matches('button');
   const isImage = target.matches('img');
@@ -476,18 +455,18 @@ galleryEl.addEventListener('click', async evt => {
   } catch (err) {
     toastAlert(`Failed to load image: "${img.alt}".`, 'danger');
   }
-});
+};
 
-document.addEventListener('web-share:error', () => {
+const onWebShareError = () => {
   toastAlert('There was an error while trying to share your meme.', 'danger');
-});
+};
 
-document.addEventListener('capture-photo:error', evt => {
+const onCapturePhotoError = evt => {
   console.error(evt.detail.error);
   toastAlert(evt.detail.error.message, 'danger');
-});
+};
 
-document.addEventListener('capture-photo:success', evt => {
+const onCapturePhotoSuccess = evt => {
   toggleModal(videoModal, false);
   const image = new Image();
   image.addEventListener('load', onImageLoaded);
@@ -498,16 +477,16 @@ document.addEventListener('capture-photo:success', evt => {
     imageUrlForm['imageUrl'].value = '';
     generatedFileName = DEFAULT_GENERATED_FILE_NAME;
   }
-});
+};
 
-document.addEventListener('modal-close', evt => {
+const onModalClose = evt => {
   if (evt.detail.modalId === 'videoModal') {
     const capturePhotoComponent = videoModal.querySelector('capture-photo');
     capturePhotoComponent.remove();
   }
-});
+};
 
-document.addEventListener('keyup', evt => {
+const onDocumentKeyup = evt => {
   if (evt.code !== 'Escape') {
     return;
   }
@@ -519,6 +498,38 @@ document.addEventListener('keyup', evt => {
   if (downloadModal.hasAttribute('data-open')) {
     toggleModal(downloadModal, false);
   }
+};
+
+fileInput.addEventListener('change', onFileUploadInputChange);
+openVideoModalBtn.addEventListener('click', onOpenVideoModalButonClick);
+closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
+addTextboxBtn.addEventListener('click', onAddTextboxBtnClick);
+generateMemeBtn.addEventListener('click', generateMeme);
+downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false));
+downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false));
+imageUrlForm.addEventListener('submit', handleImageUploadFromURL);
+canvasPlaceholder.addEventListener('dragover', onCanvasPlaceholderDragover);
+canvasPlaceholder.addEventListener('drop', onCanvasPlaceholderDrop);
+inputsContainer.addEventListener('input', onInputsContainerInput);
+inputsContainer.addEventListener('change', onInputsContainerChange);
+inputsContainer.addEventListener('click', onInputsContainerClick);
+inputsContainer.addEventListener('pointerdown', onInputsContainerPointerdown);
+inputsContainer.addEventListener('pointerup', onInputsContainerPointerup);
+inputsContainer.addEventListener('pointerout', onInputsContainerPointerout);
+imageUploadMethodSelect.addEventListener('change', onUploadMethodChange);
+galleryEl.addEventListener('click', onGalleryClick);
+document.addEventListener('web-share:error', onWebShareError);
+document.addEventListener('capture-photo:error', onCapturePhotoError);
+document.addEventListener('capture-photo:success', onCapturePhotoSuccess);
+document.addEventListener('modal-close', onModalClose);
+document.addEventListener('keyup', onDocumentKeyup);
+
+textOptions.forEach((item, index) => {
+  inputsContainer.appendChild(createTextBox(index, item));
 });
 
-customFonts.forEach(({ name, path, style, weight }) => loadCustomFont(name, path, { style, weight }));
+fileInput.accept = ACCEPTED_MIME_TYPES.join(',');
+
+customFonts.forEach(({ name, path, style, weight }) => {
+  loadCustomFont(name, path, { style, weight });
+});
