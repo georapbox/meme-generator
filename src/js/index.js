@@ -1,6 +1,6 @@
-import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.min.js';
-import '@georapbox/web-share-element/dist/web-share-defined.min.js';
-import '@georapbox/capture-photo-element/dist/capture-photo-defined.min.js';
+import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
+import '@georapbox/web-share-element/dist/web-share-defined.js';
+import '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
 import { arrayRemove } from './utils/array-remove.js';

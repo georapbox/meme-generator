@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#ffffff">
-  <meta name="color-scheme" content="light dark">
   <meta name="description" content="Meme generator tool to easily create memes bu uploading images or taking a photo.">
   <title>Meme Generator | Create Your Own Meme</title>
   <link rel="manifest" href="manifest.webmanifest">
@@ -61,7 +60,7 @@
 
           <div class="bg-light py-4 px-3 border shadow-sm rounded">
             <div class="form-group">
-              <select class="custom-select" id="imageUploadMethodSelect" autocomplete="off">
+              <select class="custom-select" id="imageUploadMethodSelect" title="Select upload method" autocomplete="off">
                 <option value="gallery">Upload from gallery</option>
                 <option value="fileInput">Upload from file</option>
                 <option value="imageUrlForm">Upload from URL</option>
@@ -173,7 +172,7 @@
 
         <div class="modal-body text-center">
           <p>
-            <img class="img-thumbnail" id="downloadMemePreview">
+            <img class="img-thumbnail" id="downloadMemePreview" alt="">
           </p>
 
           <p class="d-flex justify-content-center align-items-center">

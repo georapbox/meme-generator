@@ -5,7 +5,7 @@
   "source": "src/index.html",
   "scripts": {
     "lint": "eslint src/js/**/*.js",
-    "clean": "rimraf docs",
+    "clean": "rimraf docs .parcel-cache",
     "generateSW": "workbox generateSW",
     "start": "parcel",
     "build:parcel": "parcel build --dist-dir=docs --public-url=./",
@@ -20,18 +20,18 @@
   "author": "George Raptis <georapbox@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@parcel/packager-raw-url": "~2.7.0",
-    "@parcel/transformer-webmanifest": "~2.7.0",
-    "eslint": "~8.11.0",
+    "@parcel/packager-raw-url": "~2.8.0",
+    "@parcel/transformer-webmanifest": "~2.8.0",
+    "eslint": "~8.28.0",
     "npm-run-all": "~4.1.5",
-    "parcel": "~2.7.0",
+    "parcel": "~2.8.0",
     "rimraf": "~3.0.2",
     "workbox-cli": "~6.5.4"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "dependencies": {
-    "@georapbox/capture-photo-element": "~1.2.4",
-    "@georapbox/web-share-element": "~2.1.4",
+    "@georapbox/capture-photo-element": "~2.0.0",
+    "@georapbox/web-share-element": "~3.0.0",
     "bootstrap": "~4.6.2"
   }
 }
