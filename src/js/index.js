@@ -175,7 +175,7 @@ const handleFileSelect = file => {
 
 const onOpenVideoModalButonClick = () => {
   const capturePhotoComponent = document.createElement('capture-photo');
-  capturePhotoComponent.outputDisabled = true;
+  capturePhotoComponent.noImage = true;
   videoModal.querySelector('.modal-body').appendChild(capturePhotoComponent);
   toggleModal(videoModal, true);
 };
