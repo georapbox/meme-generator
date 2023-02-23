@@ -1,12 +1,12 @@
 {
   "short_name": "Meme Generator",
   "name": "Meme Generator | Create Your Own Meme",
-  "description": "Meme generator tool to easily create memes bu uploading images or taking a photo.",
+  "description": "Create memes by uploading an image or taking a photo.",
   "screenshots": [
     {
       "src": "assets/app-icons/screenshots/screenshot.png",
       "type": "image/png",
-      "sizes": "1024x800"
+      "sizes": "2504x1752"
     }
   ],
   "icons": [
@@ -27,7 +27,7 @@
     }
   ],
   "start_url": ".",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#eae9e9",
+  "theme_color": "#eae9e9",
   "display": "standalone"
 }
