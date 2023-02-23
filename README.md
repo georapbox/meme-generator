@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src/assets/app-icons/favicon-192.png" width="140" height="140" alt="Meme Generator">
+  <img src="src/assets/app-icons/favicon-192.png" width="140" height="140" alt="Meme Generator" style="box-shadow: 0px 0px 8px rgb(0, 0, 0, 0.15); border-radius: 50%;">
 </p>
 
 <h1 align="center">Meme Generator</h1>
