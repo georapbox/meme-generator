@@ -163,18 +163,17 @@ button[data-button="delete-text-box"] {
 }
 
 #gallery button {
-  height: 82px;
+  height: 90px;
   padding: 0;
 }
 
 #gallery img {
   display: block;
-  min-width: 80px;
-  height: 80px;
+  min-width: 88px;
+  height: 88px;
   border-radius: 0.25rem;
   cursor: pointer;
   color: var(--light);
-
 }
 
 /* Move text actions */

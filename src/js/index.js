@@ -432,15 +432,13 @@ const onInputsContainerPointerout = evt => {
 };
 
 const onGalleryClick = async evt => {
-  const target = evt.target;
-  const isButton = target.matches('button');
-  const isImage = target.matches('img');
+  const button = evt.target.closest('button');
 
-  if (!isButton && !isImage) {
+  if (!button) {
     return;
   }
 
-  const img = isButton ? target.querySelector('img') : target;
+  const img = button.querySelector('img');
 
   try {
     const file = await fileFromUrl({
