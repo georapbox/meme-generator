@@ -44,7 +44,7 @@ export const createTextBox = (index, data = {}) => {
 
         <div class="col-3 mb-3">
           <label for="fontSizeInput_${index}" class="mb-1 d-block text-truncate">Size:</label>
-          <input class="form-control" type="number" min="1" max="100" value="${data.fontSize}" data-input="fontSize" id="fontSizeInput_${index}">
+          <input class="form-control" type="number" min="1" value="${data.fontSize}" data-input="fontSize" id="fontSizeInput_${index}">
         </div>
 
         <div class="col-3 mb-3">
@@ -63,12 +63,8 @@ export const createTextBox = (index, data = {}) => {
         </div>
 
         <div class="col-6 mb-3">
-          <label for="textAlignInput_${index}" class="mb-1 d-block text-truncate">Text align:</label>
-          <select class="custom-select" data-input="textAlign" id="textAlignInput_${index}">
-            <option value="left">Left</option>
-            <option value="center">Center</option>
-            <option value="right">Right</option>
-          </select>
+          <label class="mb-1 d-block text-truncate" for="textRotateInput_${index}">Rotate:</label>
+          <input class="form-control" type="number" value="${data.rotate}" data-input="rotate" id="textRotateInput_${index}" min="-360" max="360">
         </div>
       </div>
 
@@ -112,7 +108,7 @@ export const createTextBox = (index, data = {}) => {
   div.setAttribute('data-index', index);
   div.innerHTML = inputTemplate;
   div.querySelector('[data-input="font"]').value = data.font;
-  div.querySelector('[data-input="textAlign"]').value = data.textAlign;
+  // div.querySelector('[data-input="textAlign"]').value = data.textAlign;
   div.querySelector('[data-input="allCaps"]').checked = data.allCaps;
 
   return fragment.appendChild(div);

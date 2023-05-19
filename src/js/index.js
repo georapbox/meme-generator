@@ -43,10 +43,10 @@ const defaultTextOptions = {
   font: 'Anton',
   fontSize: 40,
   fontWeight: 'normal',
-  textAlign: 'center',
   shadowBlur: 3,
   offsetY: 0,
   offsetX: 0,
+  rotate: 0,
   allCaps: true
 };
 
@@ -99,12 +99,12 @@ const draw = image => {
 
     const multiplier = index + 1;
     const lineHeight = ctx.measureText('M').width + 20;
-    const xPos = item.textAlign === 'center' || !item.textAlign ? canvas.width / 2 : item.textAlign === 'left' ? 0 : canvas.width;
+    const xPos = canvas.width / 2;
     const shadowBlur = item.shadowBlur;
     const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
 
     ctx.fillStyle = item.fillColor;
-    ctx.textAlign = item.textAlign;
+    ctx.textAlign = 'center';
     ctx.save();
 
     if (shadowBlur !== 0) {
@@ -114,11 +114,15 @@ const draw = image => {
       ctx.shadowColor = item.shadowColor;
     }
 
-    ctx.fillText(
-      text,
-      xPos + item.offsetX,
-      lineHeight * multiplier + item.offsetY
-    );
+    if (item.rotate) {
+      ctx.translate(xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
+      ctx.rotate(item.rotate * Math.PI / 180);
+      ctx.fillText(text, 0, 0);
+      ctx.rotate(-(item.rotate * Math.PI / 180));
+      ctx.translate(-(xPos + item.offsetX), -(lineHeight * multiplier + item.offsetY));
+    } else {
+      ctx.fillText(text, xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
+    }
 
     ctx.restore();
   });
@@ -317,14 +321,14 @@ const onInputsContainerInput = evt => {
     prop = 'fontSize';
   } else if (element.matches('[data-input="fontWeight"]')) {
     prop = 'fontWeight';
-  } else if (element.matches('[data-input="textAlign"]')) {
-    prop = 'textAlign';
   } else if (element.matches('[data-input="shadowBlur"]')) {
     prop = 'shadowBlur';
   } else if (element.matches('[data-input="offsetY"]')) {
     prop = 'offsetY';
   } else if (element.matches('[data-input="offsetX"]')) {
     prop = 'offsetX';
+  } else if (element.matches('[data-input="rotate"]')) {
+    prop = 'rotate';
   }
 
   if (prop) {
