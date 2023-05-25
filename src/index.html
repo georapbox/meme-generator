@@ -60,6 +60,7 @@
                 <option value="fileInput">Upload from file</option>
                 <option value="imageUrlForm">Upload from URL</option>
                 <option value="openVideoModalBtn">Take photo</option>
+                <option value="solidColorForm">Use solid color</option>
               </select>
             </div>
 
@@ -123,6 +124,25 @@
               <img src="assets/icons/camera.svg" width="20" height="20" alt="Upload image" class="mr-2" />
               Take Photo
             </button>
+
+            <form id="solidColorForm" class="upload-method" hidden>
+              <div class="form-row">
+                <div class="col-4">
+                  <label for="canvasColor">Color:</label>
+                  <input type="color" name="canvasColor" id="canvasColor" class="form-control" value="#ffffff">
+                </div>
+
+                <div class="col-4">
+                  <label for="canvasWidth">Width:</label>
+                  <input type="number" name="canvasWidth" id="canvasWidth" class="form-control" min="0" max="800" value="600">
+                </div>
+
+                <div class="col-4">
+                  <label for="canvasHeight">Height:</label>
+                  <input type="number" name="canvasHeight" id="canvasHeight" class="form-control" min="0" max="800" value="400">
+                </div>
+              </div>
+            </form>
           </div>
         </details>
 

@@ -62,7 +62,7 @@ input[type="file"]:disabled::-webkit-file-upload-button {
 }
 
 /* Inputs */
-input[type="color"],
+#inputsContainer input[type="color"],
 .settings-button {
   width: 30px;
   height: 30px;
