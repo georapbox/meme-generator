@@ -13,6 +13,7 @@ Create a meme with by:
 - Selecting an image from the web (by URL)
 - Selecting an image from the gallery
 - Taking a photo with your device's web camera
+- Using a solid color as background
 
 ## Screenshots
 
