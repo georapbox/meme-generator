@@ -77,7 +77,7 @@ const generateMeme = async () => {
         webShareComponent.shareFiles = [file];
         webShareComponent.shareUrl = window.location.href;
         webShareComponent.shareTitle = document.title;
-        webShareComponent.classList.remove('d-none');
+        webShareComponent.hidden = false;
       }
     } catch (error) {
       console.error(error);
@@ -160,9 +160,8 @@ const onImageLoaded = evt => {
   draw(selectedImage);
 
   generateMemeBtn.disabled = false;
-  canvas.classList.remove('d-none');
-
-  instructionsEl && instructionsEl.remove();
+  canvas.hidden = false;
+  instructionsEl.hidden = true;
 };
 
 const handleSolidColorFormInput = evt => {
@@ -180,9 +179,8 @@ const handleSolidColorFormInput = evt => {
     draw(selectedImage);
 
     generateMemeBtn.disabled = false;
-    canvas.classList.remove('d-none');
-
-    instructionsEl && instructionsEl.remove();
+    canvas.hidden = false;
+    instructionsEl.hidden = true;
   }
 };
 
@@ -245,8 +243,8 @@ const handleImageUploadFromURL = async evt => {
   }
 
   submitButton.disabled = true;
-  submitButton.querySelector('.spinner').classList.remove('d-none');
-  submitButton.querySelector('.label').classList.add('d-none');
+  submitButton.querySelector('.spinner').hidden = false;
+  submitButton.querySelector('.label').hidden = true;
 
   try {
     const file = await fileFromUrl({
@@ -261,8 +259,8 @@ const handleImageUploadFromURL = async evt => {
     toastAlert(`Failed to load image from "${imageUrl}".`, 'danger');
   } finally {
     submitButton.disabled = false;
-    submitButton.querySelector('.spinner').classList.add('d-none');
-    submitButton.querySelector('.label').classList.remove('d-none');
+    submitButton.querySelector('.spinner').hidden = true;
+    submitButton.querySelector('.label').hidden = false;
   }
 };
 
@@ -389,10 +387,10 @@ const handleInputsContainerClick = evt => {
       const settingsEl = el.querySelector('[data-section="settings"]');
 
       if (el.getAttribute('data-index') === textBoxIndex) {
-        settingsEl.classList.toggle('d-none');
+        settingsEl.hidden = !settingsEl.hidden;
         textOptions[index]._isSettingsOpen = !textOptions[index]._isSettingsOpen;
       } else {
-        settingsEl.classList.add('d-none');
+        settingsEl.hidden = true;
         textOptions[index]._isSettingsOpen = false;
       }
     });

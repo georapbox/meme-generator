@@ -36,10 +36,10 @@
 
     <div class="row mx-0 mb-5 py-4 bg-white border border-light rounded shadow">
       <div class="col-lg-8 mb-3 mb-lg-0">
-        <div id="canvasPlaceholder" class="h-100 rounded">
-          <canvas id="canvas" class="canvas border shadow-sm d-none"></canvas>
+        <div id="canvasPlaceholder" class="canvas-placeholder">
+          <canvas id="canvas" class="canvas border shadow-sm" hidden></canvas>
 
-          <div id="instructions" class="text-center px-3 d-flex justify-content-center align-items-center text-muted">
+          <div id="instructions" class="instructions">
             <div class="fs-lg">
               Drag & Drop an image or use any of the alternative upload methods to generate your meme.
               <br>
@@ -64,7 +64,7 @@
               </select>
             </div>
 
-            <div class="upload-method" id="gallery">
+            <div class="upload-method gallery" id="gallery">
               <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/matrix-morpheus.jpg" alt="Matrix Morpheus"></button>
               <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/batman-slapping-robin.jpg" alt="Batman slapping Robin"></button>
               <button type="button" class="btn"><img loading="lazy" src="assets/meme-templates/captain-picard-facepalm.jpg" alt="Captain Picard facepalm"></button>
@@ -117,7 +117,7 @@
               <input type="url" name="imageUrl" id="imageUrl" autocomplete="off" placeholder="Enter image URL" class="form-control mr-2 w-100" />
 
               <button type="submit" class="btn btn-primary" style="min-width: 75px;">
-                <div class="spinner d-none">
+                <div class="spinner" hidden>
                   <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                   <span class="sr-only">Loading...</span>
                 </div>
@@ -154,7 +154,7 @@
         <details open>
           <summary><strong>Text options</strong></summary>
 
-          <div id="inputsContainer"></div>
+          <div id="inputsContainer" class="inputs-container"></div>
 
           <div class="clearfix mt-3">
             <button class="btn btn-outline-dark float-right d-flex align-items-center" id="addTextboxBtn">
@@ -219,7 +219,7 @@
               Download
             </a>
 
-            <web-share class="ml-1 d-none">
+            <web-share class="ml-1" hidden>
               <button slot="button" behavior="button" type="button" class="btn btn-dark">
                 <img src="assets/icons/share.svg" width="20" height="20" alt="Share" />
                 Share

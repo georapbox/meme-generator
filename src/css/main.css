@@ -62,7 +62,7 @@ input[type="file"]:disabled::-webkit-file-upload-button {
 }
 
 /* Inputs */
-#inputsContainer input[type="color"],
+.inputs-container input[type="color"],
 .settings-button {
   width: 30px;
   height: 30px;
@@ -101,26 +101,38 @@ input[type="file"]:disabled::-webkit-file-upload-button {
 }
 
 /* Misc */
-#inputsContainer {
+.inputs-container {
   flex: 1;
 }
 
-#inputsContainer:empty {
+.inputs-container:empty {
   display: none;
 }
 
-#canvasPlaceholder {
+.canvas-placeholder {
+  position: relative;
   padding: 0.25rem;
   border: 2px dashed #c0c0c0;
+  height: 100%;
+  border-radius: 0.25rem;
 }
 
-#instructions {
+/* .clear-all-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1051;
+} */
+
+.instructions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 200px;
   height: 100%;
-}
-
-.text-underline {
-  text-decoration: underline;
+  padding: 0 1rem;
+  text-align: center;
+  color: var(--gray);
 }
 
 .errorsContainer {
@@ -152,7 +164,7 @@ button[data-button="delete-text-box"] {
 }
 
 /* Gallery */
-#gallery {
+.gallery {
   display: flex;
   gap: 0.25rem;
   margin: 0;
@@ -162,12 +174,12 @@ button[data-button="delete-text-box"] {
   padding: 0.2rem;
 }
 
-#gallery button {
+.gallery button {
   height: 90px;
   padding: 0;
 }
 
-#gallery img {
+.gallery img {
   display: block;
   min-width: 88px;
   height: 88px;
@@ -287,4 +299,10 @@ capture-photo[loading]::part(capture-button),
 capture-photo[loading]::part(facing-mode-button) {
   opacity: 0.6;
   pointer-events: none;
+}
+
+/* Utils */
+
+.text-underline {
+  text-decoration: underline;
 }
