@@ -110,19 +110,11 @@ input[type="file"]:disabled::-webkit-file-upload-button {
 }
 
 .canvas-placeholder {
-  position: relative;
-  padding: 0.25rem;
-  border: 2px dashed #c0c0c0;
   height: 100%;
+  padding: 0.25rem;
   border-radius: 0.25rem;
+  border: 2px dashed #c0c0c0;
 }
-
-/* .clear-all-btn {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  z-index: 1051;
-} */
 
 .instructions {
   display: flex;
