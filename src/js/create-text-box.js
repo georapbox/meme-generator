@@ -14,7 +14,7 @@ export const createTextBox = (index, data = {}) => {
       </div>
     </div>
 
-    <div class="p-2 ${data._isSettingsOpen ? '' : 'd-none'}" data-section="settings">
+    <div class="p-2" data-section="settings" ${data._isSettingsOpen ? '' : 'hidden'}>
       <div class="form-row">
         <div class="col-6 mb-3">
           <label for="fontInput_${index}" class="mb-1 d-block text-truncate">Font: </label>
