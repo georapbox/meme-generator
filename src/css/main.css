@@ -160,10 +160,9 @@ button[data-button="delete-text-box"] {
   display: flex;
   gap: 0.25rem;
   margin: 0;
-  padding: 0;
+  padding: 0.25rem 0;
   overflow-x: auto;
-  min-height: 111px;
-  padding: 0.2rem;
+  min-height: 112px;
 }
 
 .gallery button {
@@ -175,9 +174,17 @@ button[data-button="delete-text-box"] {
   display: block;
   min-width: 88px;
   height: 88px;
-  border-radius: 0.25rem;
+  border-radius: 0.2rem;
   cursor: pointer;
   color: var(--light);
+}
+
+.gallery__no-results {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  text-align: center;
 }
 
 /* Move text actions */

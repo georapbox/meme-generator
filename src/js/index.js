@@ -30,6 +30,8 @@ const downloadMemePreview = document.getElementById('downloadMemePreview');
 const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
 const webShareComponent = document.querySelector('web-share');
 const galleryEl = document.getElementById('gallery');
+const gallerySearchEl = document.getElementById('gallerySearch');
+const galleryNoResultsEl = galleryEl.querySelector('.gallery__no-results')
 const solidColorForm = document.getElementById('solidColorForm');
 const uploadMethodEls = document.querySelectorAll('.upload-method');
 let selectedImage = null;
@@ -485,6 +487,18 @@ const handleGalleryClick = async evt => {
   }
 };
 
+const handleGallerySearchInput = evt => {
+  const query = evt.target.value.toLowerCase();
+  const galleryItems = galleryEl.querySelectorAll('button');
+
+  galleryItems.forEach(item => {
+    const alt = item.querySelector('img').alt.toLowerCase();
+    item.hidden = !alt.includes(query);
+  });
+
+  galleryNoResultsEl.hidden = !!galleryEl.querySelector('button:not([hidden])');
+};
+
 const handleWebShareError = () => {
   toastAlert('There was an error while trying to share your meme.', 'danger');
 };
@@ -553,6 +567,7 @@ inputsContainer.addEventListener('pointerup', handleInputsContainerPointerup);
 inputsContainer.addEventListener('pointerout', handleInputsContainerPointerout);
 imageUploadMethodSelect.addEventListener('change', handleUploadMethodChange);
 galleryEl.addEventListener('click', handleGalleryClick);
+gallerySearchEl.addEventListener('input', handleGallerySearchInput);
 solidColorForm.addEventListener('input', handleSolidColorFormInput);
 document.addEventListener('web-share:error', handleWebShareError);
 document.addEventListener('capture-photo:error', handleCapturePhotoError);
@@ -560,6 +575,10 @@ document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
 document.addEventListener('modal-close', handleModalClose);
 document.addEventListener('keyup', handleDocumentKeyup);
 window.addEventListener('beforeunload', handleBeforeunload);
+
+galleryEl.querySelectorAll('button > img')?.forEach(image => {
+  image.setAttribute('title', image.getAttribute('alt'));
+});
 
 textOptions.forEach((item, index) => {
   inputsContainer.appendChild(createTextBox(index, item));
