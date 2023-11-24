@@ -542,13 +542,6 @@ const handleDocumentKeyup = evt => {
   }
 };
 
-const handleBeforeunload = evt => {
-  if (selectedImage !== null) {
-    evt.preventDefault();
-    return (evt.returnValue = '');
-  }
-};
-
 fileInput.addEventListener('change', handleFileUploadInputChange);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButonClick);
 closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
@@ -574,7 +567,6 @@ document.addEventListener('capture-photo:error', handleCapturePhotoError);
 document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
 document.addEventListener('modal-close', handleModalClose);
 document.addEventListener('keyup', handleDocumentKeyup);
-window.addEventListener('beforeunload', handleBeforeunload);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
