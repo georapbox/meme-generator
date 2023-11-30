@@ -158,25 +158,25 @@ button[data-button="delete-text-box"] {
 /* Gallery */
 .gallery {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.5rem;
   margin: 0;
   padding: 0.25rem 0;
   overflow-x: auto;
   min-height: 112px;
+  scroll-behavior: smooth;
 }
 
-.gallery button {
-  height: 90px;
+.gallery > button {
   padding: 0;
+  cursor: pointer;
 }
 
-.gallery img {
+.gallery > button > img {
   display: block;
   min-width: 88px;
   height: 88px;
   border-radius: 0.2rem;
-  cursor: pointer;
-  color: var(--light);
+  object-fit: cover;
 }
 
 .gallery__no-results {

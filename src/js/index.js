@@ -488,11 +488,11 @@ const handleGalleryClick = async evt => {
 };
 
 const handleGallerySearchInput = evt => {
-  const query = evt.target.value.toLowerCase();
+  const query = evt.target.value.toLowerCase().trim();
   const galleryItems = galleryEl.querySelectorAll('button');
 
   galleryItems.forEach(item => {
-    const alt = item.querySelector('img').alt.toLowerCase();
+    const alt = (item.querySelector('img').getAttribute('alt') || '').toLowerCase();
     item.hidden = !alt.includes(query);
   });
 
