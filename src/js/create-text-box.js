@@ -5,7 +5,7 @@ export const createTextBox = (index, data = {}) => {
     <div class="d-flex align-items-center">
       <button class="btn" data-button="delete-text-box" aria-label="Remove"></button>
 
-      <input class="form-control m-2" type="text" value="${data.text}" data-input="text" autocomplete="off" placeholder="${`Text #${index + 1}`}" style="min-width: 0;">
+      <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${index + 1}`}">${data.text}</textarea>
 
       <div class="d-flex align-items-center pr-2">
         <input class="form-control" type="color" value="${data.fillColor}" data-input="fillColor" title="Fill color">
@@ -16,7 +16,7 @@ export const createTextBox = (index, data = {}) => {
 
     <div class="p-2" data-section="settings" ${data._isSettingsOpen ? '' : 'hidden'}>
       <div class="form-row">
-        <div class="col-6 mb-3">
+        <div class="col-4 mb-3">
           <label for="fontInput_${index}" class="mb-1 d-block text-truncate">Font: </label>
 
           <select class="custom-select" data-input="font" id="fontInput_${index}">
@@ -42,12 +42,12 @@ export const createTextBox = (index, data = {}) => {
           </select>
         </div>
 
-        <div class="col-3 mb-3">
+        <div class="col-4 mb-3">
           <label for="fontSizeInput_${index}" class="mb-1 d-block text-truncate">Size:</label>
           <input class="form-control" type="number" min="1" value="${data.fontSize}" data-input="fontSize" id="fontSizeInput_${index}">
         </div>
 
-        <div class="col-3 mb-3">
+        <div class="col-4 mb-3">
           <label for="fontWeightInput_${index}" class="mb-1 d-block text-truncate">Weight:</label>
           <select class="custom-select" data-input="fontWeight" id="fontWeightInput_${index}">
             <option value="normal" selected>Normal</option>
@@ -57,12 +57,21 @@ export const createTextBox = (index, data = {}) => {
       </div>
 
       <div class="form-row">
-        <div class="col-6 mb-3">
+        <div class="col-4 mb-3">
           <label for="shadowWidthInput_${index}" class="mb-1 d-block text-truncate">Shadow width:</label>
           <input class="form-control" type="number" min="0" max="10" value="${data.shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${index}">
         </div>
 
-        <div class="col-6 mb-3">
+        <div class="col-4 mb-3">
+          <label for="textAlign_${index}" class="mb-1 d-block text-truncate">Text align:</label>
+          <select class="custom-select" data-input="textAlign" id="textAlignInput_${index}">
+            <option value="left">Left</option>
+            <option value="center" selected>Center</option>
+            <option value="right">Right</option>
+          </select>
+        </div>
+
+        <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="textRotateInput_${index}">Rotate:</label>
           <input class="form-control" type="number" value="${data.rotate}" data-input="rotate" id="textRotateInput_${index}" min="-360" max="360">
         </div>
@@ -108,7 +117,7 @@ export const createTextBox = (index, data = {}) => {
   div.setAttribute('data-index', index);
   div.innerHTML = inputTemplate;
   div.querySelector('[data-input="font"]').value = data.font;
-  // div.querySelector('[data-input="textAlign"]').value = data.textAlign;
+  div.querySelector('[data-input="textAlign"]').value = data.textAlign;
   div.querySelector('[data-input="allCaps"]').checked = data.allCaps;
 
   return fragment.appendChild(div);

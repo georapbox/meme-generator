@@ -46,6 +46,7 @@ const defaultTextOptions = {
   font: 'Anton',
   fontSize: 40,
   fontWeight: 'normal',
+  textAlign: 'center',
   shadowBlur: 3,
   offsetY: 0,
   offsetX: 0,
@@ -107,13 +108,14 @@ const draw = image => {
     ctx.font = `${item.fontWeight} ${item.fontSize}px ${item.font}`;
 
     const multiplier = index + 1;
-    const lineHeight = ctx.measureText('M').width + 20;
+    const lineHeight = ctx.measureText('M').width + item.fontSize / 2;
     const xPos = canvas.width / 2;
     const shadowBlur = item.shadowBlur;
     const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
+    const textLines = text.split('\n');
 
     ctx.fillStyle = item.fillColor;
-    ctx.textAlign = 'center';
+    ctx.textAlign = item.textAlign;
     ctx.save();
 
     if (shadowBlur !== 0) {
@@ -126,11 +128,13 @@ const draw = image => {
     if (item.rotate) {
       ctx.translate(xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
       ctx.rotate(item.rotate * Math.PI / 180);
-      ctx.fillText(text, 0, 0);
+      textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
       ctx.rotate(-(item.rotate * Math.PI / 180));
       ctx.translate(-(xPos + item.offsetX), -(lineHeight * multiplier + item.offsetY));
     } else {
-      ctx.fillText(text, xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
+      textLines.forEach((text, index) => {
+        ctx.fillText(text, xPos + item.offsetX, index * lineHeight + lineHeight * multiplier + item.offsetY);
+      });
     }
 
     ctx.restore();
@@ -349,6 +353,8 @@ const handleInputsContainerInput = evt => {
     prop = 'fontSize';
   } else if (element.matches('[data-input="fontWeight"]')) {
     prop = 'fontWeight';
+  } else if (element.matches('[data-input="textAlign"]')) {
+    prop = 'textAlign';
   } else if (element.matches('[data-input="shadowBlur"]')) {
     prop = 'shadowBlur';
   } else if (element.matches('[data-input="offsetY"]')) {
