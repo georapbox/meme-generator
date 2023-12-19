@@ -73,6 +73,13 @@ input[type="file"]:disabled::-webkit-file-upload-button {
   cursor: pointer;
 }
 
+.inputs-container .meme-text {
+  min-width: 0;
+  min-height: calc(1.5em + 0.75rem + 2px);
+  height: calc(1.5em + 0.75rem + 2px);
+  margin: 0.5rem;
+}
+
 /* Buttons */
 .btn:disabled {
   cursor: not-allowed;
