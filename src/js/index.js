@@ -10,6 +10,7 @@ import { fileFromUrl } from './file-from-url.js';
 import { toastAlert } from './toast-alert.js';
 import { toggleModal } from './toggle-modal.js';
 import { createTextBox } from './create-text-box.js';
+import { drawCanvas } from './draw-canvas.js';
 
 const videoModal = document.getElementById('videoModal');
 const downloadModal = document.getElementById('downloadModal');
@@ -90,57 +91,6 @@ const generateMeme = async () => {
   toggleModal(downloadModal, true);
 };
 
-const draw = image => {
-  if (image == null) {
-    return;
-  }
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  if (typeof image === 'string') { // Assume it's a color
-    ctx.fillStyle = image;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  } else {
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-  }
-
-  textOptions.forEach(function (item, index) {
-    ctx.font = `${item.fontWeight} ${item.fontSize}px ${item.font}`;
-
-    const multiplier = index + 1;
-    const lineHeight = ctx.measureText('M').width + item.fontSize / 2;
-    const xPos = canvas.width / 2;
-    const shadowBlur = item.shadowBlur;
-    const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
-    const textLines = text.split('\n');
-
-    ctx.fillStyle = item.fillColor;
-    ctx.textAlign = item.textAlign;
-    ctx.save();
-
-    if (shadowBlur !== 0) {
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      ctx.shadowBlur = shadowBlur;
-      ctx.shadowColor = item.shadowColor;
-    }
-
-    if (item.rotate) {
-      ctx.translate(xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
-      ctx.rotate(item.rotate * Math.PI / 180);
-      textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-      ctx.rotate(-(item.rotate * Math.PI / 180));
-      ctx.translate(-(xPos + item.offsetX), -(lineHeight * multiplier + item.offsetY));
-    } else {
-      textLines.forEach((text, index) => {
-        ctx.fillText(text, xPos + item.offsetX, index * lineHeight + lineHeight * multiplier + item.offsetY);
-      });
-    }
-
-    ctx.restore();
-  });
-};
-
 const onImageLoaded = evt => {
   const MAX_WIDTH = 800;
   const MAX_HEIGHT = 600;
@@ -163,7 +113,7 @@ const onImageLoaded = evt => {
 
   selectedImage = evt.target;
 
-  draw(selectedImage);
+  drawCanvas(selectedImage, canvas, ctx, textOptions);
 
   generateMemeBtn.disabled = false;
   canvas.hidden = false;
@@ -182,7 +132,7 @@ const handleSolidColorFormInput = evt => {
     canvas.width = Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH;
     canvas.height = Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT;
 
-    draw(selectedImage);
+    drawCanvas(selectedImage, canvas, ctx, textOptions);
 
     generateMemeBtn.disabled = false;
     canvas.hidden = false;
@@ -225,7 +175,7 @@ const handleTextPropChange = (element, index, prop) => {
     textOptions[index][prop] = element.value;
   }
 
-  draw(selectedImage);
+  drawCanvas(selectedImage, canvas, ctx, textOptions);
 };
 
 const handleAddTextboxBtnClick = () => {
@@ -299,7 +249,7 @@ const moveText = (offsetDir, sign, index) => () => {
     offsetXInput.value = textOptions[index].offsetX;
   }
 
-  draw(selectedImage);
+  drawCanvas(selectedImage, canvas, ctx, textOptions);
 
   reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
 };
@@ -416,7 +366,7 @@ const handleInputsContainerClick = evt => {
       textOptions = arrayRemove(textOptions, index);
       inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
       textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
-      draw(selectedImage);
+      drawCanvas(selectedImage, canvas, ctx, textOptions);
     }
   }
 };
