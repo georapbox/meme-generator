@@ -156,14 +156,18 @@ const handleFileSelect = file => {
 };
 
 const handleOpenVideoModalButonClick = () => {
-  // Remove old capture photo component if sitll present, in case the user
-  // opened and closed the modal too fast.
-  const oldCapturePhotoComponent = videoModal.querySelector('capture-photo');
-  oldCapturePhotoComponent?.remove();
+  let capturePhotoComponent = videoModal.querySelector('capture-photo');
 
-  const capturePhotoComponent = document.createElement('capture-photo');
-  capturePhotoComponent.noImage = true;
-  videoModal.appendChild(capturePhotoComponent);
+  if (capturePhotoComponent) {
+    // Component already exists, just start the video stream.
+    typeof capturePhotoComponent.startVideoStream === 'function' && capturePhotoComponent.startVideoStream();
+  } else {
+    // Component doesn't exist, create it and append it to the modal.
+    capturePhotoComponent = document.createElement('capture-photo');
+    capturePhotoComponent.noImage = true;
+    videoModal.appendChild(capturePhotoComponent);
+  }
+
   videoModal.open = true;
 };
 
@@ -482,7 +486,10 @@ const handleCapturePhotoSuccess = evt => {
 const handleModalClose = evt => {
   if (evt.target.id === 'videoModal') {
     const capturePhotoComponent = videoModal.querySelector('capture-photo');
-    setTimeout(() => capturePhotoComponent?.remove(), 350); // Wait for the modal to close
+
+    if (capturePhotoComponent && typeof capturePhotoComponent.stopVideoStream === 'function') {
+      capturePhotoComponent.stopVideoStream();
+    }
   }
 };
 
