@@ -58,12 +58,6 @@
       "exceptions": {
         "Property": false
       }
-    }],
-    "prefer-rest-params": [
-      "warn"
-    ],
-    "prefer-const": [
-      "warn"
-    ]
+    }]
   }
 }
