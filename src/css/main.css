@@ -1,6 +1,11 @@
 :root {
+  --body-color: #212529;
   --move-btn-width: 60px;
   --move-btn-height: 34px;
+}
+
+:not(:defined) {
+  display: none !important;
 }
 
 html,
@@ -100,11 +105,6 @@ input[type="file"]:disabled::-webkit-file-upload-button {
 .btn-outline-secondary:hover svg path,
 .btn-outline-dark:hover svg path {
   fill: #ffffff;
-}
-
-/* Modal */
-.modal {
-  background: rgba(0, 0, 0, 0.7);
 }
 
 /* Misc */
@@ -305,6 +305,52 @@ capture-photo[loading]::part(capture-button),
 capture-photo[loading]::part(facing-mode-button) {
   opacity: 0.6;
   pointer-events: none;
+}
+
+/* Modal */
+
+modal-element {
+  --me-width: fit-content;
+  --me-border-radius: 0.25rem;
+  --me-border-width: 0;
+  --me-box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.30);
+}
+
+#videoModal {
+  --me-width: 600px;
+}
+
+modal-element::part(base):focus-visible {
+  outline: 0;
+}
+
+modal-element [slot="header"] {
+  margin: 0;
+  color: var(--body-color);
+}
+
+modal-element::part(close) {
+  color: var(--body-color);
+  border-radius: 0.25rem;
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+modal-element::part(close):focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem #268fff80;
+}
+
+modal-element::part(body) {
+  padding-block: 0;
+}
+
+modal-element [slot="footer"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  text-align: center;
 }
 
 /* Utils */

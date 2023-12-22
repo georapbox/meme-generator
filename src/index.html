@@ -10,6 +10,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" sizes="192x192" href="assets/app-icons/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/app-icons/ios/180.png">
+  <script src="./js/register-service-worker.js" type="module"></script>
+  <script src="./js/index.js" type="module"></script>
 </head>
 <body class="bg-body">
   <div class="errorsContainer">
@@ -209,56 +211,28 @@
     </div>
   </div>
 
-  <div class="modal" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModal">
-    <div class="modal-dialog modal-lg shadow-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Capture image</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeVideoModalBtn">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+  <modal-element id="videoModal" static-backdrop>
+    <h5 slot="header">Capture image</h5>
+  </modal-element>
 
-        <div class="modal-body"></div>
-      </div>
+  <modal-element id="downloadModal">
+    <h5 slot="header">Download Meme</h5>
+
+    <img class="img-thumbnail" id="downloadMemePreview" alt="meme preview">
+
+    <div slot="footer">
+      <a class="btn btn-primary" href="#" download="" id="downloadMemeBtn">
+        <img src="assets/icons/save.svg" width="20" height="20" alt="Generate meme" class="mr-1" />
+        Download
+      </a>
+
+      <web-share class="ml-1" hidden>
+        <button slot="button" behavior="button" type="button" class="btn btn-dark">
+          <img src="assets/icons/share.svg" width="20" height="20" alt="Share" />
+          Share
+        </button>
+      </web-share>
     </div>
-  </div>
-
-  <div class="modal" id="downloadModal" tabindex="-1" role="dialog" aria-labelledby="downloadModal">
-    <div class="modal-dialog modal-lg shadow-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Download Meme</h5>
-
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="downloadMemeModalCloseBtn">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <div class="modal-body text-center">
-          <p>
-            <img class="img-thumbnail" id="downloadMemePreview" alt="">
-          </p>
-
-          <p class="d-flex justify-content-center align-items-center">
-            <a class="btn btn-primary" href="#" download="" id="downloadMemeBtn">
-              <img src="assets/icons/save.svg" width="20" height="20" alt="Generate meme" class="mr-1" />
-              Download
-            </a>
-
-            <web-share class="ml-1" hidden>
-              <button slot="button" behavior="button" type="button" class="btn btn-dark">
-                <img src="assets/icons/share.svg" width="20" height="20" alt="Share" />
-                Share
-              </button>
-            </web-share>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="./js/register-service-worker.js" type="module"></script>
-  <script src="./js/index.js" type="module"></script>
+  </modal-element>
 </body>
 </html>

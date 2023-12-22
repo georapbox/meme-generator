@@ -1,6 +1,7 @@
 import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
 import '@georapbox/web-share-element/dist/web-share-defined.js';
 import '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
+import '@georapbox/modal-element/dist/modal-element-defined.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
 import { arrayRemove } from './utils/array-remove.js';
@@ -8,13 +9,11 @@ import { ACCEPTED_MIME_TYPES, DEFAULT_GENERATED_FILE_NAME } from './constants.js
 import { customFonts, loadCustomFont } from './custom-fonts.js';
 import { fileFromUrl } from './file-from-url.js';
 import { toastAlert } from './toast-alert.js';
-import { toggleModal } from './toggle-modal.js';
 import { createTextBox } from './create-text-box.js';
 import { drawCanvas } from './draw-canvas.js';
 
 const videoModal = document.getElementById('videoModal');
 const downloadModal = document.getElementById('downloadModal');
-const closeVideoModalBtn = document.getElementById('closeVideoModalBtn');
 const canvas = document.getElementById('canvas');
 const canvasPlaceholder = document.getElementById('canvasPlaceholder');
 const instructionsEl = document.getElementById('instructions');
@@ -28,7 +27,6 @@ const generateMemeBtn = document.getElementById('generateMemeBtn');
 const openVideoModalBtn = document.getElementById('openVideoModalBtn');
 const downloadMemeBtn = document.getElementById('downloadMemeBtn');
 const downloadMemePreview = document.getElementById('downloadMemePreview');
-const downloadMemeModalCloseBtn = document.getElementById('downloadMemeModalCloseBtn');
 const webShareComponent = document.querySelector('web-share');
 const galleryEl = document.getElementById('gallery');
 const gallerySearchEl = document.getElementById('gallerySearch');
@@ -77,10 +75,8 @@ const generateMeme = async () => {
         mimeType: 'image/png'
       }).catch(err => toastAlert(err.message, 'danger'));
 
-      if (file) {
+      if (file && isWebShareSupported({ files: [file] })) {
         webShareComponent.shareFiles = [file];
-        webShareComponent.shareUrl = window.location.href;
-        webShareComponent.shareTitle = document.title;
         webShareComponent.hidden = false;
       }
     } catch (error) {
@@ -88,7 +84,7 @@ const generateMeme = async () => {
     }
   }
 
-  toggleModal(downloadModal, true);
+  downloadModal.open = true;
 };
 
 const onImageLoaded = evt => {
@@ -160,10 +156,15 @@ const handleFileSelect = file => {
 };
 
 const handleOpenVideoModalButonClick = () => {
+  // Remove old capture photo component if sitll present, in case the user
+  // opened and closed the modal too fast.
+  const oldCapturePhotoComponent = videoModal.querySelector('capture-photo');
+  oldCapturePhotoComponent?.remove();
+
   const capturePhotoComponent = document.createElement('capture-photo');
   capturePhotoComponent.noImage = true;
-  videoModal.querySelector('.modal-body').appendChild(capturePhotoComponent);
-  toggleModal(videoModal, true);
+  videoModal.appendChild(capturePhotoComponent);
+  videoModal.open = true;
 };
 
 const handleTextPropChange = (element, index, prop) => {
@@ -456,6 +457,7 @@ const handleGallerySearchInput = evt => {
 };
 
 const handleWebShareError = () => {
+  downloadModal.open = false;
   toastAlert('There was an error while trying to share your meme.', 'danger');
 };
 
@@ -465,7 +467,7 @@ const handleCapturePhotoError = evt => {
 };
 
 const handleCapturePhotoSuccess = evt => {
-  toggleModal(videoModal, false);
+  videoModal.open = false;
   const image = new Image();
   image.addEventListener('load', onImageLoaded);
   image.src = evt.detail.dataURI;
@@ -478,33 +480,17 @@ const handleCapturePhotoSuccess = evt => {
 };
 
 const handleModalClose = evt => {
-  if (evt.detail.modalId === 'videoModal') {
+  if (evt.target.id === 'videoModal') {
     const capturePhotoComponent = videoModal.querySelector('capture-photo');
-    capturePhotoComponent.remove();
-  }
-};
-
-const handleDocumentKeyup = evt => {
-  if (evt.code !== 'Escape') {
-    return;
-  }
-
-  if (videoModal.hasAttribute('data-open')) {
-    toggleModal(videoModal, false);
-  }
-
-  if (downloadModal.hasAttribute('data-open')) {
-    toggleModal(downloadModal, false);
+    setTimeout(() => capturePhotoComponent?.remove(), 350); // Wait for the modal to close
   }
 };
 
 fileInput.addEventListener('change', handleFileUploadInputChange);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButonClick);
-closeVideoModalBtn.addEventListener('click', () => toggleModal(videoModal, false));
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
 generateMemeBtn.addEventListener('click', generateMeme);
-downloadMemeBtn.addEventListener('click', () => toggleModal(downloadModal, false));
-downloadMemeModalCloseBtn.addEventListener('click', () => toggleModal(downloadModal, false));
+downloadMemeBtn.addEventListener('click', () => downloadModal.open = false);
 imageUrlForm.addEventListener('submit', handleImageUploadFromURL);
 canvasPlaceholder.addEventListener('dragover', handleCanvasPlaceholderDragover);
 canvasPlaceholder.addEventListener('drop', handleCanvasPlaceholderDrop);
@@ -521,8 +507,7 @@ solidColorForm.addEventListener('input', handleSolidColorFormInput);
 document.addEventListener('web-share:error', handleWebShareError);
 document.addEventListener('capture-photo:error', handleCapturePhotoError);
 document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
-document.addEventListener('modal-close', handleModalClose);
-document.addEventListener('keyup', handleDocumentKeyup);
+document.addEventListener('me-close', handleModalClose);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));

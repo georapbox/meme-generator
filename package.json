@@ -31,7 +31,8 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "dependencies": {
     "@georapbox/capture-photo-element": "~3.2.1",
-    "@georapbox/web-share-element": "~3.0.0",
+    "@georapbox/modal-element": "~1.2.1",
+    "@georapbox/web-share-element": "~3.1.0",
     "bootstrap": "~4.6.2"
   }
 }
