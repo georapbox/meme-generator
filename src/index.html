@@ -13,7 +13,7 @@
   <script src="./js/register-service-worker.js" type="module"></script>
   <script src="./js/index.js" type="module"></script>
 </head>
-<body class="bg-body">
+<body>
   <div class="errorsContainer">
     <div class="container-fluid mt-2">
       <div class="row">
@@ -22,46 +22,42 @@
     </div>
   </div>
 
+  <header class="site-header">
+    <img src="assets/logo.png" width="90" height="90" alt="Logo" class="d-block rounded-circle border">
+    <h1 class="page-title">Meme Generator</h1>
+    <p class="mb-0">
+      <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+      Fork me on <a href="https://github.com/georapbox/meme-generator" class="text-underline text-dark" target="_blank" rel="noopener noreferrer">Github</a>
+    </p>
+  </header>
+
   <div class="container">
-    <div class="row my-4 my-md-5 text-center">
-      <div class="col">
-        <h1 class="page-title">Meme Generator</h1>
-
-        <p class="text-muted mx-auto">Create memes by uploading image or taking photo.</p>
-
-        <p class="mb-0">
-          <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
-          Fork me on <a href="https://github.com/georapbox/meme-generator" class="text-underline" target="_blank" rel="noopener noreferrer">Github</a>
-        </p>
-      </div>
-    </div>
-
     <div class="row mx-0 mb-5 py-4 bg-white border border-light rounded shadow">
-      <div class="col-lg-8 mb-3 mb-lg-0">
-        <div id="canvasPlaceholder" class="canvas-placeholder">
+      <div class="col-xl-8 col-lg-7 mb-3 mb-lg-0">
+        <files-dropzone>
           <canvas id="canvas" class="canvas border shadow-sm" hidden></canvas>
 
           <div id="instructions" class="instructions">
-            <div class="fs-lg">
-              Drag & Drop an image or use any of the alternative upload methods to generate your meme.
-              <br>
-              The images are processed without being stored on any server.
+            <img src="assets/icons/add-image.svg" width="60" height="60" alt="add image icon">
+            <div>
+              <p class="mb-0">Drag & Drop an image here or click to select an image from your device.</p>
+              <p class="m-0 text-muted"><em><small>All uploaded images are processed locally in your browser. No data is sent to any server.</small></em></p>
             </div>
           </div>
-        </div>
+        </files-dropzone>
       </div>
 
-      <div class="col-lg-4">
+      <div class="col-xl-4 col-lg-5">
         <details class="mb-4" open>
-          <summary><strong>Image upload options</strong></summary>
+          <summary><strong>Image selection options</strong></summary>
 
           <div class="bg-light py-4 px-3 border shadow-sm rounded">
             <div class="form-group">
-              <select class="custom-select" id="imageUploadMethodSelect" title="Select upload method" autocomplete="off">
-                <option value="gallery">Upload from gallery</option>
-                <option value="fileInput">Upload from file</option>
-                <option value="imageUrlForm">Upload from URL</option>
-                <option value="openVideoModalBtn">Take photo</option>
+              <select class="custom-select" id="imageUploadMethodSelect" autocomplete="off">
+                <option value="gallery">Select image from gallery</option>
+                <option value="fileSelectBtn">Use an image from your device</option>
+                <option value="imageUrlForm">Use an image from URL</option>
+                <option value="openVideoModalBtn">Take photo with webcam</option>
                 <option value="solidColorForm">Use solid color</option>
               </select>
             </div>
@@ -138,7 +134,10 @@
               </div>
             </div>
 
-            <input type="file" name="file[]" id="fileInput" autocomplete="off" class="upload-method form-control h-auto" hidden />
+            <button type="button" id="fileSelectBtn" class="btn btn-primary btn-block d-flex justify-content-center align-items-center upload-method" hidden>
+              <img src="assets/icons/photo.svg" width="20" height="20" alt="photo icon" class="mr-2">
+              Select Image
+            </button>
 
             <form id="imageUrlForm" class="upload-method form-inline flex-nowrap" hidden>
               <label class="sr-only" for="imageUrl">Image URL</label>
@@ -155,7 +154,7 @@
             </form>
 
             <button class="upload-method btn btn-primary btn-block d-flex align-items-center justify-content-center" id="openVideoModalBtn" hidden>
-              <img src="assets/icons/camera.svg" width="20" height="20" alt="Upload image" class="mr-2" />
+              <img src="assets/icons/camera.svg" width="20" height="20" alt="camera icon" class="mr-2" />
               Take Photo
             </button>
 
@@ -203,10 +202,7 @@
 
     <div class="row mb-5">
       <div class="col text-center">
-        <span class=text-muted>
-          Licensed under
-          <a class="text-underline" href="https://georapbox.mit-license.org/@2018" target="_blank" rel="noopener">The MIT License (MIT)</a>
-        </span>
+        Licensed under <a class="text-underline text-dark" href="https://georapbox.mit-license.org/@2018" target="_blank" rel="noopener">The MIT License (MIT)</a>
       </div>
     </div>
   </div>

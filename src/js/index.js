@@ -2,10 +2,12 @@ import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-sh
 import '@georapbox/web-share-element/dist/web-share-defined.js';
 import '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
 import '@georapbox/modal-element/dist/modal-element-defined.js';
+import '@georapbox/files-dropzone-element/dist/files-dropzone-defined.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
 import { arrayRemove } from './utils/array-remove.js';
-import { ACCEPTED_MIME_TYPES, DEFAULT_GENERATED_FILE_NAME } from './constants.js';
+import { uid } from './utils/uid.js';
+import { ACCEPTED_MIME_TYPES } from './constants.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
 import { fileFromUrl } from './file-from-url.js';
 import { toastAlert } from './toast-alert.js';
@@ -15,11 +17,11 @@ import { drawCanvas } from './draw-canvas.js';
 const videoModal = document.getElementById('videoModal');
 const downloadModal = document.getElementById('downloadModal');
 const canvas = document.getElementById('canvas');
-const canvasPlaceholder = document.getElementById('canvasPlaceholder');
+const dropzoneEl = document.querySelector('files-dropzone');
 const instructionsEl = document.getElementById('instructions');
 const ctx = canvas.getContext('2d');
 const imageUploadMethodSelect = document.getElementById('imageUploadMethodSelect');
-const fileInput = document.getElementById('fileInput');
+const fileSelectBtn = document.getElementById('fileSelectBtn');
 const imageUrlForm = document.getElementById('imageUrlForm');
 const addTextboxBtn = document.getElementById('addTextboxBtn');
 const inputsContainer = document.getElementById('inputsContainer');
@@ -34,7 +36,6 @@ const galleryNoResultsEl = galleryEl.querySelector('.gallery__no-results');
 const solidColorForm = document.getElementById('solidColorForm');
 const uploadMethodEls = document.querySelectorAll('.upload-method');
 let selectedImage = null;
-let generatedFileName = DEFAULT_GENERATED_FILE_NAME;
 let reqAnimFrame = null;
 
 const defaultTextOptions = {
@@ -62,7 +63,7 @@ const generateMeme = async () => {
 
   // Prepare download link
   const downloadLink = dataUrl.replace('image/png', 'image/octet-stream');
-  downloadMemeBtn.download = generatedFileName;
+  downloadMemeBtn.download = `${uid('meme')}.png`;
   downloadMemeBtn.href = downloadLink;
   downloadMemePreview.src = downloadLink;
 
@@ -71,7 +72,7 @@ const generateMeme = async () => {
     try {
       const file = await fileFromUrl({
         url: dataUrl,
-        filename: DEFAULT_GENERATED_FILE_NAME,
+        filename: `${uid('meme')}.png`,
         mimeType: 'image/png'
       }).catch(err => toastAlert(err.message, 'danger'));
 
@@ -144,8 +145,6 @@ const handleFileSelect = file => {
   const image = new Image();
   const reader = new FileReader();
 
-  generatedFileName = `${file.name.replace(/\.[^.]+$/, '')}-meme.png`;
-
   reader.addEventListener('load', function (evt) {
     const data = evt.target.result;
     image.addEventListener('load', onImageLoaded);
@@ -214,7 +213,6 @@ const handleImageUploadFromURL = async evt => {
 
     if (file) {
       handleFileSelect(file);
-      fileInput.value = fileInput.defaultValue;
     }
   } catch (err) {
     toastAlert(`Failed to load image from "${imageUrl}".`, 'danger');
@@ -263,32 +261,18 @@ const handleUploadMethodChange = evt => {
   uploadMethodEls.forEach(el => el.hidden = el.id !== evt.target.value);
 };
 
-const handleFileUploadInputChange = evt => {
-  imageUrlForm['imageUrl'].value = '';
-  handleFileSelect(evt.target.files[0]);
-};
-
-const handleCanvasPlaceholderDragover = evt => {
-  evt.stopPropagation();
-  evt.preventDefault();
-  evt.dataTransfer.dropEffect = 'copy';
-};
-
-const handleCanvasPlaceholderDrop = evt => {
-  evt.stopPropagation();
-  evt.preventDefault();
-
-  const fileList = evt.dataTransfer.files;
-  const [file] = fileList;
-
-  if (!ACCEPTED_MIME_TYPES.includes(file.type)) {
-    return;
+const handleFileSelectClick = () => {
+  if (typeof dropzoneEl.openFileDialog === 'function') {
+    dropzoneEl.openFileDialog();
   }
+};
 
-  fileInput.value = fileInput.defaultValue;
-  imageUrlForm['imageUrl'].value = '';
+const handleDropFilesAccepted = evt => {
+  const [file] = evt.detail.acceptedFiles;
 
-  handleFileSelect(file);
+  if (file) {
+    handleFileSelect(file);
+  }
 };
 
 const handleInputsContainerInput = evt => {
@@ -440,8 +424,6 @@ const handleGalleryClick = async evt => {
 
     if (file) {
       handleFileSelect(file);
-      fileInput.value = fileInput.defaultValue;
-      imageUrlForm['imageUrl'].value = '';
     }
   } catch (err) {
     toastAlert(`Failed to load image: "${img.alt}".`, 'danger');
@@ -475,12 +457,6 @@ const handleCapturePhotoSuccess = evt => {
   const image = new Image();
   image.addEventListener('load', onImageLoaded);
   image.src = evt.detail.dataURI;
-
-  if (fileInput.value) {
-    fileInput.value = fileInput.defaultValue;
-    imageUrlForm['imageUrl'].value = '';
-    generatedFileName = DEFAULT_GENERATED_FILE_NAME;
-  }
 };
 
 const handleModalClose = evt => {
@@ -493,14 +469,13 @@ const handleModalClose = evt => {
   }
 };
 
-fileInput.addEventListener('change', handleFileUploadInputChange);
+fileSelectBtn.addEventListener('click', handleFileSelectClick);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
 generateMemeBtn.addEventListener('click', generateMeme);
 downloadMemeBtn.addEventListener('click', () => downloadModal.open = false);
 imageUrlForm.addEventListener('submit', handleImageUploadFromURL);
-canvasPlaceholder.addEventListener('dragover', handleCanvasPlaceholderDragover);
-canvasPlaceholder.addEventListener('drop', handleCanvasPlaceholderDrop);
+dropzoneEl.addEventListener('files-dropzone-drop-accepted', handleDropFilesAccepted);
 inputsContainer.addEventListener('input', handleInputsContainerInput);
 inputsContainer.addEventListener('change', handleInputsContainerChange);
 inputsContainer.addEventListener('click', handleInputsContainerClick);
@@ -524,7 +499,7 @@ textOptions.forEach((item, index) => {
   inputsContainer.appendChild(createTextBox(index, item));
 });
 
-fileInput.accept = ACCEPTED_MIME_TYPES.join(',');
+dropzoneEl.accept = ACCEPTED_MIME_TYPES;
 
 customFonts.forEach(({ name, path, style, weight }) => {
   loadCustomFont(name, path, { style, weight });

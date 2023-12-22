@@ -9,14 +9,5 @@ export const fileFromUrl = async (options = {}) => {
     throw new Error(`This is not an accepted image format. Accepted MIME types are: ${ACCEPTED_MIME_TYPES.join(', ')}`);
   }
 
-  let filename = options.filename || '';
-
-  if (!options.filename) {
-    const fileExtension = mimeType.split('/')[1];
-    filename = `${options.url}.${fileExtension}`;
-  }
-
-  const file = new File([blob], filename, blob);
-
-  return file;
+  return new File([blob], options.filename || '', blob);
 };

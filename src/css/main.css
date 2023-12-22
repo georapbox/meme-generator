@@ -2,6 +2,7 @@
   --body-color: #212529;
   --move-btn-width: 60px;
   --move-btn-height: 34px;
+  --focus-ring: 0 0 0 0.2rem #268fff80;
 }
 
 :not(:defined) {
@@ -15,9 +16,6 @@ body {
 
 body {
   overflow-x: hidden;
-}
-
-.bg-body {
   background-color: #eae9e9;
 }
 
@@ -25,39 +23,30 @@ body {
   display: none !important;
 }
 
+a:focus-visible,
+details summary:focus-visible {
+  outline: 0;
+  border-radius: 0.25rem;
+  box-shadow: var(--focus-ring);
+  transition: box-shadow 0.15s ease-in-out;
+}
+
 .container {
   max-width: 1400px;
 }
 
+.site-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 0.5rem;
+  margin: 3rem 0.5rem;
+  text-align: center;
+}
+
 .page-title {
   font-weight: 300;
-  letter-spacing: 2px;
-}
-
-/* File Input */
-input[type="file"] {
-  cursor: pointer;
-}
-
-input[type="file"]:disabled {
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-input[type="file"]::-webkit-file-upload-button {
-  color: #ffffff;
-  background-color: var(--primary);
-  border: 1px solid var(--primary);
-  border-radius: 0.25rem;
-  line-height: 1.5;
-  cursor: pointer;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-input[type="file"]:disabled::-webkit-file-upload-button {
-  cursor: not-allowed;
+  margin-bottom: 0;
 }
 
 /* Canvas */
@@ -116,22 +105,17 @@ input[type="file"]:disabled::-webkit-file-upload-button {
   display: none;
 }
 
-.canvas-placeholder {
-  height: 100%;
-  padding: 0.25rem;
-  border-radius: 0.25rem;
-  border: 2px dashed #c0c0c0;
-}
-
 .instructions {
   display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
   justify-content: center;
   align-items: center;
   min-height: 200px;
   height: 100%;
-  padding: 0 1rem;
+  padding: 1rem;
   text-align: center;
-  color: var(--gray);
+  text-wrap: balance;
 }
 
 .errorsContainer {
@@ -337,7 +321,7 @@ modal-element::part(close) {
 
 modal-element::part(close):focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 0.2rem #268fff80;
+  box-shadow: var(--focus-ring);
 }
 
 modal-element::part(body) {
@@ -351,6 +335,22 @@ modal-element [slot="footer"] {
   gap: 0.25rem;
   flex-wrap: wrap;
   text-align: center;
+}
+
+/* Files dropzone */
+files-dropzone {
+  --dropzone-border-color: var(--secondary);
+  --dropzone-border-color-hover: var(--primary);
+  --dropzone-border-color-dragover: var(--primary);
+  --dropzone-background-color-hover: var(--light);
+  --dropzone-background-color-dragover: var(--light);
+  --dropzone-focus-box-shadow: var(--focus-ring);
+  height: 100%;
+}
+
+files-dropzone::part(dropzone) {
+  height: 100%;
+  padding: 0.5rem;
 }
 
 /* Utils */
