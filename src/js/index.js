@@ -154,19 +154,7 @@ const handleFileSelect = file => {
   reader.readAsDataURL(file);
 };
 
-const handleOpenVideoModalButonClick = () => {
-  let capturePhotoComponent = videoModal.querySelector('capture-photo');
-
-  if (capturePhotoComponent) {
-    // Component already exists, just start the video stream.
-    typeof capturePhotoComponent.startVideoStream === 'function' && capturePhotoComponent.startVideoStream();
-  } else {
-    // Component doesn't exist, create it and append it to the modal.
-    capturePhotoComponent = document.createElement('capture-photo');
-    capturePhotoComponent.noImage = true;
-    videoModal.appendChild(capturePhotoComponent);
-  }
-
+const handleOpenVideoModalButtonClick = () => {
   videoModal.open = true;
 };
 
@@ -459,6 +447,16 @@ const handleCapturePhotoSuccess = evt => {
   image.src = evt.detail.dataURI;
 };
 
+const handleModalOpen = evt => {
+  if (evt.target.id === 'videoModal') {
+    const capturePhotoComponent = videoModal.querySelector('capture-photo');
+
+    if (capturePhotoComponent && typeof capturePhotoComponent.startVideoStream === 'function') {
+      capturePhotoComponent.startVideoStream();
+    }
+  }
+};
+
 const handleModalClose = evt => {
   if (evt.target.id === 'videoModal') {
     const capturePhotoComponent = videoModal.querySelector('capture-photo');
@@ -470,7 +468,7 @@ const handleModalClose = evt => {
 };
 
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
-openVideoModalBtn.addEventListener('click', handleOpenVideoModalButonClick);
+openVideoModalBtn.addEventListener('click', handleOpenVideoModalButtonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
 generateMemeBtn.addEventListener('click', generateMeme);
 downloadMemeBtn.addEventListener('click', () => downloadModal.open = false);
@@ -489,6 +487,7 @@ solidColorForm.addEventListener('input', handleSolidColorFormInput);
 document.addEventListener('web-share:error', handleWebShareError);
 document.addEventListener('capture-photo:error', handleCapturePhotoError);
 document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
+document.addEventListener('me-open', handleModalOpen);
 document.addEventListener('me-close', handleModalClose);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
