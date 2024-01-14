@@ -3,7 +3,7 @@ import { customFonts } from './custom-fonts.js';
 export const createTextBox = (index, data = {}) => {
   const inputTemplate = /* html */`
     <div class="d-flex align-items-center">
-      <button class="btn" data-button="delete-text-box" aria-label="Remove"></button>
+      <button class="btn btn-link" data-button="delete-text-box" aria-label="Remove"></button>
 
       <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${index + 1}`}">${data.text}</textarea>
 
