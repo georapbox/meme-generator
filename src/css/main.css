@@ -75,25 +75,11 @@ details summary:focus-visible {
 }
 
 /* Buttons */
-.btn:disabled {
-  cursor: not-allowed;
-}
-
 .settings-button {
   background-image: url(../assets/icons/gear.svg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: 60%;
-}
-
-.btn-outline-secondary:hover svg path,
-.btn-outline-dark:hover svg path {
-  transition: fill 0.15s ease-in-out;
-}
-
-.btn-outline-secondary:hover svg path,
-.btn-outline-dark:hover svg path {
-  fill: #ffffff;
 }
 
 /* Misc */
@@ -143,7 +129,7 @@ button[data-button="delete-text-box"] {
   background-image: url(../assets/icons/trash.svg);
   background-repeat: no-repeat;
   background-position: center;
-  margin-left: 0.7rem;
+  margin-left: 0.5rem;
 }
 
 /* Gallery */
@@ -192,7 +178,7 @@ button[data-button="delete-text-box"] {
   height: var(--move-btn-height);
   background-position: center;
   background-repeat: no-repeat;
-  border-color: var(--light);
+  border-color: var(--bs-light);
 }
 
 /* UP */
@@ -339,11 +325,11 @@ modal-element [slot="footer"] {
 
 /* Files dropzone */
 files-dropzone {
-  --dropzone-border-color: var(--secondary);
-  --dropzone-border-color-hover: var(--primary);
-  --dropzone-border-color-dragover: var(--primary);
-  --dropzone-background-color-hover: var(--light);
-  --dropzone-background-color-dragover: var(--light);
+  --dropzone-border-color: var(--bs-secondary);
+  --dropzone-border-color-hover: var(--bs-primary);
+  --dropzone-border-color-dragover: var(--bs-primary);
+  --dropzone-background-color-hover: var(--bs-light);
+  --dropzone-background-color-dragover: var(--bs-light);
   --dropzone-focus-box-shadow: var(--focus-ring);
   height: 100%;
 }
