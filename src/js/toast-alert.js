@@ -15,9 +15,7 @@ export const toastAlert = (message = '', type = 'info') => {
 
   const template = /* html */`
     ${message}
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
   `;
 
   const div = document.createElement('div');
