@@ -3,6 +3,8 @@
   --move-btn-width: 60px;
   --move-btn-height: 34px;
   --focus-ring: 0 0 0 0.2rem #268fff80;
+
+  accent-color: var(--bs-primary);
 }
 
 :not(:defined) {
