@@ -100,9 +100,9 @@ export const createTextBox = (index, data = {}) => {
 
       <div class="row g-2">
         <div class="col-lg-12">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="allCapsCheckbox_${index}" data-input="allCaps">
-            <label class="custom-control-label" for="allCapsCheckbox_${index}">ALL CAPS</label>
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="allCapsCheckbox_${index}" data-input="allCaps">
+            <label class="form-check-label" for="allCapsCheckbox_${index}">ALL CAPS</label>
           </div>
         </div>
       </div>
