@@ -178,19 +178,18 @@ button[data-button="delete-text-box"] {
   height: var(--move-btn-height);
   background-position: center;
   background-repeat: no-repeat;
-  border-color: var(--bs-light);
 }
 
 /* UP */
 .move-text-actions [data-move="offsetY"][data-sign="-"] {
-  top: 0;
+  top: -1px;
   left: var(--move-btn-width);
   background-image: url(../assets/icons/chevron-up.svg);
 }
 
 /* DOWN */
 .move-text-actions [data-move="offsetY"][data-sign="+"] {
-  top: var(--move-btn-height);
+  top: calc(var(--move-btn-height) + 1px);
   left: var(--move-btn-width);
   background-image: url(../assets/icons/chevron-down.svg);
 }
@@ -198,14 +197,14 @@ button[data-button="delete-text-box"] {
 /* LEFT */
 .move-text-actions [data-move="offsetX"][data-sign="-"] {
   top: calc(var(--move-btn-height) / 2);
-  left: 0;
+  left: -2px;
   background-image: url(../assets/icons/chevron-left.svg);
 }
 
 /* RIGHT */
 .move-text-actions [data-move="offsetX"][data-sign="+"] {
   top: calc(var(--move-btn-height) / 2);
-  left: calc(var(--move-btn-width) * 2);
+  left: calc(var(--move-btn-width) * 2 + 2px);
   background-image: url(../assets/icons/chevron-right.svg);
 
 }
