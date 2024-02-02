@@ -13,7 +13,12 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
   }
 
   textOptions.forEach(function (item, index) {
+    ctx.save();
+
     ctx.font = `${item.fontWeight} ${item.fontSize}px ${item.font}`;
+    ctx.fillStyle = item.fillColor;
+    ctx.textAlign = item.textAlign;
+    ctx.strokeStyle = item.shadowColor;
 
     const multiplier = index + 1;
     const lineHeight = ctx.measureText('M').width + item.fontSize / 2;
@@ -22,10 +27,6 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
     const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
     const textLines = text.split('\n');
 
-    ctx.fillStyle = item.fillColor;
-    ctx.textAlign = item.textAlign;
-    ctx.save();
-
     if (shadowBlur !== 0) {
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
@@ -33,16 +34,13 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
       ctx.shadowColor = item.shadowColor;
     }
 
-    if (item.rotate) {
-      ctx.translate(xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
-      ctx.rotate(item.rotate * Math.PI / 180);
-      textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-      ctx.rotate(-(item.rotate * Math.PI / 180));
-      ctx.translate(-(xPos + item.offsetX), -(lineHeight * multiplier + item.offsetY));
-    } else {
-      textLines.forEach((text, index) => {
-        ctx.fillText(text, xPos + item.offsetX, index * lineHeight + lineHeight * multiplier + item.offsetY);
-      });
+    ctx.translate(xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
+    ctx.rotate(item.rotate * Math.PI / 180);
+    textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
+    if (item.borderSize > 0) {
+      ctx.shadowBlur = 0;
+      ctx.lineWidth = item.borderSize;
+      textLines.forEach((text, index) => ctx.strokeText(text, 0, index * lineHeight));
     }
 
     ctx.restore();

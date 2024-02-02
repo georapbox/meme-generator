@@ -48,6 +48,7 @@ const defaultTextOptions = {
   fontWeight: 'normal',
   textAlign: 'center',
   shadowBlur: 3,
+  borderSize: 1,
   offsetY: 0,
   offsetX: 0,
   rotate: 0,
@@ -290,6 +291,8 @@ const handleInputsContainerInput = evt => {
     prop = 'offsetX';
   } else if (element.matches('[data-input="rotate"]')) {
     prop = 'rotate';
+  } else if (element.matches('[data-input="borderSize"]')) {
+    prop = 'borderSize';
   }
 
   if (prop) {
