@@ -36,9 +36,13 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
 
     ctx.translate(xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
     ctx.rotate(item.rotate * Math.PI / 180);
+    // first draw each line with shadow
+    textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
+    // since shadows of multiline text may be drawn over letters of neighbour lines
+    // (when shadow blur is big enough), re-draw text without shadows.
+    ctx.shadowBlur = 0;
     textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
     if (item.borderSize > 0) {
-      ctx.shadowBlur = 0;
       ctx.lineWidth = item.borderSize;
       textLines.forEach((text, index) => ctx.strokeText(text, 0, index * lineHeight));
     }
