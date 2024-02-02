@@ -43,7 +43,7 @@ const defaultTextOptions = {
   text: '',
   fillColor: '#ffffff',
   shadowColor: '#000000',
-  font: 'Anton',
+  font: 'Pressuru',
   fontSize: 40,
   fontWeight: 'normal',
   textAlign: 'center',
