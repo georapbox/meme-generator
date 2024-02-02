@@ -89,8 +89,8 @@ const generateMeme = async () => {
 };
 
 const onImageLoaded = evt => {
-  const MAX_WIDTH = 800;
-  const MAX_HEIGHT = 600;
+  const MAX_WIDTH = 4000;
+  const MAX_HEIGHT = 3000;
   let width = evt.target.width;
   let height = evt.target.height;
 
