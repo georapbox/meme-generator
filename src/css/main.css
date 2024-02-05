@@ -291,8 +291,8 @@ modal-element {
   --me-width: 600px;
 }
 
-#downloadModal::part(base) {
-  max-width: 1024px;
+#downloadModal {
+  --me-width: 900px;
 }
 
 modal-element::part(base):focus-visible {
