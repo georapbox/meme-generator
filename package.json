@@ -1,7 +1,7 @@
 {
   "name": "meme-generator",
   "version": "1.0.0",
-  "description": "Easily add text to images or memes.",
+  "description": "A Progressive Web App (PWA) for creating memes.",
   "source": "src/index.html",
   "scripts": {
     "lint": "eslint . --ext .js",
@@ -13,9 +13,7 @@
     "postbuild": "npm run generateSW"
   },
   "keywords": [
-    "meme",
-    "meme-generator",
-    "meme-maker"
+    "meme generator"
   ],
   "author": "George Raptis <georapbox@gmail.com>",
   "license": "MIT",
