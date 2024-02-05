@@ -43,11 +43,12 @@ const defaultTextOptions = {
   text: '',
   fillColor: '#ffffff',
   shadowColor: '#000000',
-  font: 'Anton',
+  font: 'Pressuru',
   fontSize: 40,
   fontWeight: 'normal',
   textAlign: 'center',
   shadowBlur: 3,
+  borderSize: 1,
   offsetY: 0,
   offsetX: 0,
   rotate: 0,
@@ -89,8 +90,8 @@ const generateMeme = async () => {
 };
 
 const onImageLoaded = evt => {
-  const MAX_WIDTH = 800;
-  const MAX_HEIGHT = 600;
+  const MAX_WIDTH = 4000;
+  const MAX_HEIGHT = 3000;
   let width = evt.target.width;
   let height = evt.target.height;
 
@@ -290,6 +291,8 @@ const handleInputsContainerInput = evt => {
     prop = 'offsetX';
   } else if (element.matches('[data-input="rotate"]')) {
     prop = 'rotate';
+  } else if (element.matches('[data-input="borderSize"]')) {
+    prop = 'borderSize';
   }
 
   if (prop) {

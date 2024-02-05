@@ -1,4 +1,4 @@
-import AntonRegular from 'url:../assets/fonts/Anton/Anton-Regular.ttf';
+import Pressuru from 'url:../assets/fonts/Pressuru/Pressuru.ttf';
 import OswaldRegular from 'url:../assets/fonts/Oswald/Oswald-Regular.ttf';
 import OswaldBold from 'url:../assets/fonts/Oswald/Oswald-Bold.ttf';
 import RobotoRegular from 'url:../assets/fonts/Roboto/Roboto-Regular.ttf';
@@ -11,7 +11,7 @@ import OpenSansRegular from 'url:../assets/fonts/OpenSans/OpenSans-Regular.ttf';
 import OpenSansBold from 'url:../assets/fonts/OpenSans/OpenSans-Bold.ttf';
 
 export const customFonts = [
-  { name: 'Anton', label: 'Anton', path: AntonRegular, style: 'normal', weight: '400' },
+  { name: 'Pressuru', label: 'Pressuru', path: Pressuru, style: 'normal', weight: '400' },
   { name: 'Oswald-Regular', label: 'Oswald', path: OswaldRegular, style: 'normal', weight: '400' },
   { name: 'Oswald-Bold', label: 'Oswald Bold', path: OswaldBold, style: 'normal', weight: '700' },
   { name: 'Roboto-Regular', label: 'Roboto', path: RobotoRegular, style: 'normal', weight: '400' },
