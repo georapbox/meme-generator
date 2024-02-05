@@ -57,41 +57,40 @@ export const createTextBox = (index, data = {}) => {
       </div>
 
       <div class="row g-2">
-        <div class="col mb-3">
+        <div class="col-4 mb-3">
           <label for="shadowWidthInput_${index}" class="mb-1 d-block text-truncate">Shadow size:</label>
           <input class="form-control" type="number" min="0" max="100" value="${data.shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${index}">
         </div>
 
-        <div class="col mb-3">
-          <label class="mb-1 d-block text-truncate" for="TextBorderSizeInput_${index}">Border width:</label>
-          <input class="form-control" type="number" min="0" max="100" value="${data.borderSize}" data-input="borderSize" id="TextBorderWidthInput_${index}">
+        <div class="col-4 mb-3">
+          <label class="mb-1 d-block text-truncate" for="borderWidthInput_${index}">Border width:</label>
+          <input class="form-control" type="number" min="0" max="100" value="${data.borderWidth}" data-input="borderWidth" id="borderWidthInput_${index}">
         </div>
 
-        <div class="col mb-3">
-          <label for="textAlign_${index}" class="mb-1 d-block text-truncate">Text align:</label>
+        <div class="col-4 mb-3">
+          <label for="textAlignInput_${index}" class="mb-1 d-block text-truncate">Text align:</label>
           <select class="form-select" data-input="textAlign" id="textAlignInput_${index}">
             <option value="left">Left</option>
             <option value="center" selected>Center</option>
             <option value="right">Right</option>
           </select>
         </div>
-
-        <div class="col mb-3">
-          <label class="mb-1 d-block text-truncate" for="textRotateInput_${index}">Rotate:</label>
-          <input class="form-control" type="number" value="${data.rotate}" data-input="rotate" id="textRotateInput_${index}" min="-360" max="360">
-        </div>
-
       </div>
 
       <div class="row g-2">
-        <div class="col-6 mb-3">
+        <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="offsetYInput_${index}">Vertical offset:</label>
           <input class="form-control" type="number" value="${data.offsetY}" data-input="offsetY" id="offsetYInput_${index}">
         </div>
 
-        <div class="col-6 mb-3">
+        <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="offsetXInput_${index}">Horizontal offset:</label>
           <input class="form-control" type="number" value="${data.offsetX}" data-input="offsetX" id="offsetXInput_${index}">
+        </div>
+
+        <div class="col-4 mb-3">
+          <label class="mb-1 d-block text-truncate" for="textRotateInput_${index}">Rotate:</label>
+          <input class="form-control" type="number" value="${data.rotate}" data-input="rotate" id="textRotateInput_${index}" min="-360" max="360">
         </div>
 
         <div class="col-12">

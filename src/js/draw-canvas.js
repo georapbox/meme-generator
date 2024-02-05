@@ -42,8 +42,8 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
     // (when shadow blur is big enough), re-draw text without shadows.
     ctx.shadowBlur = 0;
     textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-    if (item.borderSize > 0) {
-      ctx.lineWidth = item.borderSize;
+    if (item.borderWidth > 0) {
+      ctx.lineWidth = item.borderWidth;
       textLines.forEach((text, index) => ctx.strokeText(text, 0, index * lineHeight));
     }
 

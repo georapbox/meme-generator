@@ -48,7 +48,7 @@ const defaultTextOptions = {
   fontWeight: 'normal',
   textAlign: 'center',
   shadowBlur: 3,
-  borderSize: 1,
+  borderWidth: 1,
   offsetY: 0,
   offsetX: 0,
   rotate: 0,
@@ -66,6 +66,8 @@ const generateMeme = async () => {
   const downloadLink = dataUrl.replace('image/png', 'image/octet-stream');
   downloadMemeBtn.download = `${uid('meme')}.png`;
   downloadMemeBtn.href = downloadLink;
+  downloadMemePreview.width = canvas.width;
+  downloadMemePreview.height = canvas.height;
   downloadMemePreview.src = downloadLink;
 
   // Prepare for sharing file
@@ -86,7 +88,9 @@ const generateMeme = async () => {
     }
   }
 
-  downloadModal.open = true;
+  window.requestAnimationFrame(() => {
+    downloadModal.open = true;
+  });
 };
 
 const onImageLoaded = evt => {
@@ -291,8 +295,8 @@ const handleInputsContainerInput = evt => {
     prop = 'offsetX';
   } else if (element.matches('[data-input="rotate"]')) {
     prop = 'rotate';
-  } else if (element.matches('[data-input="borderSize"]')) {
-    prop = 'borderSize';
+  } else if (element.matches('[data-input="borderWidth"]')) {
+    prop = 'borderWidth';
   }
 
   if (prop) {
