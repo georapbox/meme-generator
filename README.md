@@ -32,41 +32,47 @@ Below are the instructions for setting up the development environment.
 
 ### Installation
 
-1. Clone the repository
+Clone the repository to your local machine:
 
 ```bash
 git clone git@github.com:georapbox/meme-generator.git
 ```
 
-2. Navigate to the project directory
-
-```bash
-cd meme-generator
-```
-
-3. Install dependencies
+Navigate to the project's directory and install the dependencies:
 
 ```bash
 npm install
 ```
 
-4. Start the development server
+### Running the application
+
+To run the application in development mode, run the following command:
 
 ```bash
-npm start
+npm start -- --open
 ```
 
-5. Open your browser and navigate to `http://localhost:1234`
+This will start the development server and open the application in your default web browser.
 
-## Deployment
+### Building the application for production
 
-To build the app for production, run:
+To build the application for production, run the following command:
 
 ```bash
 npm run build
 ```
 
-This will generate the production build in the `docs` directory. The reason that the build is in the `docs` directory is to enable GitHub Pages to serve the app. 
+This will create a `dist` directory containing the production build of the application.
+
+### Deployment
+
+To deploy the application, run the following command:
+
+```bash
+npm run deploy
+```
+
+This will build the application first and then deploy it to GitHub Pages in the `gh-pages` branch.
 
 ## License
 
