@@ -227,5 +227,17 @@
       </web-share>
     </div>
   </modal-element>
+
+  <modal-element id="removeConfirmationModal">
+    <h5 slot="header">Remove text</h5>
+    <p>Are you sure you want to remove this text box?</p>
+    <footer slot="footer" class="text-end justify-content-end">
+      <form id="removeTextForm">
+        <input type="hidden" name="text-index">
+        <!-- <button type="button" class="btn btn-outline-secondary" id="cancelDeleteBtn">Cancel</button> -->
+        <button type="submit" class="btn btn-danger">Remove</button>
+      </form>
+    </footer>
+  </modal-element>
 </body>
 </html>

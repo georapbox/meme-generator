@@ -35,6 +35,8 @@ const gallerySearchEl = document.getElementById('gallerySearch');
 const galleryNoResultsEl = galleryEl.querySelector('.gallery__no-results');
 const solidColorForm = document.getElementById('solidColorForm');
 const uploadMethodEls = document.querySelectorAll('.upload-method');
+const removeConfirmationModal = document.getElementById('removeConfirmationModal');
+const removeTextForm = document.getElementById('removeTextForm');
 let selectedImage = null;
 let reqAnimFrame = null;
 
@@ -120,6 +122,13 @@ const onImageLoaded = evt => {
   generateMemeBtn.disabled = false;
   canvas.hidden = false;
   instructionsEl.hidden = true;
+};
+
+const removeText = index => {
+  textOptions = arrayRemove(textOptions, index);
+  inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
+  textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
+  drawCanvas(selectedImage, canvas, ctx, textOptions);
 };
 
 const handleSolidColorFormInput = evt => {
@@ -340,18 +349,27 @@ const handleInputsContainerClick = evt => {
 
   if (element.matches('[data-button="delete-text-box"]')) {
     const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
-    let confirm = true;
 
     if (textOptions[index].text.trim()) {
-      confirm = window.confirm('Are you sure you want to remove this text box?');
-    }
+      const textIndexInput = removeTextForm['text-index'];
 
-    if (confirm) {
-      textOptions = arrayRemove(textOptions, index);
-      inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
-      textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
-      drawCanvas(selectedImage, canvas, ctx, textOptions);
+      if (textIndexInput) {
+        textIndexInput.value = index;
+        removeConfirmationModal.open = true;
+      }
+    } else {
+      removeText(index);
     }
+  }
+};
+
+const handleTextRemoveFormSubmit = evt => {
+  evt.preventDefault();
+  const index = Number(evt.target['text-index'].value);
+
+  if (index >= 0) {
+    removeText(index);
+    removeConfirmationModal.open = false;
   }
 };
 
@@ -472,6 +490,10 @@ const handleModalClose = evt => {
       capturePhotoComponent.stopVideoStream();
     }
   }
+
+  if (evt.target.id === 'removeConfirmationModal') {
+    removeTextForm.reset();
+  }
 };
 
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
@@ -496,6 +518,7 @@ document.addEventListener('capture-photo:error', handleCapturePhotoError);
 document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
 document.addEventListener('me-open', handleModalOpen);
 document.addEventListener('me-close', handleModalClose);
+removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
