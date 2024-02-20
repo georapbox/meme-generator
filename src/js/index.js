@@ -467,8 +467,16 @@ const handleWebShareError = () => {
 };
 
 const handleCapturePhotoError = evt => {
-  console.error(evt.detail.error);
-  toastAlert(evt.detail.error.message, 'danger');
+  const error = evt.detail.error;
+  let errorMessage = 'An error occurred while trying to capture photo.';
+
+  if (error instanceof Error && (error.name === 'NotAllowedError' || error.name === 'NotFoundError')) {
+    errorMessage += ' Make sure you have a camera connected and you have granted the appropriate permissions.';
+  }
+
+  toastAlert(errorMessage, 'danger');
+  videoModal.open = false;
+  console.error(error);
 };
 
 const handleCapturePhotoSuccess = evt => {
