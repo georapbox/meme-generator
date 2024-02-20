@@ -35,6 +35,8 @@ const gallerySearchEl = document.getElementById('gallerySearch');
 const galleryNoResultsEl = galleryEl.querySelector('.gallery__no-results');
 const solidColorForm = document.getElementById('solidColorForm');
 const uploadMethodEls = document.querySelectorAll('.upload-method');
+const removeConfirmationModal = document.getElementById('removeConfirmationModal');
+const removeTextForm = document.getElementById('removeTextForm');
 let selectedImage = null;
 let reqAnimFrame = null;
 
@@ -120,6 +122,13 @@ const onImageLoaded = evt => {
   generateMemeBtn.disabled = false;
   canvas.hidden = false;
   instructionsEl.hidden = true;
+};
+
+const removeText = index => {
+  textOptions = arrayRemove(textOptions, index);
+  inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
+  textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
+  drawCanvas(selectedImage, canvas, ctx, textOptions);
 };
 
 const handleSolidColorFormInput = evt => {
@@ -340,18 +349,33 @@ const handleInputsContainerClick = evt => {
 
   if (element.matches('[data-button="delete-text-box"]')) {
     const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
-    let confirm = true;
 
     if (textOptions[index].text.trim()) {
-      confirm = window.confirm('Are you sure you want to remove this text box?');
-    }
+      const textIndexInput = removeTextForm['text-index'];
 
-    if (confirm) {
-      textOptions = arrayRemove(textOptions, index);
-      inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
-      textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
-      drawCanvas(selectedImage, canvas, ctx, textOptions);
+      if (textIndexInput) {
+        textIndexInput.value = index;
+        removeConfirmationModal.open = true;
+      }
+    } else {
+      removeText(index);
     }
+  }
+};
+
+const handleTextRemoveFormSubmit = evt => {
+  evt.preventDefault();
+  const index = Number(evt.target['text-index'].value);
+
+  if (index >= 0) {
+    removeText(index);
+    removeConfirmationModal.open = false;
+  }
+};
+
+const removeConfirmationModalClose = evt => {
+  if (evt.target?.closest('[data-close-modal]') !== null) {
+    removeConfirmationModal.open = false;
   }
 };
 
@@ -443,8 +467,16 @@ const handleWebShareError = () => {
 };
 
 const handleCapturePhotoError = evt => {
-  console.error(evt.detail.error);
-  toastAlert(evt.detail.error.message, 'danger');
+  const error = evt.detail.error;
+  let errorMessage = 'An error occurred while trying to capture photo.';
+
+  if (error instanceof Error && (error.name === 'NotAllowedError' || error.name === 'NotFoundError')) {
+    errorMessage += ' Make sure you have a camera connected and you have granted the appropriate permissions.';
+  }
+
+  toastAlert(errorMessage, 'danger');
+  videoModal.open = false;
+  console.error(error);
 };
 
 const handleCapturePhotoSuccess = evt => {
@@ -472,6 +504,10 @@ const handleModalClose = evt => {
       capturePhotoComponent.stopVideoStream();
     }
   }
+
+  if (evt.target.id === 'removeConfirmationModal') {
+    removeTextForm.reset();
+  }
 };
 
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
@@ -496,6 +532,8 @@ document.addEventListener('capture-photo:error', handleCapturePhotoError);
 document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
 document.addEventListener('me-open', handleModalOpen);
 document.addEventListener('me-close', handleModalClose);
+removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
+removeConfirmationModal.addEventListener('click', removeConfirmationModalClose);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));

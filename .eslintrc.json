@@ -58,6 +58,7 @@
       "exceptions": {
         "Property": false
       }
-    }]
+    }],
+    "no-extra-parens": ["warn", "all"]
   }
 }
