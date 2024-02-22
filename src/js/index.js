@@ -373,12 +373,6 @@ const handleTextRemoveFormSubmit = evt => {
   }
 };
 
-const removeConfirmationModalClose = evt => {
-  if (evt.target?.closest('[data-close-modal]') !== null) {
-    removeConfirmationModal.open = false;
-  }
-};
-
 const handleInputsContainerPointerdown = evt => {
   const element = evt.target;
   const textBoxEl = element.closest('[data-section="textBox"]');
@@ -533,7 +527,6 @@ document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
 document.addEventListener('me-open', handleModalOpen);
 document.addEventListener('me-close', handleModalClose);
 removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
-removeConfirmationModal.addEventListener('click', removeConfirmationModalClose);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
