@@ -3,14 +3,15 @@ import { customFonts } from './custom-fonts.js';
 export const createTextBox = (index, data = {}) => {
   const inputTemplate = /* html */`
     <div class="d-flex align-items-center">
-      <button class="btn btn-link" data-button="delete-text-box" aria-label="Remove"></button>
+      <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
+      <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
 
       <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${index + 1}`}">${data.text}</textarea>
 
       <div class="d-flex align-items-center pe-2">
         <input class="form-control" type="color" value="${data.fillColor}" data-input="fillColor" title="Fill color">
         <input class="form-control" type="color" value="${data.shadowColor}" data-input="shadowColor" title="Outline color">
-        <button class="btn btn-secondary settings-button" data-button="settings" aria-label="Settings"></button>
+        <button type="button" class="btn btn-secondary settings-button" data-button="settings" title="Settings"></button>
       </div>
     </div>
 

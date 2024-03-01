@@ -59,7 +59,8 @@ details summary:focus-visible {
 
 /* Inputs */
 .inputs-container input[type="color"],
-.settings-button {
+.settings-button,
+.duplicate-button {
   width: 30px;
   height: 30px;
   margin: 0 2px;
@@ -123,15 +124,25 @@ details[open] summary {
   margin-bottom: 0.5rem;
 }
 
+button[data-button="duplicate-text-box"],
 button[data-button="delete-text-box"] {
-  width: 25px;
-  min-width: 25px;
-  height: 25px;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
   padding: 0;
-  background-image: url(../assets/icons/trash.svg);
+  margin-inline-start: 0.5rem;
   background-repeat: no-repeat;
+  background-size: 90%;
   background-position: center;
-  margin-left: 0.5rem;
+}
+
+button[data-button="duplicate-text-box"] {
+  background-image: url(../assets/icons/duplicate.svg);
+}
+
+button[data-button="delete-text-box"] {
+  background-image: url(../assets/icons/trash.svg);
+  margin-inline-start: 0.25rem;
 }
 
 /* Gallery */

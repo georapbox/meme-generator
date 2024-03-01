@@ -347,6 +347,21 @@ const handleInputsContainerClick = evt => {
     });
   }
 
+  if (element.matches('[data-button="duplicate-text-box"')) {
+    const currentTextBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
+
+    textOptions.push({
+      ...textOptions[currentTextBoxIndex],
+      _isSettingsOpen: false
+    });
+
+    const newTextBox = createTextBox(textOptions.length - 1, textOptions[textOptions.length - 1]);
+
+    inputsContainer.appendChild(newTextBox);
+    newTextBox.querySelector('[data-input="text"]').focus();
+    drawCanvas(selectedImage, canvas, ctx, textOptions);
+  }
+
   if (element.matches('[data-button="delete-text-box"]')) {
     const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
 
