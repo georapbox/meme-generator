@@ -127,6 +127,7 @@ export const createTextBox = (index, data = {}) => {
   div.setAttribute('data-index', index);
   div.innerHTML = inputTemplate;
   div.querySelector('[data-input="font"]').value = data.font;
+  div.querySelector('[data-input="fontWeight"]').value = data.fontWeight;
   div.querySelector('[data-input="textAlign"]').value = data.textAlign;
   div.querySelector('[data-input="allCaps"]').checked = data.allCaps;
 
