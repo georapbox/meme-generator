@@ -9,8 +9,12 @@ export const createTextBox = (index, data = {}) => {
       <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${index + 1}`}">${data.text}</textarea>
 
       <div class="d-flex align-items-center pe-2">
-        <input class="form-control" type="color" value="${data.fillColor}" data-input="fillColor" title="Fill color">
-        <input class="form-control" type="color" value="${data.shadowColor}" data-input="shadowColor" title="Outline color">
+        <label for="fillColorInput" class="visually-hidden">Fill color</label>
+        <input class="form-control" type="color" value="${data.fillColor}" id="fillColorInput" data-input="fillColor" title="Fill color">
+
+        <label for="shadowColorInput" class="visually-hidden">Outline color</label>
+        <input class="form-control" type="color" value="${data.shadowColor}" id="shadowColorInput" data-input="shadowColor" title="Outline color">
+
         <button type="button" class="btn btn-secondary settings-button" data-button="settings" title="Settings"></button>
       </div>
     </div>
