@@ -55,7 +55,7 @@ export const createTextBox = (index, data = {}) => {
         <div class="col-4 mb-3">
           <label for="fontWeightInput_${index}" class="mb-1 d-block text-truncate">Weight:</label>
           <select class="form-select" data-input="fontWeight" id="fontWeightInput_${index}">
-            <option value="normal" selected>Normal</option>
+            <option value="normal">Normal</option>
             <option value="bold">Bold</option>
           </select>
         </div>
@@ -74,9 +74,9 @@ export const createTextBox = (index, data = {}) => {
 
         <div class="col-4 mb-3">
           <label for="textAlignInput_${index}" class="mb-1 d-block text-truncate">Text align:</label>
-          <select class="form-select" data-input="textAlign" id="textAlignInput_${index}">
+          <select class="form-select" data-input="textAlign" id="textAlignInput_${index}" value="right">
             <option value="left">Left</option>
-            <option value="center" selected>Center</option>
+            <option value="center">Center</option>
             <option value="right">Right</option>
           </select>
         </div>
@@ -126,10 +126,8 @@ export const createTextBox = (index, data = {}) => {
   div.setAttribute('data-section', 'textBox');
   div.setAttribute('data-index', index);
   div.innerHTML = inputTemplate;
-  div.querySelector('[data-input="font"]').value = data.font;
-  div.querySelector('[data-input="fontWeight"]').value = data.fontWeight;
-  div.querySelector('[data-input="textAlign"]').value = data.textAlign;
-  div.querySelector('[data-input="allCaps"]').checked = data.allCaps;
+  div.querySelectorAll('select').forEach(el => el.value = data[el.dataset.input]);
+  div.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = data[el.dataset.input]);
 
   return fragment.appendChild(div);
 };
