@@ -138,6 +138,7 @@ button[data-button="delete-text-box"] {
 
 button[data-button="duplicate-text-box"] {
   background-image: url(../assets/icons/duplicate.svg);
+  background-size: 70%;
 }
 
 button[data-button="delete-text-box"] {
