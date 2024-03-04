@@ -338,7 +338,7 @@ modal-element [slot="footer"] {
 }
 
 /* Files dropzone */
-files-dropzone {
+.dropzone {
   --dropzone-border-color: var(--bs-secondary);
   --dropzone-border-color-hover: var(--bs-primary);
   --dropzone-border-color-dragover: var(--bs-primary);
@@ -348,9 +348,25 @@ files-dropzone {
   height: 100%;
 }
 
-files-dropzone::part(dropzone) {
+@media screen and (min-width: 992px) {
+  .dropzone {
+    position: sticky;
+    top: 0.25rem;
+  }
+}
+
+.dropzone:not(.dropzone--accepted) {
+  max-height: 36rem;
+}
+
+.dropzone--accepted {
+  width: fit-content;
+  height: fit-content;
+}
+
+.dropzone::part(dropzone) {
   height: 100%;
-  padding: 0.5rem;
+  padding: 0;
 }
 
 /* Utils */

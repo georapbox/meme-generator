@@ -112,6 +112,7 @@ const onImageLoaded = evt => {
       height = MAX_HEIGHT;
     }
   }
+
   canvas.width = width;
   canvas.height = height;
 
@@ -119,6 +120,7 @@ const onImageLoaded = evt => {
 
   drawCanvas(selectedImage, canvas, ctx, textOptions);
 
+  dropzoneEl.classList.add('dropzone--accepted');
   generateMemeBtn.disabled = false;
   canvas.hidden = false;
   instructionsEl.hidden = true;
