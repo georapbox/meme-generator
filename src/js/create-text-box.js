@@ -3,14 +3,19 @@ import { customFonts } from './custom-fonts.js';
 export const createTextBox = (index, data = {}) => {
   const inputTemplate = /* html */`
     <div class="d-flex align-items-center">
-      <button class="btn btn-link" data-button="delete-text-box" aria-label="Remove"></button>
+      <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
+      <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
 
       <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${index + 1}`}">${data.text}</textarea>
 
       <div class="d-flex align-items-center pe-2">
-        <input class="form-control" type="color" value="${data.fillColor}" data-input="fillColor" title="Fill color">
-        <input class="form-control" type="color" value="${data.shadowColor}" data-input="shadowColor" title="Outline color">
-        <button class="btn btn-secondary settings-button" data-button="settings" aria-label="Settings"></button>
+        <label for="fillColorInput" class="visually-hidden">Fill color</label>
+        <input class="form-control" type="color" value="${data.fillColor}" id="fillColorInput" data-input="fillColor" title="Fill color">
+
+        <label for="shadowColorInput" class="visually-hidden">Outline color</label>
+        <input class="form-control" type="color" value="${data.shadowColor}" id="shadowColorInput" data-input="shadowColor" title="Outline color">
+
+        <button type="button" class="btn btn-secondary settings-button" data-button="settings" title="Settings"></button>
       </div>
     </div>
 
@@ -50,7 +55,7 @@ export const createTextBox = (index, data = {}) => {
         <div class="col-4 mb-3">
           <label for="fontWeightInput_${index}" class="mb-1 d-block text-truncate">Weight:</label>
           <select class="form-select" data-input="fontWeight" id="fontWeightInput_${index}">
-            <option value="normal" selected>Normal</option>
+            <option value="normal">Normal</option>
             <option value="bold">Bold</option>
           </select>
         </div>
@@ -69,9 +74,9 @@ export const createTextBox = (index, data = {}) => {
 
         <div class="col-4 mb-3">
           <label for="textAlignInput_${index}" class="mb-1 d-block text-truncate">Text align:</label>
-          <select class="form-select" data-input="textAlign" id="textAlignInput_${index}">
+          <select class="form-select" data-input="textAlign" id="textAlignInput_${index}" value="right">
             <option value="left">Left</option>
-            <option value="center" selected>Center</option>
+            <option value="center">Center</option>
             <option value="right">Right</option>
           </select>
         </div>
@@ -121,9 +126,8 @@ export const createTextBox = (index, data = {}) => {
   div.setAttribute('data-section', 'textBox');
   div.setAttribute('data-index', index);
   div.innerHTML = inputTemplate;
-  div.querySelector('[data-input="font"]').value = data.font;
-  div.querySelector('[data-input="textAlign"]').value = data.textAlign;
-  div.querySelector('[data-input="allCaps"]').checked = data.allCaps;
+  div.querySelectorAll('select').forEach(el => el.value = data[el.dataset.input]);
+  div.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = data[el.dataset.input]);
 
   return fragment.appendChild(div);
 };

@@ -112,6 +112,7 @@ const onImageLoaded = evt => {
       height = MAX_HEIGHT;
     }
   }
+
   canvas.width = width;
   canvas.height = height;
 
@@ -119,6 +120,7 @@ const onImageLoaded = evt => {
 
   drawCanvas(selectedImage, canvas, ctx, textOptions);
 
+  dropzoneEl.classList.add('dropzone--accepted');
   generateMemeBtn.disabled = false;
   canvas.hidden = false;
   instructionsEl.hidden = true;
@@ -345,6 +347,21 @@ const handleInputsContainerClick = evt => {
         textOptions[index]._isSettingsOpen = false;
       }
     });
+  }
+
+  if (element.matches('[data-button="duplicate-text-box"')) {
+    const currentTextBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
+
+    textOptions.push({
+      ...textOptions[currentTextBoxIndex],
+      _isSettingsOpen: false
+    });
+
+    const newTextBox = createTextBox(textOptions.length - 1, textOptions[textOptions.length - 1]);
+
+    inputsContainer.appendChild(newTextBox);
+    newTextBox.querySelector('[data-input="text"]').focus();
+    drawCanvas(selectedImage, canvas, ctx, textOptions);
   }
 
   if (element.matches('[data-button="delete-text-box"]')) {

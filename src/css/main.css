@@ -5,15 +5,12 @@
   --focus-ring: 0 0 0 0.2rem #268fff80;
 
   accent-color: var(--bs-primary);
+  scrollbar-gutter: stable both-edges;
+  font-size: 14px;
 }
 
 :not(:defined) {
   display: none !important;
-}
-
-html,
-body {
-  font-size: 14px;
 }
 
 body {
@@ -59,7 +56,8 @@ details summary:focus-visible {
 
 /* Inputs */
 .inputs-container input[type="color"],
-.settings-button {
+.settings-button,
+.duplicate-button {
   width: 30px;
   height: 30px;
   margin: 0 2px;
@@ -123,15 +121,26 @@ details[open] summary {
   margin-bottom: 0.5rem;
 }
 
+button[data-button="duplicate-text-box"],
 button[data-button="delete-text-box"] {
-  width: 25px;
-  min-width: 25px;
-  height: 25px;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
   padding: 0;
-  background-image: url(../assets/icons/trash.svg);
+  margin-inline-start: 0.5rem;
   background-repeat: no-repeat;
+  background-size: 90%;
   background-position: center;
-  margin-left: 0.5rem;
+}
+
+button[data-button="duplicate-text-box"] {
+  background-image: url(../assets/icons/duplicate.svg);
+  background-size: 70%;
+}
+
+button[data-button="delete-text-box"] {
+  background-image: url(../assets/icons/trash.svg);
+  margin-inline-start: 0.25rem;
 }
 
 /* Gallery */
@@ -329,7 +338,7 @@ modal-element [slot="footer"] {
 }
 
 /* Files dropzone */
-files-dropzone {
+.dropzone {
   --dropzone-border-color: var(--bs-secondary);
   --dropzone-border-color-hover: var(--bs-primary);
   --dropzone-border-color-dragover: var(--bs-primary);
@@ -339,9 +348,25 @@ files-dropzone {
   height: 100%;
 }
 
-files-dropzone::part(dropzone) {
+@media screen and (min-width: 992px) {
+  .dropzone {
+    position: sticky;
+    top: 0.25rem;
+  }
+}
+
+.dropzone:not(.dropzone--accepted) {
+  max-height: 36rem;
+}
+
+.dropzone--accepted {
+  width: fit-content;
+  height: fit-content;
+}
+
+.dropzone::part(dropzone) {
   height: 100%;
-  padding: 0.5rem;
+  padding: 0;
 }
 
 /* Utils */
