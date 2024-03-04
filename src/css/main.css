@@ -5,15 +5,12 @@
   --focus-ring: 0 0 0 0.2rem #268fff80;
 
   accent-color: var(--bs-primary);
+  scrollbar-gutter: stable both-edges;
+  font-size: 14px;
 }
 
 :not(:defined) {
   display: none !important;
-}
-
-html,
-body {
-  font-size: 14px;
 }
 
 body {
