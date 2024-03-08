@@ -12,8 +12,8 @@ export const createTextBox = (index, data = {}) => {
         <label for="fillColorInput" class="visually-hidden">Fill color</label>
         <input class="form-control" type="color" value="${data.fillColor}" id="fillColorInput" data-input="fillColor" title="Fill color">
 
-        <label for="shadowColorInput" class="visually-hidden">Outline color</label>
-        <input class="form-control" type="color" value="${data.shadowColor}" id="shadowColorInput" data-input="shadowColor" title="Outline color">
+        <label for="strokeColorInput" class="visually-hidden">Outline color</label>
+        <input class="form-control" type="color" value="${data.strokeColor}" id="strokeColorInput" data-input="strokeColor" title="Outline color">
 
         <button type="button" class="btn btn-secondary settings-button" data-button="settings" title="Settings"></button>
       </div>

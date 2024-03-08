@@ -54,6 +54,17 @@ details summary:focus-visible {
   max-width: 100%;
 }
 
+.canvas-container {
+  max-width: 100%;
+  width: auto !important;
+  height: auto !important;
+}
+
+.canvas-container canvas {
+  width: auto !important;
+  height: auto !important;
+}
+
 /* Inputs */
 .inputs-container input[type="color"],
 .settings-button,
@@ -346,6 +357,11 @@ modal-element [slot="footer"] {
   --dropzone-background-color-dragover: var(--bs-light);
   --dropzone-focus-box-shadow: var(--focus-ring);
   height: 100%;
+  max-width: 100%;
+}
+
+.dropzone[disabled]::part(dropzone) {
+  opacity: 1;
 }
 
 @media screen and (min-width: 992px) {
@@ -360,8 +376,10 @@ modal-element [slot="footer"] {
 }
 
 .dropzone--accepted {
-  width: fit-content;
-  height: fit-content;
+  /* width: fit-content;
+  height: fit-content; */
+  width: 100%;
+  height: 100%;
 }
 
 .dropzone::part(dropzone) {

@@ -1,52 +1,48 @@
+import { fabric } from 'fabric';
+
 export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
   if (image == null) {
     return;
   }
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvas.clear();
 
   if (typeof image === 'string') { // Assume it's a color
-    ctx.fillStyle = image;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    canvas.add(new fabric.Rect({
+      left: 0,
+      top: 0,
+      width: canvas.width,
+      height: canvas.height,
+      fill: image
+    }));
   } else {
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    canvas.add(
+      new fabric.Image(image, {
+        left: 0,
+        top: 0,
+        width: canvas.width,
+        height: canvas.height,
+        selectable: false
+      })
+    );
   }
 
   textOptions.forEach(function (item, index) {
-    ctx.save();
+    console.log('DRAW');
 
-    ctx.font = `${item.fontWeight} ${item.fontSize}px ${item.font}`;
-    ctx.fillStyle = item.fillColor;
-    ctx.textAlign = item.textAlign;
-    ctx.strokeStyle = item.shadowColor;
+    if (item._instance) {
+      item._instance.set('text', item.allCaps === true ? item.text.toUpperCase() : item.text);
+      item._instance.set('top', item._instance.top || item._instance.height * index);
+      item._instance.set('left', item._instance.left || canvas.width / 2);
+      item._instance.set('originX', item._instance.originX || 'center');
+      item._instance.set('fontFamily', item.font);
+      item._instance.set('fontSize', canvas.width / 20);
+      item._instance.set('fontWeight', item.fontWeight);
+      item._instance.set('fill', item.fillColor);
+      item._instance.set('stroke', item.borderWidth === 0 ? null : item.strokeColor);
+      item._instance.set('strokeWidth', item.borderWidth);
 
-    const multiplier = index + 1;
-    const lineHeight = ctx.measureText('M').width + item.fontSize / 2;
-    const xPos = canvas.width / 2;
-    const shadowBlur = item.shadowBlur;
-    const text = item.allCaps === true ? item.text.toUpperCase() : item.text;
-    const textLines = text.split('\n');
-
-    if (shadowBlur !== 0) {
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      ctx.shadowBlur = shadowBlur;
-      ctx.shadowColor = item.shadowColor;
+      canvas.add(item._instance);
     }
-
-    ctx.translate(xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
-    ctx.rotate(item.rotate * Math.PI / 180);
-    // first draw each line with shadow
-    textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-    // since shadows of multiline text may be drawn over letters of neighbour lines
-    // (when shadow blur is big enough), re-draw text without shadows.
-    ctx.shadowBlur = 0;
-    textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-    if (item.borderWidth > 0) {
-      ctx.lineWidth = item.borderWidth;
-      textLines.forEach((text, index) => ctx.strokeText(text, 0, index * lineHeight));
-    }
-
-    ctx.restore();
   });
 };

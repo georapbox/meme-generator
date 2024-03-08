@@ -1,3 +1,4 @@
+import { fabric } from 'fabric';
 import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
 import '@georapbox/web-share-element/dist/web-share-defined.js';
 import '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
@@ -40,11 +41,14 @@ const removeTextForm = document.getElementById('removeTextForm');
 let selectedImage = null;
 let reqAnimFrame = null;
 
+const fcanvas = new fabric.Canvas(canvas);
+
 const defaultTextOptions = {
+  _instance: null,
   _isSettingsOpen: false,
   text: '',
   fillColor: '#ffffff',
-  shadowColor: '#000000',
+  strokeColor: '#000000',
   font: 'Pressuru',
   fontSize: 40,
   fontWeight: 'normal',
@@ -54,7 +58,7 @@ const defaultTextOptions = {
   offsetY: 0,
   offsetX: 0,
   rotate: 0,
-  allCaps: true
+  allCaps: true,
 };
 
 let textOptions = [
@@ -68,8 +72,10 @@ const generateMeme = async () => {
   const downloadLink = dataUrl.replace('image/png', 'image/octet-stream');
   downloadMemeBtn.download = `${uid('meme')}.png`;
   downloadMemeBtn.href = downloadLink;
-  downloadMemePreview.width = canvas.width;
-  downloadMemePreview.height = canvas.height;
+  // downloadMemePreview.width = canvas.width;
+  // downloadMemePreview.height = canvas.height;
+  downloadMemePreview.width = fcanvas.width;
+  downloadMemePreview.height = fcanvas.height;
   downloadMemePreview.src = downloadLink;
 
   // Prepare for sharing file
@@ -101,26 +107,29 @@ const onImageLoaded = evt => {
   let width = evt.target.width;
   let height = evt.target.height;
 
-  if (width > height) {
-    if (width > MAX_WIDTH) {
-      height *= MAX_WIDTH / width;
-      width = MAX_WIDTH;
-    }
-  } else {
-    if (height > MAX_HEIGHT) {
-      width *= MAX_HEIGHT / height;
-      height = MAX_HEIGHT;
-    }
-  }
+  // if (width > height) {
+  //   if (width > MAX_WIDTH) {
+  //     height *= MAX_WIDTH / width;
+  //     width = MAX_WIDTH;
+  //   }
+  // } else {
+  //   if (height > MAX_HEIGHT) {
+  //     width *= MAX_HEIGHT / height;
+  //     height = MAX_HEIGHT;
+  //   }
+  // }
 
-  canvas.width = width;
-  canvas.height = height;
+  // canvas.width = width;
+  // canvas.height = height;
+
+  fcanvas.setDimensions({ width, height });
 
   selectedImage = evt.target;
 
-  drawCanvas(selectedImage, canvas, ctx, textOptions);
+  drawCanvas(selectedImage, fcanvas, ctx, textOptions);
 
   dropzoneEl.classList.add('dropzone--accepted');
+  dropzoneEl.disabled = true;
   generateMemeBtn.disabled = false;
   canvas.hidden = false;
   instructionsEl.hidden = true;
@@ -130,7 +139,7 @@ const removeText = index => {
   textOptions = arrayRemove(textOptions, index);
   inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
   textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
-  drawCanvas(selectedImage, canvas, ctx, textOptions);
+  drawCanvas(selectedImage, fcanvas, ctx, textOptions);
 };
 
 const handleSolidColorFormInput = evt => {
@@ -142,10 +151,15 @@ const handleSolidColorFormInput = evt => {
   }
 
   if (typeof selectedImage === 'string') {
-    canvas.width = Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH;
-    canvas.height = Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT;
+    // canvas.width = Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH;
+    // canvas.height = Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT;
 
-    drawCanvas(selectedImage, canvas, ctx, textOptions);
+    fcanvas.setDimensions({
+      width: Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH,
+      height: Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT
+    });
+
+    drawCanvas(selectedImage, fcanvas, ctx, textOptions);
 
     generateMemeBtn.disabled = false;
     canvas.hidden = false;
@@ -183,14 +197,57 @@ const handleTextPropChange = (element, index, prop) => {
     textOptions[index][prop] = element.value;
   }
 
-  drawCanvas(selectedImage, canvas, ctx, textOptions);
+  if (element.dataset.input === 'text') {
+    textOptions[index]._instance.set('text', textOptions[index].allCaps === true ? textOptions[index].text.toUpperCase() : textOptions[index].text);
+  }
+
+  if (element.dataset.input === 'font') {
+    textOptions[index]._instance.set('fontFamily', textOptions[index].font);
+  }
+
+  if (element.dataset.input === 'fontWeight') {
+    textOptions[index]._instance.set('fontWeight', textOptions[index].fontWeight);
+  }
+
+  if (element.dataset.input === 'textAlign') {
+    textOptions[index]._instance.set('textAlign', textOptions[index].textAlign);
+  }
+
+  if (element.dataset.input === 'fillColor') {
+    console.log('???????');
+    textOptions[index]._instance.set('fill', textOptions[index].fillColor);
+  }
+
+  if (element.dataset.input === 'strokeColor') {
+    textOptions[index]._instance.set('stroke', textOptions[index].borderWidth === 0 ? null : textOptions[index].strokeColor);
+  }
+
+  if (element.dataset.input === 'borderWidth') {
+    textOptions[index]._instance.set('strokeWidth', textOptions[index].borderWidth);
+  }
+
+  if (element.dataset.input === 'allCaps') {
+    textOptions[index]._instance.set('text', textOptions[index].allCaps === true ? textOptions[index].text.toUpperCase() : textOptions[index].text);
+  }
+
+  if (element.dataset.input === 'textAlign') {
+    textOptions[index]._instance.set('originX', textOptions[index].textAlign);
+  }
+
+  drawCanvas(selectedImage, fcanvas, ctx, textOptions);
 };
 
 const handleAddTextboxBtnClick = () => {
-  const textOptionsLength = textOptions.length;
-  const newTextBox = createTextBox(textOptionsLength, defaultTextOptions);
+  const newTextBox = createTextBox(textOptions.length, defaultTextOptions);
 
   textOptions.push({ ...defaultTextOptions });
+
+  const index = textOptions.length - 1;
+
+  const text = createTextBoxInstance(textOptions[index]);
+
+  textOptions[index]._instance = text;
+
   inputsContainer.appendChild(newTextBox);
   newTextBox.querySelector('[data-input="text"]').focus();
 };
@@ -256,7 +313,7 @@ const moveText = (offsetDir, sign, index) => () => {
     offsetXInput.value = textOptions[index].offsetX;
   }
 
-  drawCanvas(selectedImage, canvas, ctx, textOptions);
+  drawCanvas(selectedImage, fcanvas, ctx, textOptions);
 
   reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
 };
@@ -288,8 +345,8 @@ const handleInputsContainerInput = evt => {
     prop = 'text';
   } else if (element.matches('[data-input="fillColor"]')) {
     prop = 'fillColor';
-  } else if (element.matches('[data-input="shadowColor"]')) {
-    prop = 'shadowColor';
+  } else if (element.matches('[data-input="strokeColor"]')) {
+    prop = 'strokeColor';
   } else if (element.matches('[data-input="font"]')) {
     prop = 'font';
   } else if (element.matches('[data-input="fontSize"]')) {
@@ -361,7 +418,7 @@ const handleInputsContainerClick = evt => {
 
     inputsContainer.appendChild(newTextBox);
     newTextBox.querySelector('[data-input="text"]').focus();
-    drawCanvas(selectedImage, canvas, ctx, textOptions);
+    drawCanvas(selectedImage, fcanvas, ctx, textOptions);
   }
 
   if (element.matches('[data-button="delete-text-box"]')) {
@@ -521,6 +578,22 @@ const handleModalClose = evt => {
   }
 };
 
+function createTextBoxInstance(item) {
+  const textbox = new fabric.Textbox('', {
+    editable: false,
+    originX: item.textAlign
+  });
+
+  textbox.setControlsVisibility({
+    mt: false,
+    mb: false,
+    ml: false,
+    mr: false
+  });
+
+  return textbox;
+}
+
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButtonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
@@ -550,6 +623,8 @@ galleryEl.querySelectorAll('button > img')?.forEach(image => {
 });
 
 textOptions.forEach((item, index) => {
+  item._instance = createTextBoxInstance(item);
+
   inputsContainer.appendChild(createTextBox(index, item));
 });
 
