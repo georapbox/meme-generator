@@ -58,7 +58,7 @@ const defaultTextOptions = {
   offsetY: 0,
   offsetX: 0,
   rotate: 0,
-  allCaps: true,
+  allCaps: true
 };
 
 let textOptions = [
@@ -74,8 +74,8 @@ const generateMeme = async () => {
   downloadMemeBtn.href = downloadLink;
   // downloadMemePreview.width = canvas.width;
   // downloadMemePreview.height = canvas.height;
-  downloadMemePreview.width = fcanvas.width;
-  downloadMemePreview.height = fcanvas.height;
+  downloadMemePreview.width = fcanvas.getWidth();
+  downloadMemePreview.height = fcanvas.getWidth();
   downloadMemePreview.src = downloadLink;
 
   // Prepare for sharing file
@@ -633,3 +633,46 @@ dropzoneEl.accept = ACCEPTED_MIME_TYPES;
 customFonts.forEach(({ name, path, style, weight }) => {
   loadCustomFont(name, path, { style, weight });
 });
+
+function adjustControlSizes(canvas) {
+  const canvasWidth = canvas.getWidth();
+  const controlSize = canvasWidth / 20; // Adjust the divisor to control control size relative to canvas width
+
+  // Loop through each object on the canvas
+  canvas.forEachObject(function (object) {
+    if (object.type === 'textbox') {
+      object.set({
+        cornerSize: controlSize,
+        padding: controlSize / 2,
+        cornerStrokeColor: 'white',
+        borderColor: 'white',
+        touchCornerSize: controlSize,
+        cornerStyle: 'circle',
+        borderScaleFactor: object.strokeWidth / ((object.scaleX + object.scaleY) / 4)
+      });
+    }
+  });
+}
+
+// Event listener for canvas rendering
+fcanvas.on('after:render', function () {
+  // Adjust control sizes when the canvas is rendered
+  adjustControlSizes(fcanvas);
+});
+
+function scaleCanvas() {
+  var containerWidth = document.querySelector('.dropzone').offsetWidth;
+  var scaleFactor = containerWidth / canvas.getWidth();
+
+  // Set canvas dimensions
+  fcanvas.setWidth(containerWidth);
+  fcanvas.setHeight(fcanvas.getHeight() * scaleFactor);
+
+  // Set fcanvas zoom level
+  fcanvas.setZoom(scaleFactor);
+
+  // Render fcanvas
+  fcanvas.renderAll();
+}
+
+window.addEventListener('resize', scaleCanvas);

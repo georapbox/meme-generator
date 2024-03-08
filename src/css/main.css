@@ -55,14 +55,14 @@ details summary:focus-visible {
 }
 
 .canvas-container {
-  max-width: 100%;
-  width: auto !important;
-  height: auto !important;
+  /* max-width: 100%; */
+  /* width: auto !important; */
+  /* height: auto !important; */
 }
 
 .canvas-container canvas {
-  width: auto !important;
-  height: auto !important;
+  /* width: auto !important; */
+  /* height: auto !important; */
 }
 
 /* Inputs */
