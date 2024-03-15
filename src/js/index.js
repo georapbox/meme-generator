@@ -233,38 +233,36 @@ const handleImageUploadFromURL = async evt => {
   }
 };
 
-const moveText = (offsetDir, sign, index) => () => {
+const moveTextUsingArrowbuttons = (direction, index) => () => {
   const textBoxSection = document.querySelectorAll('[data-section="textBox"]')[index];
   const offsetYInput = textBoxSection.querySelector('[data-input="offsetY"]');
   const offsetXInput = textBoxSection.querySelector('[data-input="offsetX"]');
 
-  if (offsetDir === 'offsetY') {
-    if (sign === '-') {
-      textOptions[index].offsetY -= 1;
-    }
+  direction = direction.toLowerCase();
 
-    if (sign === '+') {
-      textOptions[index].offsetY += 1;
-    }
-
+  if (direction === 'up') {
+    textOptions[index].offsetY -= 1;
     offsetYInput.value = textOptions[index].offsetY;
   }
 
-  if (offsetDir === 'offsetX') {
-    if (sign === '-') {
-      textOptions[index].offsetX -= 1;
-    }
+  if (direction === 'down') {
+    textOptions[index].offsetY += 1;
+    offsetYInput.value = textOptions[index].offsetY;
+  }
 
-    if (sign === '+') {
-      textOptions[index].offsetX += 1;
-    }
+  if (direction === 'left') {
+    textOptions[index].offsetX -= 1;
+    offsetXInput.value = textOptions[index].offsetX;
+  }
 
+  if (direction === 'right') {
+    textOptions[index].offsetX += 1;
     offsetXInput.value = textOptions[index].offsetX;
   }
 
   drawCanvas(selectedImage, canvas, ctx, textOptions);
 
-  reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
+  reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(direction, index));
 };
 
 const handleUploadMethodChange = evt => {
@@ -397,17 +395,15 @@ const handleInputsContainerPointerdown = evt => {
 
   const index = Number(textBoxEl.getAttribute('data-index'));
 
-  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
-    const offsetDir = element.getAttribute('data-move');
-    const sign = element.getAttribute('data-sign');
-    reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
+  if (element.matches('[data-action="move-text"]')) {
+    reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(element.getAttribute('aria-label'), index));
   }
 };
 
 const handleInputsContainerPointerup = evt => {
   const element = evt.target;
 
-  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+  if (element.matches('[data-action="move-text"]')) {
     cancelAnimationFrame && cancelAnimationFrame(reqAnimFrame);
     reqAnimFrame = null;
   }
@@ -416,7 +412,7 @@ const handleInputsContainerPointerup = evt => {
 const handleInputsContainerPointerout = evt => {
   const element = evt.target;
 
-  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+  if (element.matches('[data-action="move-text"]')) {
     cancelAnimationFrame && cancelAnimationFrame(reqAnimFrame);
     reqAnimFrame = null;
   }
@@ -426,14 +422,11 @@ const handleInputsContainerKeyDown = evt => {
   const element = evt.target;
   const textBoxEl = element.closest('[data-section="textBox"]');
 
-  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+  if (element.matches('[data-action="move-text"]')) {
     if (evt.key === ' ' || evt.key === 'Enter') {
       const index = Number(textBoxEl.getAttribute('data-index'));
-      const offsetDir = element.getAttribute('data-move');
-      const sign = element.getAttribute('data-sign');
-
       reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
-      reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
+      reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(element.getAttribute('aria-label'), index));
     }
   }
 };
@@ -441,7 +434,7 @@ const handleInputsContainerKeyDown = evt => {
 const handleInputsContainerKeyUp = evt => {
   const element = evt.target;
 
-  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+  if (element.matches('[data-action="move-text"]')) {
     if (evt.key === ' ' || evt.key === 'Enter') {
       reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
       reqAnimFrame = null;

@@ -107,10 +107,10 @@ export const createTextBox = (index, data = {}) => {
 
         <div class="col-12">
           <div class="move-text-actions mb-3">
-            <button type="button" class="btn btn-secondary" data-move="offsetY" data-sign="-" aria-label="Up"></button>
-            <button type="button" class="btn btn-secondary" data-move="offsetX" data-sign="+" aria-label="Right"></button>
-            <button type="button" class="btn btn-secondary" data-move="offsetY" data-sign="+" aria-label="Down"></button>
-            <button type="button" class="btn btn-secondary" data-move="offsetX" data-sign="-" aria-label="Left"></button>
+            <button type="button" class="btn btn-secondary" data-action="move-text" aria-label="Up"></button>
+            <button type="button" class="btn btn-secondary" data-action="move-text" aria-label="Right"></button>
+            <button type="button" class="btn btn-secondary" data-action="move-text" aria-label="Down"></button>
+            <button type="button" class="btn btn-secondary" data-action="move-text" aria-label="Left"></button>
           </div>
         </div>
       </div>

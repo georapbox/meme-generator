@@ -188,7 +188,7 @@ button[data-button="delete-text-box"] {
   margin: 0 auto;
 }
 
-.move-text-actions [data-move] {
+.move-text-actions > button {
   position: absolute;
   width: var(--move-btn-width);
   height: var(--move-btn-height);
@@ -197,28 +197,28 @@ button[data-button="delete-text-box"] {
 }
 
 /* UP */
-.move-text-actions [data-move="offsetY"][data-sign="-"] {
+.move-text-actions > [aria-label="Up"] {
   top: -1px;
   left: var(--move-btn-width);
   background-image: url(../assets/icons/chevron-up.svg);
 }
 
 /* DOWN */
-.move-text-actions [data-move="offsetY"][data-sign="+"] {
+.move-text-actions > [aria-label="Down"] {
   top: calc(var(--move-btn-height) + 1px);
   left: var(--move-btn-width);
   background-image: url(../assets/icons/chevron-down.svg);
 }
 
 /* LEFT */
-.move-text-actions [data-move="offsetX"][data-sign="-"] {
+.move-text-actions > [aria-label="Left"] {
   top: calc(var(--move-btn-height) / 2);
   left: -2px;
   background-image: url(../assets/icons/chevron-left.svg);
 }
 
 /* RIGHT */
-.move-text-actions [data-move="offsetX"][data-sign="+"] {
+.move-text-actions > [aria-label="Right"] {
   top: calc(var(--move-btn-height) / 2);
   left: calc(var(--move-btn-width) * 2 + 2px);
   background-image: url(../assets/icons/chevron-right.svg);
