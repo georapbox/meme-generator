@@ -35,6 +35,8 @@
     "@georapbox/files-dropzone-element": "~2.0.0",
     "@georapbox/modal-element": "~1.5.0",
     "@georapbox/web-share-element": "~3.1.0",
-    "bootstrap": "~5.3.3"
+    "bootstrap": "~5.3.3",
+    "emoji-picker-element": "~1.21.1",
+    "insert-text-at-cursor": "~0.3.0"
   }
 }

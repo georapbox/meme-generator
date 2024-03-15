@@ -1,7 +1,7 @@
 import { customFonts } from './custom-fonts.js';
 
 export const createTextBox = (index, data = {}) => {
-  const inputTemplate = /* html */`
+  const template = /* html */`
     <div class="d-flex align-items-center">
       <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
       <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
@@ -19,8 +19,15 @@ export const createTextBox = (index, data = {}) => {
       </div>
     </div>
 
-    <div class="p-2" data-section="settings" ${data._isSettingsOpen ? '' : 'hidden'}>
+    <div class="p-2" data-section="settings" hidden>
       <div class="row g-2">
+        <div class="col-12">
+          <details>
+            <summary>Emoji picker</summary>
+            <emoji-picker class="light"></emoji-picker>
+          </details>
+        </div>
+
         <div class="col-4 mb-3">
           <label for="fontInput_${index}" class="mb-1 d-block text-truncate">Font: </label>
 
@@ -125,7 +132,7 @@ export const createTextBox = (index, data = {}) => {
   div.className = 'bg-light border shadow-sm mb-3 rounded';
   div.setAttribute('data-section', 'textBox');
   div.setAttribute('data-index', index);
-  div.innerHTML = inputTemplate;
+  div.innerHTML = template;
   div.querySelectorAll('select').forEach(el => el.value = data[el.dataset.input]);
   div.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = data[el.dataset.input]);
 

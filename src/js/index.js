@@ -1,3 +1,5 @@
+import 'emoji-picker-element';
+import insertTextAtCursor from 'insert-text-at-cursor';
 import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
 import '@georapbox/web-share-element/dist/web-share-defined.js';
 import '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
@@ -41,7 +43,6 @@ let selectedImage = null;
 let reqAnimFrame = null;
 
 const defaultTextOptions = {
-  _isSettingsOpen: false,
   text: '',
   fillColor: '#ffffff',
   shadowColor: '#000000',
@@ -128,8 +129,13 @@ const onImageLoaded = evt => {
 
 const removeText = index => {
   textOptions = arrayRemove(textOptions, index);
-  inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
-  textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
+
+  const textBoxEl = inputsContainer.querySelector(`[data-section="textBox"][data-index="${index}"]`);
+  textBoxEl && textBoxEl.remove();
+
+  const textBoxEls = inputsContainer.querySelectorAll('[data-section="textBox"]');
+  textBoxEls.forEach((el, idx) => el.setAttribute('data-index', idx));
+
   drawCanvas(selectedImage, canvas, ctx, textOptions);
 };
 
@@ -333,28 +339,19 @@ const handleInputsContainerClick = evt => {
   const element = evt.target;
 
   if (element.matches('[data-button="settings"]')) {
-    const textBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
-    const textBoxEls = document.querySelectorAll('[data-section="textBox"]');
+    const textBoxEl = element.closest('[data-section="textBox"]');
+    const textBoxSettingsEl = textBoxEl?.querySelector('[data-section="settings"]');
 
-    textBoxEls.forEach((el, index) => {
-      const settingsEl = el.querySelector('[data-section="settings"]');
-
-      if (el.getAttribute('data-index') === textBoxIndex) {
-        settingsEl.hidden = !settingsEl.hidden;
-        textOptions[index]._isSettingsOpen = !textOptions[index]._isSettingsOpen;
-      } else {
-        settingsEl.hidden = true;
-        textOptions[index]._isSettingsOpen = false;
-      }
-    });
+    if (textBoxSettingsEl) {
+      textBoxSettingsEl.hidden = !textBoxSettingsEl.hidden;
+    }
   }
 
   if (element.matches('[data-button="duplicate-text-box"')) {
     const currentTextBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
 
     textOptions.push({
-      ...textOptions[currentTextBoxIndex],
-      _isSettingsOpen: false
+      ...textOptions[currentTextBoxIndex]
     });
 
     const newTextBox = createTextBox(textOptions.length - 1, textOptions[textOptions.length - 1]);
@@ -521,6 +518,19 @@ const handleModalClose = evt => {
   }
 };
 
+const handleEmojiPickerSelection = evt => {
+  const textBoxEl = evt.target.closest('[data-section="textBox"]');
+
+  if (textBoxEl) {
+    const input = textBoxEl.querySelector('[data-input="text"]');
+    const emoji = evt.detail.unicode;
+
+    if (input) {
+      insertTextAtCursor(input, emoji);
+    }
+  }
+};
+
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButtonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
@@ -543,6 +553,7 @@ document.addEventListener('capture-photo:error', handleCapturePhotoError);
 document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
 document.addEventListener('me-open', handleModalOpen);
 document.addEventListener('me-close', handleModalClose);
+document.addEventListener('emoji-click', handleEmojiPickerSelection);
 removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
