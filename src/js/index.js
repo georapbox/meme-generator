@@ -45,7 +45,7 @@ let reqAnimFrame = null;
 const defaultTextOptions = {
   text: '',
   fillColor: '#ffffff',
-  shadowColor: '#000000',
+  strokeColor: '#000000',
   font: 'Pressuru',
   fontSize: 40,
   fontWeight: 'normal',
@@ -292,8 +292,8 @@ const handleInputsContainerInput = evt => {
     prop = 'text';
   } else if (element.matches('[data-input="fillColor"]')) {
     prop = 'fillColor';
-  } else if (element.matches('[data-input="shadowColor"]')) {
-    prop = 'shadowColor';
+  } else if (element.matches('[data-input="strokeColor"]')) {
+    prop = 'strokeColor';
   } else if (element.matches('[data-input="font"]')) {
     prop = 'font';
   } else if (element.matches('[data-input="fontSize"]')) {

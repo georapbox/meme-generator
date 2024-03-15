@@ -18,7 +18,7 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
     ctx.font = `${item.fontWeight} ${item.fontSize}px ${item.font}`;
     ctx.fillStyle = item.fillColor;
     ctx.textAlign = item.textAlign;
-    ctx.strokeStyle = item.shadowColor;
+    ctx.strokeStyle = item.strokeColor;
 
     const multiplier = index + 1;
     const lineHeight = ctx.measureText('M').width + item.fontSize / 2;
@@ -31,7 +31,7 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
       ctx.shadowOffsetX = 0;
       ctx.shadowOffsetY = 0;
       ctx.shadowBlur = shadowBlur;
-      ctx.shadowColor = item.shadowColor;
+      ctx.shadowColor = item.strokeColor;
     }
 
     ctx.translate(xPos + item.offsetX, lineHeight * multiplier + item.offsetY);
