@@ -134,7 +134,11 @@ const removeText = index => {
   textBoxEl && textBoxEl.remove();
 
   const textBoxEls = inputsContainer.querySelectorAll('[data-section="textBox"]');
-  textBoxEls.forEach((el, idx) => el.setAttribute('data-index', idx));
+
+  textBoxEls.forEach((el, idx) => {
+    el.setAttribute('data-index', idx);
+    el.querySelector('[data-input="text"]').setAttribute('placeholder', `Text #${idx + 1}`);
+  });
 
   drawCanvas(selectedImage, canvas, ctx, textOptions);
 };
