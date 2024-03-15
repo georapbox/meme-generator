@@ -140,8 +140,8 @@ const removeText = index => {
 };
 
 const handleSolidColorFormInput = evt => {
-  const DEFAULT_WIDTH = 600;
-  const DEFAULT_HEIGHT = 400;
+  const DEFAULT_WIDTH = 800;
+  const DEFAULT_HEIGHT = 600;
 
   if (evt.target === solidColorForm['canvasColor']) {
     selectedImage = evt.target.value;
@@ -153,6 +153,7 @@ const handleSolidColorFormInput = evt => {
 
     drawCanvas(selectedImage, canvas, ctx, textOptions);
 
+    dropzoneEl.classList.add('dropzone--accepted');
     generateMemeBtn.disabled = false;
     canvas.hidden = false;
     instructionsEl.hidden = true;
