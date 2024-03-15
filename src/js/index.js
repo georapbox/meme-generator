@@ -395,44 +395,58 @@ const handleInputsContainerPointerdown = evt => {
     return;
   }
 
-  const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
-  const isOffsetYButton = element.matches('[data-move="offsetY"]');
-  const isOffsetXButton = element.matches('[data-move="offsetX"]');
+  const index = Number(textBoxEl.getAttribute('data-index'));
 
-  if (!isOffsetYButton && !isOffsetXButton) {
-    return;
+  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+    const offsetDir = element.getAttribute('data-move');
+    const sign = element.getAttribute('data-sign');
+    reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
   }
-
-  const offsetDir = element.getAttribute('data-move');
-  const sign = element.getAttribute('data-sign');
-
-  reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
 };
 
 const handleInputsContainerPointerup = evt => {
   const element = evt.target;
-  const isOffsetYButton = element.matches('[data-move="offsetY"]');
-  const isOffsetXButton = element.matches('[data-move="offsetX"]');
 
-  if (!isOffsetYButton && !isOffsetXButton) {
-    return;
+  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+    cancelAnimationFrame && cancelAnimationFrame(reqAnimFrame);
+    reqAnimFrame = null;
   }
-
-  cancelAnimationFrame(reqAnimFrame);
-  reqAnimFrame = null;
 };
 
 const handleInputsContainerPointerout = evt => {
   const element = evt.target;
-  const isOffsetYButton = element.matches('[data-move="offsetY"]');
-  const isOffsetXButton = element.matches('[data-move="offsetX"]');
 
-  if (!isOffsetYButton && !isOffsetXButton || !reqAnimFrame) {
-    return;
+  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+    cancelAnimationFrame && cancelAnimationFrame(reqAnimFrame);
+    reqAnimFrame = null;
   }
+};
 
-  cancelAnimationFrame(reqAnimFrame);
-  reqAnimFrame = null;
+const handleInputsContainerKeyDown = evt => {
+  const element = evt.target;
+  const textBoxEl = element.closest('[data-section="textBox"]');
+
+  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+    if (evt.key === ' ' || evt.key === 'Enter') {
+      const index = Number(textBoxEl.getAttribute('data-index'));
+      const offsetDir = element.getAttribute('data-move');
+      const sign = element.getAttribute('data-sign');
+
+      reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
+      reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
+    }
+  }
+};
+
+const handleInputsContainerKeyUp = evt => {
+  const element = evt.target;
+
+  if (element.matches('[data-move="offsetY"]') || element.matches('[data-move="offsetX"]')) {
+    if (evt.key === ' ' || evt.key === 'Enter') {
+      reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
+      reqAnimFrame = null;
+    }
+  }
 };
 
 const handleGalleryClick = async evt => {
@@ -544,6 +558,8 @@ inputsContainer.addEventListener('click', handleInputsContainerClick);
 inputsContainer.addEventListener('pointerdown', handleInputsContainerPointerdown);
 inputsContainer.addEventListener('pointerup', handleInputsContainerPointerup);
 inputsContainer.addEventListener('pointerout', handleInputsContainerPointerout);
+inputsContainer.addEventListener('keydown', handleInputsContainerKeyDown);
+inputsContainer.addEventListener('keyup', handleInputsContainerKeyUp);
 imageUploadMethodSelect.addEventListener('change', handleUploadMethodChange);
 galleryEl.addEventListener('click', handleGalleryClick);
 gallerySearchEl.addEventListener('input', handleGallerySearchInput);
