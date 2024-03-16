@@ -15,7 +15,7 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
   textOptions.forEach(function (item, index) {
     ctx.save();
 
-    ctx.font = `${item.fontWeight} ${item.fontSize}px ${item.font}`;
+    ctx.font = `${item.fontWeight} ${item.fontSize * canvas.width / 1000}px ${item.font}`;
     ctx.fillStyle = item.fillColor;
     ctx.textAlign = item.textAlign;
     ctx.strokeStyle = item.strokeColor;

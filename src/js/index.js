@@ -39,6 +39,7 @@ const solidColorForm = document.getElementById('solidColorForm');
 const uploadMethodEls = document.querySelectorAll('.upload-method');
 const removeConfirmationModal = document.getElementById('removeConfirmationModal');
 const removeTextForm = document.getElementById('removeTextForm');
+const maxImageDimensionsForm = document.getElementById('maxImageDimensionsForm');
 let selectedImage = null;
 let reqAnimFrame = null;
 
@@ -96,11 +97,13 @@ const generateMeme = async () => {
   });
 };
 
-const onImageLoaded = evt => {
-  const MAX_WIDTH = 4000;
-  const MAX_HEIGHT = 3000;
-  let width = evt.target.width;
-  let height = evt.target.height;
+const setImageMaxDimensions = image => {
+  const maxImageDimensionsSelect = maxImageDimensionsForm['maxImageDimensions'];
+  const [maxWidthValue, maxHeightValue] = maxImageDimensionsSelect.value.split('x');
+  const MAX_WIDTH = Number(maxWidthValue) || 800;
+  const MAX_HEIGHT = Number(maxHeightValue) || 600;
+  let width = image.width;
+  let height = image.height;
 
   if (width > height) {
     if (width > MAX_WIDTH) {
@@ -116,11 +119,12 @@ const onImageLoaded = evt => {
 
   canvas.width = width;
   canvas.height = height;
+};
 
+const onImageLoaded = evt => {
   selectedImage = evt.target;
-
+  setImageMaxDimensions(selectedImage);
   drawCanvas(selectedImage, canvas, ctx, textOptions);
-
   dropzoneEl.classList.add('dropzone--accepted');
   generateMemeBtn.disabled = false;
   canvas.hidden = false;
@@ -272,6 +276,7 @@ const moveTextUsingArrowbuttons = (direction, index) => () => {
 
 const handleUploadMethodChange = evt => {
   uploadMethodEls.forEach(el => el.hidden = el.id !== evt.target.value);
+  maxImageDimensionsForm.hidden = evt.target.value === 'solidColorForm';
 };
 
 const handleFileSelectClick = () => {
@@ -543,6 +548,15 @@ const handleEmojiPickerSelection = evt => {
   }
 };
 
+const handleMaxImageDimensionsFormChange = () => {
+  if (!selectedImage || typeof selectedImage === 'string') {
+    return;
+  }
+
+  setImageMaxDimensions(selectedImage);
+  drawCanvas(selectedImage, canvas, ctx, textOptions);
+};
+
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButtonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
@@ -569,6 +583,7 @@ document.addEventListener('me-open', handleModalOpen);
 document.addEventListener('me-close', handleModalClose);
 document.addEventListener('emoji-click', handleEmojiPickerSelection);
 removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
+maxImageDimensionsForm.addEventListener('change', handleMaxImageDimensionsFormChange);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
