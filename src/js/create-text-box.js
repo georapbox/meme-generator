@@ -25,7 +25,7 @@ export const createTextBox = (index, data = {}) => {
     <div class="p-2" data-section="settings" hidden>
       <div class="row g-2">
         <div class="col-12">
-          <details>
+          <details class="emoji-picker-details">
             <summary>Emoji picker</summary>
             <emoji-picker class="light"></emoji-picker>
           </details>
