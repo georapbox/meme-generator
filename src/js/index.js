@@ -41,6 +41,8 @@ const uploadMethodEls = document.querySelectorAll('.upload-method');
 const removeConfirmationModal = document.getElementById('removeConfirmationModal');
 const removeTextForm = document.getElementById('removeTextForm');
 const maxImageDimensionsForm = document.getElementById('maxImageDimensionsForm');
+const maxImageDimensionsSelect = maxImageDimensionsForm['maxImageDimensions'];
+const maxImageDimensionsFromStorage = storage.get('maxImageDimensions');
 let selectedImage = null;
 let reqAnimFrame = null;
 
@@ -604,8 +606,8 @@ customFonts.forEach(({ name, path, style, weight }) => {
   loadCustomFont(name, path, { style, weight });
 });
 
-const maxImageDimensionsFromStorage = storage.get('maxImageDimensions');
-
 if (maxImageDimensionsFromStorage) {
-  maxImageDimensionsForm['maxImageDimensions'].value = maxImageDimensionsFromStorage;
+  maxImageDimensionsSelect.value = maxImageDimensionsFromStorage;
 }
+
+maxImageDimensionsSelect.disabled = false;

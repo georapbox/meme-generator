@@ -5,7 +5,6 @@
   --focus-ring: 0 0 0 0.2rem #268fff80;
 
   accent-color: var(--bs-primary);
-  scrollbar-gutter: stable both-edges;
   font-size: 14px;
 }
 
@@ -73,6 +72,11 @@ details summary:focus-visible {
   max-height: 200px;
   height: calc(1.5em + 0.75rem + 2px);
   margin: 0.5rem;
+}
+
+#maxImageDimensionsForm select:disabled {
+  text-indent: -9999px;
+  opacity: 0.7;
 }
 
 /* Buttons */
