@@ -9,9 +9,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
 import { arrayRemove } from './utils/array-remove.js';
 import { uid } from './utils/uid.js';
+import { fileFromUrl } from './utils/file-from-url.js';
+import { storage } from './utils/storage.js';
 import { ACCEPTED_MIME_TYPES } from './constants.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
-import { fileFromUrl } from './file-from-url.js';
 import { toastAlert } from './toast-alert.js';
 import { createTextBox } from './create-text-box.js';
 import { drawCanvas } from './draw-canvas.js';
@@ -548,7 +549,11 @@ const handleEmojiPickerSelection = evt => {
   }
 };
 
-const handleMaxImageDimensionsFormChange = () => {
+const handleMaxImageDimensionsFormChange = evt => {
+  if (evt.target.matches('[name="maxImageDimensions"]')) {
+    storage.set('maxImageDimensions', evt.target.value);
+  }
+
   if (!selectedImage || typeof selectedImage === 'string') {
     return;
   }
@@ -598,3 +603,9 @@ dropzoneEl.accept = ACCEPTED_MIME_TYPES;
 customFonts.forEach(({ name, path, style, weight }) => {
   loadCustomFont(name, path, { style, weight });
 });
+
+const maxImageDimensionsFromStorage = storage.get('maxImageDimensions');
+
+if (maxImageDimensionsFromStorage) {
+  maxImageDimensionsForm['maxImageDimensions'].value = maxImageDimensionsFromStorage;
+}

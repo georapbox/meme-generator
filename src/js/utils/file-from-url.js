@@ -1,4 +1,4 @@
-import { ACCEPTED_MIME_TYPES } from './constants.js';
+import { ACCEPTED_MIME_TYPES } from '../constants.js';
 
 export const fileFromUrl = async (options = {}) => {
   const res = await fetch(options.url);
