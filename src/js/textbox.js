@@ -1,14 +1,67 @@
+import { uid } from './utils/uid.js';
 import { customFonts } from './custom-fonts.js';
 
-export const createTextBox = (id, data = {}) => {
-  const textBoxNumber = document.querySelectorAll('[data-section="textBox"]').length + 1;
+const defaultTextboxData = {
+  id: '',
+  text: '',
+  fillColor: '#ffffff',
+  strokeColor: '#000000',
+  font: 'Pressuru',
+  fontSize: 40,
+  fontWeight: 'normal',
+  textAlign: 'center',
+  shadowBlur: 3,
+  borderWidth: 1,
+  offsetY: 0,
+  offsetX: 0,
+  rotate: 0,
+  allCaps: true
+};
 
-  const template = /* html */`
+const textboxes = new Map();
+
+class Textbox {
+  constructor(data) {
+    const id = uid();
+    const dataToAdd = data ? { ...data, id } : { ...defaultTextboxData, id };
+
+    this.data = dataToAdd;
+    textboxes.set(id, this);
+
+    document.dispatchEvent(new CustomEvent(`textbox-create`, {
+      bubbles: true,
+      composed: true,
+      detail: { textbox: this }
+    }));
+  }
+
+  static getAll() {
+    return textboxes;
+  }
+
+  static getById(id) {
+    return textboxes.get(id);
+  }
+
+  static del(id) {
+    textboxes.delete(id);
+
+    document.dispatchEvent(new CustomEvent(`textbox-delete`, {
+      bubbles: true,
+      composed: true,
+      detail: { id }
+    }));
+  }
+
+  static createElement(data = {}, autoFocus = true) {
+    const id = data.id || uid();
+
+    const template = /* html */`
     <div class="d-flex align-items-center">
       <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
       <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
 
-      <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${textBoxNumber}`}">${data.text}</textarea>
+      <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${textboxes.size}`}">${data.text}</textarea>
 
       <div class="d-flex align-items-center pe-2">
         <label for="fillColorInput" class="visually-hidden">Fill color</label>
@@ -128,15 +181,24 @@ export const createTextBox = (id, data = {}) => {
     </div>
   `;
 
-  const fragment = document.createDocumentFragment();
-  const div = document.createElement('div');
+    const fragment = document.createDocumentFragment();
+    const div = document.createElement('div');
 
-  div.setAttribute('id', id);
-  div.setAttribute('data-section', 'textBox');
-  div.className = 'bg-light border shadow-sm mb-3 rounded';
-  div.innerHTML = template;
-  div.querySelectorAll('select').forEach(el => el.value = data[el.dataset.input]);
-  div.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = data[el.dataset.input]);
+    div.setAttribute('id', id);
+    div.setAttribute('data-section', 'textbox');
+    div.className = 'bg-light border shadow-sm mb-3 rounded';
+    div.innerHTML = template;
+    div.querySelectorAll('select').forEach(el => el.value = data[el.dataset.input]);
+    div.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = data[el.dataset.input]);
 
-  return fragment.appendChild(div);
-};
+    const textboxEl = fragment.appendChild(div);
+
+    if (autoFocus) {
+      setTimeout(() => textboxEl.querySelector('[data-input="text"]').focus(), 0);
+    }
+
+    return textboxEl;
+  }
+}
+
+export { Textbox };

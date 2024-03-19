@@ -54,7 +54,7 @@ details summary:focus-visible {
 }
 
 /* Inputs */
-.inputs-container input[type="color"],
+.textboxes-container input[type="color"],
 .settings-button,
 .duplicate-button {
   min-width: 30px;
@@ -66,7 +66,7 @@ details summary:focus-visible {
   cursor: pointer;
 }
 
-.inputs-container .meme-text {
+.textboxes-container .meme-text {
   min-width: 0;
   min-height: calc(1.5em + 0.75rem + 2px);
   max-height: 200px;
@@ -88,11 +88,11 @@ details summary:focus-visible {
 }
 
 /* Misc */
-.inputs-container {
+.textboxes-container {
   flex: 1;
 }
 
-.inputs-container:empty {
+.textboxes-container:empty {
   display: none;
 }
 
@@ -109,7 +109,7 @@ details summary:focus-visible {
   text-wrap: balance;
 }
 
-.errorsContainer {
+.errors-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -118,7 +118,7 @@ details summary:focus-visible {
   pointer-events: none;
 }
 
-.errorsContainer .alert {
+.errors-container .alert {
   pointer-events: all;
 }
 
