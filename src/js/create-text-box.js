@@ -1,15 +1,14 @@
 import { customFonts } from './custom-fonts.js';
-import { uid } from './utils/uid.js';
 
-export const createTextBox = (index, data = {}) => {
-  const _id_ = `${uid()}-${Date.now().toString(36)}`;
+export const createTextBox = (id, data = {}) => {
+  const textBoxNumber = document.querySelectorAll('[data-section="textBox"]').length + 1;
 
   const template = /* html */`
     <div class="d-flex align-items-center">
       <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
       <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
 
-      <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${index + 1}`}">${data.text}</textarea>
+      <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${textBoxNumber}`}">${data.text}</textarea>
 
       <div class="d-flex align-items-center pe-2">
         <label for="fillColorInput" class="visually-hidden">Fill color</label>
@@ -32,9 +31,9 @@ export const createTextBox = (index, data = {}) => {
         </div>
 
         <div class="col-4 mb-3">
-          <label for="fontInput_${_id_}" class="mb-1 d-block text-truncate">Font: </label>
+          <label for="fontInput_${id}" class="mb-1 d-block text-truncate">Font: </label>
 
-          <select class="form-select" data-input="font" id="fontInput_${_id_}">
+          <select class="form-select" data-input="font" id="fontInput_${id}">
             <optgroup label="Web fonts">
               <option value="Impact">Impact</option>
               <option value="Arial">Arial</option>
@@ -58,13 +57,13 @@ export const createTextBox = (index, data = {}) => {
         </div>
 
         <div class="col-4 mb-3">
-          <label for="fontSizeInput_${_id_}" class="mb-1 d-block text-truncate">Size:</label>
-          <input class="form-control" type="number" min="1" value="${data.fontSize}" data-input="fontSize" id="fontSizeInput_${_id_}">
+          <label for="fontSizeInput_${id}" class="mb-1 d-block text-truncate">Size:</label>
+          <input class="form-control" type="number" min="1" value="${data.fontSize}" data-input="fontSize" id="fontSizeInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
-          <label for="fontWeightInput_${_id_}" class="mb-1 d-block text-truncate">Weight:</label>
-          <select class="form-select" data-input="fontWeight" id="fontWeightInput_${_id_}">
+          <label for="fontWeightInput_${id}" class="mb-1 d-block text-truncate">Weight:</label>
+          <select class="form-select" data-input="fontWeight" id="fontWeightInput_${id}">
             <option value="normal">Normal</option>
             <option value="bold">Bold</option>
           </select>
@@ -73,18 +72,18 @@ export const createTextBox = (index, data = {}) => {
 
       <div class="row g-2">
         <div class="col-4 mb-3">
-          <label for="shadowWidthInput_${_id_}" class="mb-1 d-block text-truncate">Shadow size:</label>
-          <input class="form-control" type="number" min="0" max="100" value="${data.shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${_id_}">
+          <label for="shadowWidthInput_${id}" class="mb-1 d-block text-truncate">Shadow size:</label>
+          <input class="form-control" type="number" min="0" max="100" value="${data.shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
-          <label class="mb-1 d-block text-truncate" for="borderWidthInput_${_id_}">Border width:</label>
-          <input class="form-control" type="number" min="0" max="100" value="${data.borderWidth}" data-input="borderWidth" id="borderWidthInput_${_id_}">
+          <label class="mb-1 d-block text-truncate" for="borderWidthInput_${id}">Border width:</label>
+          <input class="form-control" type="number" min="0" max="100" value="${data.borderWidth}" data-input="borderWidth" id="borderWidthInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
-          <label for="textAlignInput_${_id_}" class="mb-1 d-block text-truncate">Text align:</label>
-          <select class="form-select" data-input="textAlign" id="textAlignInput_${_id_}" value="right">
+          <label for="textAlignInput_${id}" class="mb-1 d-block text-truncate">Text align:</label>
+          <select class="form-select" data-input="textAlign" id="textAlignInput_${id}" value="right">
             <option value="left">Left</option>
             <option value="center">Center</option>
             <option value="right">Right</option>
@@ -94,18 +93,18 @@ export const createTextBox = (index, data = {}) => {
 
       <div class="row g-2">
         <div class="col-4 mb-3">
-          <label class="mb-1 d-block text-truncate" for="offsetYInput_${_id_}">Vertical offset:</label>
-          <input class="form-control" type="number" value="${data.offsetY}" data-input="offsetY" id="offsetYInput_${_id_}">
+          <label class="mb-1 d-block text-truncate" for="offsetYInput_${id}">Vertical offset:</label>
+          <input class="form-control" type="number" value="${data.offsetY}" data-input="offsetY" id="offsetYInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
-          <label class="mb-1 d-block text-truncate" for="offsetXInput_${_id_}">Horizontal offset:</label>
-          <input class="form-control" type="number" value="${data.offsetX}" data-input="offsetX" id="offsetXInput_${_id_}">
+          <label class="mb-1 d-block text-truncate" for="offsetXInput_${id}">Horizontal offset:</label>
+          <input class="form-control" type="number" value="${data.offsetX}" data-input="offsetX" id="offsetXInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
-          <label class="mb-1 d-block text-truncate" for="textRotateInput_${_id_}">Rotate:</label>
-          <input class="form-control" type="number" value="${data.rotate}" data-input="rotate" id="textRotateInput_${_id_}" min="-360" max="360">
+          <label class="mb-1 d-block text-truncate" for="textRotateInput_${id}">Rotate:</label>
+          <input class="form-control" type="number" value="${data.rotate}" data-input="rotate" id="textRotateInput_${id}" min="-360" max="360">
         </div>
 
         <div class="col-12">
@@ -121,8 +120,8 @@ export const createTextBox = (index, data = {}) => {
       <div class="row g-2">
         <div class="col-lg-12">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="allCapsCheckbox_${_id_}" data-input="allCaps">
-            <label class="form-check-label" for="allCapsCheckbox_${_id_}">ALL CAPS</label>
+            <input type="checkbox" class="form-check-input" id="allCapsCheckbox_${id}" data-input="allCaps">
+            <label class="form-check-label" for="allCapsCheckbox_${id}">ALL CAPS</label>
           </div>
         </div>
       </div>
@@ -132,9 +131,8 @@ export const createTextBox = (index, data = {}) => {
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
 
-  div.setAttribute('id', _id_);
+  div.setAttribute('id', id);
   div.setAttribute('data-section', 'textBox');
-  div.setAttribute('data-index', index);
   div.className = 'bg-light border shadow-sm mb-3 rounded';
   div.innerHTML = template;
   div.querySelectorAll('select').forEach(el => el.value = data[el.dataset.input]);

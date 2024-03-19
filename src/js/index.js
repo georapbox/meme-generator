@@ -7,7 +7,6 @@ import '@georapbox/modal-element/dist/modal-element-defined.js';
 import '@georapbox/files-dropzone-element/dist/files-dropzone-defined.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
-import { arrayRemove } from './utils/array-remove.js';
 import { uid } from './utils/uid.js';
 import { fileFromUrl } from './utils/file-from-url.js';
 import { storage } from './utils/storage.js';
@@ -62,9 +61,9 @@ const defaultTextOptions = {
   allCaps: true
 };
 
-let textOptions = [
-  { ...defaultTextOptions }
-];
+const textOptions = new Map([
+  [uid(), { ...defaultTextOptions }]
+]);
 
 const generateMeme = async () => {
   const dataUrl = canvas.toDataURL('image/png');
@@ -134,16 +133,13 @@ const onImageLoaded = evt => {
   instructionsEl.hidden = true;
 };
 
-const removeText = index => {
-  textOptions = arrayRemove(textOptions, index);
+const removeText = id => {
+  textOptions.delete(id);
 
-  const textBoxEl = inputsContainer.querySelector(`[data-section="textBox"][data-index="${index}"]`);
+  const textBoxEl = document.getElementById(id);
   textBoxEl && textBoxEl.remove();
 
-  const textBoxEls = inputsContainer.querySelectorAll('[data-section="textBox"]');
-
-  textBoxEls.forEach((el, idx) => {
-    el.setAttribute('data-index', idx);
+  inputsContainer.querySelectorAll('[data-section="textBox"]').forEach((el, idx) => {
     el.querySelector('[data-input="text"]').setAttribute('placeholder', `Text #${idx + 1}`);
   });
 
@@ -192,23 +188,23 @@ const handleOpenVideoModalButtonClick = () => {
   videoModal.open = true;
 };
 
-const handleTextPropChange = (element, index, prop) => {
+const handleTextPropChange = (element, textBoxId, prop) => {
   if (element.type === 'checkbox') {
-    textOptions[index][prop] = element.checked;
+    textOptions.get(textBoxId)[prop] = element.checked;
   } else if (element.type === 'number') {
-    textOptions[index][prop] = Number(element.value);
+    textOptions.get(textBoxId)[prop] = Number(element.value);
   } else {
-    textOptions[index][prop] = element.value;
+    textOptions.get(textBoxId)[prop] = element.value;
   }
 
   drawCanvas(selectedImage, canvas, ctx, textOptions);
 };
 
 const handleAddTextboxBtnClick = () => {
-  const textOptionsLength = textOptions.length;
-  const newTextBox = createTextBox(textOptionsLength, defaultTextOptions);
+  const textBoxId = uid();
+  const newTextBox = createTextBox(textBoxId, defaultTextOptions);
 
-  textOptions.push({ ...defaultTextOptions });
+  textOptions.set(textBoxId, { ...defaultTextOptions });
   inputsContainer.appendChild(newTextBox);
   newTextBox.querySelector('[data-input="text"]').focus();
 };
@@ -245,36 +241,40 @@ const handleImageUploadFromURL = async evt => {
   }
 };
 
-const moveTextUsingArrowbuttons = (direction, index) => () => {
-  const textBoxSection = document.querySelectorAll('[data-section="textBox"]')[index];
-  const offsetYInput = textBoxSection.querySelector('[data-input="offsetY"]');
-  const offsetXInput = textBoxSection.querySelector('[data-input="offsetX"]');
+const moveTextUsingArrowbuttons = (textBoxId, direction) => () => {
+  const textBoxEl = document.getElementById(textBoxId);
+  const offsetYInput = textBoxEl.querySelector('[data-input="offsetY"]');
+  const offsetXInput = textBoxEl.querySelector('[data-input="offsetX"]');
+  const textOption = textOptions.get(textBoxId);
+
+  if (!textOption) {
+    return;
+  }
 
   direction = direction.toLowerCase();
 
-  if (direction === 'up') {
-    textOptions[index].offsetY -= 1;
-    offsetYInput.value = textOptions[index].offsetY;
-  }
-
-  if (direction === 'down') {
-    textOptions[index].offsetY += 1;
-    offsetYInput.value = textOptions[index].offsetY;
-  }
-
-  if (direction === 'left') {
-    textOptions[index].offsetX -= 1;
-    offsetXInput.value = textOptions[index].offsetX;
-  }
-
-  if (direction === 'right') {
-    textOptions[index].offsetX += 1;
-    offsetXInput.value = textOptions[index].offsetX;
+  switch (direction) {
+    case 'up':
+      textOption.offsetY -= 1;
+      offsetYInput.value = textOption.offsetY;
+      break;
+    case 'down':
+      textOption.offsetY += 1;
+      offsetYInput.value = textOption.offsetY;
+      break;
+    case 'left':
+      textOption.offsetX -= 1;
+      offsetXInput.value = textOption.offsetX;
+      break;
+    case 'right':
+      textOption.offsetX += 1;
+      offsetXInput.value = textOption.offsetX;
+      break;
   }
 
   drawCanvas(selectedImage, canvas, ctx, textOptions);
 
-  reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(direction, index));
+  reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textBoxId, direction));
 };
 
 const handleUploadMethodChange = evt => {
@@ -298,7 +298,7 @@ const handleDropFilesAccepted = evt => {
 
 const handleInputsContainerInput = evt => {
   const element = evt.target;
-  const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
+  const textBoxId = element.closest('[data-section="textBox"]').id;
   let prop;
 
   if (element.matches('[data-input="text"]')) {
@@ -328,13 +328,13 @@ const handleInputsContainerInput = evt => {
   }
 
   if (prop) {
-    handleTextPropChange(element, index, prop);
+    handleTextPropChange(element, textBoxId, prop);
   }
 };
 
 const handleInputsContainerChange = evt => {
   const element = evt.target;
-  const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
+  const textBoxId = element.closest('[data-section="textBox"]').id;
   let prop;
 
   if (element.matches('[data-input="allCaps"]')) {
@@ -342,7 +342,7 @@ const handleInputsContainerChange = evt => {
   }
 
   if (prop) {
-    handleTextPropChange(element, index, prop);
+    handleTextPropChange(element, textBoxId, prop);
   }
 };
 
@@ -359,41 +359,42 @@ const handleInputsContainerClick = evt => {
   }
 
   if (element.matches('[data-button="duplicate-text-box"')) {
-    const currentTextBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
+    const currentTextBoxEl = element.closest('[data-section="textBox"]');
+    const currentTextBoxData = textOptions.get(currentTextBoxEl.id);
+    const newTextBoxId = uid();
 
-    textOptions.push({
-      ...textOptions[currentTextBoxIndex]
-    });
+    textOptions.set(newTextBoxId, { ...currentTextBoxData });
 
-    const newTextBox = createTextBox(textOptions.length - 1, textOptions[textOptions.length - 1]);
+    const newTextBoxEl = createTextBox(newTextBoxId, currentTextBoxData);
 
-    inputsContainer.appendChild(newTextBox);
-    newTextBox.querySelector('[data-input="text"]').focus();
+    inputsContainer.appendChild(newTextBoxEl);
+    newTextBoxEl.querySelector('[data-input="text"]').focus();
     drawCanvas(selectedImage, canvas, ctx, textOptions);
   }
 
   if (element.matches('[data-button="delete-text-box"]')) {
-    const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
+    const textBoxId = element.closest('[data-section="textBox"]').id;
+    const textOption = textOptions.get(textBoxId);
 
-    if (textOptions[index].text.trim()) {
-      const textIndexInput = removeTextForm['text-index'];
+    if (textOption && textOption.text.trim()) {
+      const textBoxIdInput = removeTextForm['textbox-id'];
 
-      if (textIndexInput) {
-        textIndexInput.value = index;
+      if (textBoxIdInput) {
+        textBoxIdInput.value = textBoxId;
         removeConfirmationModal.open = true;
       }
     } else {
-      removeText(index);
+      removeText(textBoxId);
     }
   }
 };
 
 const handleTextRemoveFormSubmit = evt => {
   evt.preventDefault();
-  const index = Number(evt.target['text-index'].value);
+  const textBoxId = evt.target['textbox-id'].value;
 
-  if (index >= 0) {
-    removeText(index);
+  if (textBoxId) {
+    removeText(textBoxId);
     removeConfirmationModal.open = false;
   }
 };
@@ -406,10 +407,8 @@ const handleInputsContainerPointerdown = evt => {
     return;
   }
 
-  const index = Number(textBoxEl.getAttribute('data-index'));
-
   if (element.matches('[data-action="move-text"]')) {
-    reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(element.getAttribute('aria-label'), index));
+    reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textBoxEl.id, element.getAttribute('aria-label')));
   }
 };
 
@@ -437,9 +436,8 @@ const handleInputsContainerKeyDown = evt => {
 
   if (element.matches('[data-action="move-text"]')) {
     if (evt.key === ' ' || evt.key === 'Enter') {
-      const index = Number(textBoxEl.getAttribute('data-index'));
       reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
-      reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(element.getAttribute('aria-label'), index));
+      reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textBoxEl.id, element.getAttribute('aria-label')));
     }
   }
 };
@@ -596,8 +594,8 @@ galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
 });
 
-textOptions.forEach((item, index) => {
-  inputsContainer.appendChild(createTextBox(index, item));
+textOptions.forEach((value, key) => {
+  inputsContainer.appendChild(createTextBox(key, value));
 });
 
 dropzoneEl.accept = ACCEPTED_MIME_TYPES;

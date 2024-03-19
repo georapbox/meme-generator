@@ -1,4 +1,4 @@
-export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
+export const drawCanvas = (image, canvas, ctx, textOptions = new Map()) => {
   if (image == null) {
     return;
   }
@@ -12,7 +12,11 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
   }
 
-  textOptions.forEach(function (item, index) {
+  let multiplier = 0;
+
+  textOptions.forEach(item => {
+    multiplier += 1;
+
     ctx.save();
 
     ctx.font = `${item.fontWeight} ${item.fontSize * canvas.width / 1000}px ${item.font}`;
@@ -20,7 +24,6 @@ export const drawCanvas = (image, canvas, ctx, textOptions = []) => {
     ctx.textAlign = item.textAlign;
     ctx.strokeStyle = item.strokeColor;
 
-    const multiplier = index + 1;
     const lineHeight = ctx.measureText('M').width + item.fontSize / 2;
     const xPos = canvas.width / 2;
     const shadowBlur = item.shadowBlur;
