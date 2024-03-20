@@ -23,9 +23,9 @@ const textboxes = new Map();
 class Textbox {
   constructor(data) {
     const id = uid();
-    const dataToAdd = data ? { ...data, id } : { ...defaultTextboxData, id };
 
-    this.data = dataToAdd;
+    this.data = data ? { ...data, id } : { ...defaultTextboxData, id };
+
     textboxes.set(id, this);
 
     document.dispatchEvent(new CustomEvent(`textbox-create`, {
@@ -33,6 +33,14 @@ class Textbox {
       composed: true,
       detail: { textbox: this }
     }));
+  }
+
+  getData() {
+    return this.data;
+  }
+
+  static create(data) {
+    return new Textbox(data);
   }
 
   static getAll() {
@@ -43,32 +51,37 @@ class Textbox {
     return textboxes.get(id);
   }
 
-  static del(id) {
+  static remove(id) {
     textboxes.delete(id);
 
-    document.dispatchEvent(new CustomEvent(`textbox-delete`, {
+    document.dispatchEvent(new CustomEvent(`textbox-remove`, {
       bubbles: true,
       composed: true,
       detail: { id }
     }));
   }
 
-  static createElement(data = {}, autoFocus = true) {
-    const id = data.id || uid();
+  static createElement(textbox, autoFocus = true) {
+    if (!(textbox instanceof Textbox)) {
+      return;
+    }
+
+    const data = textbox.getData();
+    const { id, text, fillColor, strokeColor, fontSize, shadowBlur, borderWidth, offsetX, offsetY, rotate } = data;
 
     const template = /* html */`
     <div class="d-flex align-items-center">
       <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
       <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
 
-      <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${textboxes.size}`}">${data.text}</textarea>
+      <textarea class="form-control meme-text" type="text" data-input="text" autocomplete="off" rows="1" placeholder="${`Text #${textboxes.size}`}">${text}</textarea>
 
       <div class="d-flex align-items-center pe-2">
         <label for="fillColorInput" class="visually-hidden">Fill color</label>
-        <input class="form-control" type="color" value="${data.fillColor}" id="fillColorInput" data-input="fillColor" title="Fill color">
+        <input class="form-control" type="color" value="${fillColor}" id="fillColorInput" data-input="fillColor" title="Fill color">
 
         <label for="strokeColorInput" class="visually-hidden">Outline color</label>
-        <input class="form-control" type="color" value="${data.strokeColor}" id="strokeColorInput" data-input="strokeColor" title="Outline color">
+        <input class="form-control" type="color" value="${strokeColor}" id="strokeColorInput" data-input="strokeColor" title="Outline color">
 
         <button type="button" class="btn btn-secondary settings-button" data-button="settings" title="Settings"></button>
       </div>
@@ -111,7 +124,7 @@ class Textbox {
 
         <div class="col-4 mb-3">
           <label for="fontSizeInput_${id}" class="mb-1 d-block text-truncate">Size:</label>
-          <input class="form-control" type="number" min="1" value="${data.fontSize}" data-input="fontSize" id="fontSizeInput_${id}">
+          <input class="form-control" type="number" min="1" value="${fontSize}" data-input="fontSize" id="fontSizeInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
@@ -126,12 +139,12 @@ class Textbox {
       <div class="row g-2">
         <div class="col-4 mb-3">
           <label for="shadowWidthInput_${id}" class="mb-1 d-block text-truncate">Shadow size:</label>
-          <input class="form-control" type="number" min="0" max="100" value="${data.shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${id}">
+          <input class="form-control" type="number" min="0" max="100" value="${shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="borderWidthInput_${id}">Border width:</label>
-          <input class="form-control" type="number" min="0" max="100" value="${data.borderWidth}" data-input="borderWidth" id="borderWidthInput_${id}">
+          <input class="form-control" type="number" min="0" max="100" value="${borderWidth}" data-input="borderWidth" id="borderWidthInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
@@ -147,17 +160,17 @@ class Textbox {
       <div class="row g-2">
         <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="offsetYInput_${id}">Vertical offset:</label>
-          <input class="form-control" type="number" value="${data.offsetY}" data-input="offsetY" id="offsetYInput_${id}">
+          <input class="form-control" type="number" value="${offsetY}" data-input="offsetY" id="offsetYInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="offsetXInput_${id}">Horizontal offset:</label>
-          <input class="form-control" type="number" value="${data.offsetX}" data-input="offsetX" id="offsetXInput_${id}">
+          <input class="form-control" type="number" value="${offsetX}" data-input="offsetX" id="offsetXInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="textRotateInput_${id}">Rotate:</label>
-          <input class="form-control" type="number" value="${data.rotate}" data-input="rotate" id="textRotateInput_${id}" min="-360" max="360">
+          <input class="form-control" type="number" value="${rotate}" data-input="rotate" id="textRotateInput_${id}" min="-360" max="360">
         </div>
 
         <div class="col-12">

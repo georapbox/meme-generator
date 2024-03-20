@@ -16,9 +16,8 @@ export const drawCanvas = (image, canvas, ctx, textboxes = new Map()) => {
 
   textboxes.forEach(textbox => {
     const { data } = textbox;
-    multiplier += 1;
 
-    console.log('------');
+    multiplier += 1;
 
     ctx.save();
 

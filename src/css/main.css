@@ -357,7 +357,7 @@ modal-element [slot="footer"] {
   height: 100%;
 }
 
-@media screen and (min-width: 992px) {
+@media screen and (min-width: 768px) {
   .dropzone {
     position: sticky;
     top: 0.25rem;

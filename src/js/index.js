@@ -157,7 +157,7 @@ const handleOpenVideoModalButtonClick = () => {
 };
 
 const handleTextPropChange = (element, textboxId, prop) => {
-  const textboxData = Textbox.getById(textboxId).data;
+  const textboxData = Textbox.getById(textboxId).getData();
 
   switch (element.type) {
     case 'checkbox':
@@ -173,7 +173,7 @@ const handleTextPropChange = (element, textboxId, prop) => {
   drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
 };
 
-const handleAddTextboxBtnClick = () => new Textbox();
+const handleAddTextboxBtnClick = () => Textbox.create();
 
 const handleImageUploadFromURL = async evt => {
   evt.preventDefault();
@@ -217,24 +217,26 @@ const moveTextUsingArrowbuttons = (textboxId, direction) => () => {
     return;
   }
 
+  const textboxData = textbox.getData();
+
   direction = direction.toLowerCase();
 
   switch (direction) {
     case 'up':
-      textbox.data.offsetY -= 1;
-      offsetYInput.value = textbox.data.offsetY;
+      textboxData.offsetY -= 1;
+      offsetYInput.value = textboxData.offsetY;
       break;
     case 'down':
-      textbox.data.offsetY += 1;
-      offsetYInput.value = textbox.data.offsetY;
+      textboxData.offsetY += 1;
+      offsetYInput.value = textboxData.offsetY;
       break;
     case 'left':
-      textbox.data.offsetX -= 1;
-      offsetXInput.value = textbox.data.offsetX;
+      textboxData.offsetX -= 1;
+      offsetXInput.value = textboxData.offsetX;
       break;
     case 'right':
-      textbox.data.offsetX += 1;
-      offsetXInput.value = textbox.data.offsetX;
+      textboxData.offsetX += 1;
+      offsetXInput.value = textboxData.offsetX;
       break;
   }
 
@@ -327,7 +329,7 @@ const handleTextboxesContainerClick = evt => {
   if (element.matches('[data-button="duplicate-text-box"')) {
     const currentTextboxEl = element.closest('[data-section="textbox"]');
     const currentTextboxData = Textbox.getById(currentTextboxEl.id);
-    new Textbox({ ...currentTextboxData.data });
+    Textbox.create({ ...currentTextboxData.data });
   }
 
   if (element.matches('[data-button="delete-text-box"]')) {
@@ -342,7 +344,7 @@ const handleTextboxesContainerClick = evt => {
         removeConfirmationModal.open = true;
       }
     } else {
-      Textbox.del(textboxId);
+      Textbox.remove(textboxId);
     }
   }
 };
@@ -352,7 +354,7 @@ const handleTextRemoveFormSubmit = evt => {
   const textboxId = evt.target['textbox-id'].value;
 
   if (textboxId) {
-    Textbox.del(textboxId);
+    Textbox.remove(textboxId);
     removeConfirmationModal.open = false;
   }
 };
@@ -521,13 +523,13 @@ const handleMaxImageDimensionsFormChange = evt => {
 };
 
 const handleTextboxCreate = evt => {
-  const textboxData = evt.detail.textbox.data;
-  const textboxEl = Textbox.createElement(textboxData, shouldFocusOnTextboxCreate);
+  const textbox = evt.detail.textbox;
+  const textboxEl = Textbox.createElement(textbox, shouldFocusOnTextboxCreate);
 
   shouldFocusOnTextboxCreate = true;
   textboxesContainer.appendChild(textboxEl);
 
-  if (textboxData.text) {
+  if (textbox.getData().text) {
     drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
   }
 };
@@ -569,7 +571,7 @@ document.addEventListener('me-open', handleModalOpen);
 document.addEventListener('me-close', handleModalClose);
 document.addEventListener('emoji-click', handleEmojiPickerSelection);
 document.addEventListener('textbox-create', handleTextboxCreate);
-document.addEventListener('textbox-delete', handleTextboxDelete);
+document.addEventListener('textbox-remove', handleTextboxDelete);
 removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
 maxImageDimensionsForm.addEventListener('change', handleMaxImageDimensionsFormChange);
 
@@ -577,7 +579,7 @@ galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
 });
 
-new Textbox();
+Textbox.create();
 
 dropzoneEl.accept = ACCEPTED_MIME_TYPES;
 
