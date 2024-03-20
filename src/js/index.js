@@ -7,21 +7,20 @@ import '@georapbox/modal-element/dist/modal-element-defined.js';
 import '@georapbox/files-dropzone-element/dist/files-dropzone-defined.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
+import { ACCEPTED_MIME_TYPES } from './constants.js';
 import { uid } from './utils/uid.js';
 import { fileFromUrl } from './utils/file-from-url.js';
 import { storage } from './utils/storage.js';
-import { ACCEPTED_MIME_TYPES } from './constants.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
 import { toastAlert } from './toast-alert.js';
-import { drawCanvas, clearCanvas } from './canvas.js';
 import { Textbox } from './textbox.js';
+import { Canvas } from './canvas.js';
 
+const canvas = Canvas.createInstance(document.getElementById('canvas'));
 const videoModal = document.getElementById('videoModal');
 const downloadModal = document.getElementById('downloadModal');
-const canvas = document.getElementById('canvas');
 const dropzoneEl = document.querySelector('files-dropzone');
 const instructionsEl = document.getElementById('instructions');
-const ctx = canvas.getContext('2d');
 const imageUploadMethodSelect = document.getElementById('imageUploadMethodSelect');
 const fileSelectBtn = document.getElementById('fileSelectBtn');
 const imageUrlForm = document.getElementById('imageUrlForm');
@@ -54,8 +53,8 @@ const generateMeme = async () => {
   const downloadLink = dataUrl.replace('image/png', 'image/octet-stream');
   downloadMemeBtn.download = `${uid('meme')}.png`;
   downloadMemeBtn.href = downloadLink;
-  downloadMemePreview.width = canvas.width;
-  downloadMemePreview.height = canvas.height;
+  downloadMemePreview.width = canvas.getDimensions().width;
+  downloadMemePreview.height = canvas.getDimensions().height;
   downloadMemePreview.src = downloadLink;
 
   // Prepare for sharing file
@@ -101,16 +100,14 @@ const setImageMaxDimensions = image => {
     }
   }
 
-  canvas.width = width;
-  canvas.height = height;
+  canvas.setDimensions({ width, height });
 };
 
 const afterImageSelect = () => {
-  drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
+  canvas.draw(selectedImage, Textbox.getAll()).show();
   dropzoneEl.classList.add('dropzone--accepted');
   dropzoneEl.disabled = true;
   generateMemeBtn.disabled = false;
-  canvas.hidden = false;
   instructionsEl.hidden = true;
   clearCanvasBtn.hidden = false;
 };
@@ -130,8 +127,11 @@ const handleSolidColorFormInput = evt => {
   }
 
   if (typeof selectedImage === 'string') {
-    canvas.width = Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH;
-    canvas.height = Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT;
+    canvas.setDimensions({
+      width: Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH,
+      height: Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT
+    });
+
     afterImageSelect();
   }
 };
@@ -171,7 +171,7 @@ const handleTextPropChange = (element, textboxId, prop) => {
       textboxData[prop] = element.value;
   }
 
-  drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
+  canvas.draw(selectedImage, Textbox.getAll());
 };
 
 const handleAddTextboxBtnClick = () => Textbox.create();
@@ -241,7 +241,7 @@ const moveTextUsingArrowbuttons = (textboxId, direction) => () => {
       break;
   }
 
-  drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
+  canvas.draw(selectedImage, Textbox.getAll());
 
   reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxId, direction));
 };
@@ -520,7 +520,7 @@ const handleMaxImageDimensionsFormChange = evt => {
   }
 
   setImageMaxDimensions(selectedImage);
-  drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
+  canvas.draw(selectedImage, Textbox.getAll());
 };
 
 const handleTextboxCreate = evt => {
@@ -531,7 +531,7 @@ const handleTextboxCreate = evt => {
   textboxesContainer.appendChild(textboxEl);
 
   if (textbox.getData().text) {
-    drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
+    canvas.draw(selectedImage, Textbox.getAll());
   }
 };
 
@@ -543,7 +543,7 @@ const handleTextboxDelete = evt => {
     el.querySelector('[data-input="text"]').setAttribute('placeholder', `Text #${idx + 1}`);
   });
 
-  drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
+  canvas.draw(selectedImage, Textbox.getAll());
 };
 
 const handleClearCanvas = evt => {
@@ -555,11 +555,10 @@ const handleClearCanvas = evt => {
   selectedImage = null;
   dropzoneEl.classList.remove('dropzone--accepted');
   generateMemeBtn.disabled = true;
-  canvas.hidden = true;
   instructionsEl.hidden = false;
   clearCanvasBtn.hidden = true;
   dropzoneEl.disabled = false;
-  clearCanvas(canvas, ctx);
+  canvas.clear().hide();
 };
 
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
