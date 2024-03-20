@@ -13,7 +13,7 @@ import { storage } from './utils/storage.js';
 import { ACCEPTED_MIME_TYPES } from './constants.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
 import { toastAlert } from './toast-alert.js';
-import { drawCanvas } from './draw-canvas.js';
+import { drawCanvas, clearCanvas } from './canvas.js';
 import { Textbox } from './textbox.js';
 
 const videoModal = document.getElementById('videoModal');
@@ -41,6 +41,7 @@ const removeConfirmationModal = document.getElementById('removeConfirmationModal
 const removeTextForm = document.getElementById('removeTextForm');
 const maxImageDimensionsForm = document.getElementById('maxImageDimensionsForm');
 const maxImageDimensionsSelect = maxImageDimensionsForm['maxImageDimensions'];
+const clearCanvasBtn = document.getElementById('clearCanvasBtn');
 const maxImageDimensionsFromStorage = storage.get('maxImageDimensions');
 let shouldFocusOnTextboxCreate = false;
 let selectedImage = null;
@@ -104,14 +105,20 @@ const setImageMaxDimensions = image => {
   canvas.height = height;
 };
 
-const onImageLoaded = evt => {
-  selectedImage = evt.target;
-  setImageMaxDimensions(selectedImage);
+const afterImageSelect = () => {
   drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
   dropzoneEl.classList.add('dropzone--accepted');
+  dropzoneEl.disabled = true;
   generateMemeBtn.disabled = false;
   canvas.hidden = false;
   instructionsEl.hidden = true;
+  clearCanvasBtn.hidden = false;
+};
+
+const handleImageLoad = evt => {
+  selectedImage = evt.target;
+  setImageMaxDimensions(selectedImage);
+  afterImageSelect();
 };
 
 const handleSolidColorFormInput = evt => {
@@ -125,13 +132,7 @@ const handleSolidColorFormInput = evt => {
   if (typeof selectedImage === 'string') {
     canvas.width = Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH;
     canvas.height = Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT;
-
-    drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
-
-    dropzoneEl.classList.add('dropzone--accepted');
-    generateMemeBtn.disabled = false;
-    canvas.hidden = false;
-    instructionsEl.hidden = true;
+    afterImageSelect();
   }
 };
 
@@ -145,7 +146,7 @@ const handleFileSelect = file => {
 
   reader.addEventListener('load', function (evt) {
     const data = evt.target.result;
-    image.addEventListener('load', onImageLoaded);
+    image.addEventListener('load', handleImageLoad);
     image.src = data;
   });
 
@@ -468,7 +469,7 @@ const handleCapturePhotoError = evt => {
 const handleCapturePhotoSuccess = evt => {
   videoModal.open = false;
   const image = new Image();
-  image.addEventListener('load', onImageLoaded);
+  image.addEventListener('load', handleImageLoad);
   image.src = evt.detail.dataURI;
 };
 
@@ -545,6 +546,22 @@ const handleTextboxDelete = evt => {
   drawCanvas(selectedImage, canvas, ctx, Textbox.getAll());
 };
 
+const handleClearCanvas = evt => {
+  if (!selectedImage) {
+    return;
+  }
+
+  evt.stopPropagation();
+  selectedImage = null;
+  dropzoneEl.classList.remove('dropzone--accepted');
+  generateMemeBtn.disabled = true;
+  canvas.hidden = true;
+  instructionsEl.hidden = false;
+  clearCanvasBtn.hidden = true;
+  dropzoneEl.disabled = false;
+  clearCanvas(canvas, ctx);
+};
+
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButtonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
@@ -574,6 +591,7 @@ document.addEventListener('textbox-create', handleTextboxCreate);
 document.addEventListener('textbox-remove', handleTextboxDelete);
 removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
 maxImageDimensionsForm.addEventListener('change', handleMaxImageDimensionsFormChange);
+clearCanvasBtn.addEventListener('click', handleClearCanvas);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));

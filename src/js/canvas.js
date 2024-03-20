@@ -55,3 +55,7 @@ export const drawCanvas = (image, canvas, ctx, textboxes = new Map()) => {
     ctx.restore();
   });
 };
+
+export const clearCanvas = (canvas, ctx) => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+};
