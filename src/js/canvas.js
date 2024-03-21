@@ -1,3 +1,5 @@
+import { isSolidColorSelected } from './utils/is-solid-color-selected.js';
+
 export class Canvas {
   #canvas = null;
   #ctx = null;
@@ -50,7 +52,7 @@ export class Canvas {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (typeof image === 'string') { // Assume it's a color
+    if (isSolidColorSelected(image)) {
       ctx.fillStyle = image;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     } else {

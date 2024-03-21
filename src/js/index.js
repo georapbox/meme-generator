@@ -11,6 +11,7 @@ import { ACCEPTED_MIME_TYPES } from './constants.js';
 import { uid } from './utils/uid.js';
 import { fileFromUrl } from './utils/file-from-url.js';
 import { storage } from './utils/storage.js';
+import { isSolidColorSelected } from './utils/is-solid-color-selected.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
 import { toastAlert } from './toast-alert.js';
 import { Textbox } from './textbox.js';
@@ -126,7 +127,7 @@ const handleSolidColorFormInput = evt => {
     selectedImage = evt.target.value;
   }
 
-  if (typeof selectedImage === 'string') {
+  if (isSolidColorSelected(selectedImage)) {
     canvas.setDimensions({
       width: Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH,
       height: Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT
@@ -515,7 +516,7 @@ const handleMaxImageDimensionsFormChange = evt => {
     storage.set('maxImageDimensions', evt.target.value);
   }
 
-  if (!selectedImage || typeof selectedImage === 'string') {
+  if (!selectedImage || isSolidColorSelected(selectedImage)) {
     return;
   }
 
