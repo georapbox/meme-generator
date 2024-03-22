@@ -386,7 +386,7 @@ modal-element [slot="footer"] {
 }
 
 .dropzone:not(.dropzone--accepted) {
-  max-height: 36rem;
+  max-height: 41rem;
 }
 
 .dropzone--accepted {
