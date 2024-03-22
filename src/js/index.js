@@ -49,10 +49,11 @@ let reqAnimFrame = null;
 
 const generateMeme = async () => {
   const dataUrl = canvas.toDataURL('image/png');
+  const filename = `${uid('meme')}.png`;
 
   // Prepare download link
   const downloadLink = dataUrl.replace('image/png', 'image/octet-stream');
-  downloadMemeBtn.download = `${uid('meme')}.png`;
+  downloadMemeBtn.download = filename;
   downloadMemeBtn.href = downloadLink;
   downloadMemePreview.width = canvas.getDimensions().width;
   downloadMemePreview.height = canvas.getDimensions().height;
@@ -63,7 +64,7 @@ const generateMeme = async () => {
     try {
       const file = await fileFromUrl({
         url: dataUrl,
-        filename: `${uid('meme')}.png`,
+        filename,
         mimeType: 'image/png'
       }).catch(err => toastAlert(err.message, 'danger'));
 

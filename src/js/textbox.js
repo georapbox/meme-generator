@@ -22,7 +22,7 @@ const textboxes = new Map();
 
 class Textbox {
   constructor(data) {
-    const id = uid();
+    const id = uid('textbox', Date.now().toString(36));
 
     this.data = data ? { ...data, id } : { ...defaultTextboxData, id };
 
