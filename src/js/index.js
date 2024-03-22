@@ -1,3 +1,5 @@
+import 'emoji-picker-element';
+import insertTextAtCursor from 'insert-text-at-cursor';
 import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
 import '@georapbox/web-share-element/dist/web-share-defined.js';
 import '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
@@ -5,26 +7,26 @@ import '@georapbox/modal-element/dist/modal-element-defined.js';
 import '@georapbox/files-dropzone-element/dist/files-dropzone-defined.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
-import { arrayRemove } from './utils/array-remove.js';
-import { uid } from './utils/uid.js';
 import { ACCEPTED_MIME_TYPES } from './constants.js';
+import { uid } from './utils/uid.js';
+import { fileFromUrl } from './utils/file-from-url.js';
+import { storage } from './utils/storage.js';
+import { isSolidColorSelected } from './utils/is-solid-color-selected.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
-import { fileFromUrl } from './file-from-url.js';
 import { toastAlert } from './toast-alert.js';
-import { createTextBox } from './create-text-box.js';
-import { drawCanvas } from './draw-canvas.js';
+import { Textbox } from './textbox.js';
+import { Canvas } from './canvas.js';
 
+const canvas = Canvas.createInstance(document.getElementById('canvas'));
 const videoModal = document.getElementById('videoModal');
 const downloadModal = document.getElementById('downloadModal');
-const canvas = document.getElementById('canvas');
 const dropzoneEl = document.querySelector('files-dropzone');
 const instructionsEl = document.getElementById('instructions');
-const ctx = canvas.getContext('2d');
 const imageUploadMethodSelect = document.getElementById('imageUploadMethodSelect');
 const fileSelectBtn = document.getElementById('fileSelectBtn');
 const imageUrlForm = document.getElementById('imageUrlForm');
 const addTextboxBtn = document.getElementById('addTextboxBtn');
-const inputsContainer = document.getElementById('inputsContainer');
+const textboxesContainer = document.getElementById('textboxesContainer');
 const generateMemeBtn = document.getElementById('generateMemeBtn');
 const openVideoModalBtn = document.getElementById('openVideoModalBtn');
 const downloadMemeBtn = document.getElementById('downloadMemeBtn');
@@ -37,39 +39,24 @@ const solidColorForm = document.getElementById('solidColorForm');
 const uploadMethodEls = document.querySelectorAll('.upload-method');
 const removeConfirmationModal = document.getElementById('removeConfirmationModal');
 const removeTextForm = document.getElementById('removeTextForm');
+const maxImageDimensionsForm = document.getElementById('maxImageDimensionsForm');
+const maxImageDimensionsSelect = maxImageDimensionsForm['maxImageDimensions'];
+const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+const maxImageDimensionsFromStorage = storage.get('maxImageDimensions');
+let shouldFocusOnTextboxCreate = false;
 let selectedImage = null;
 let reqAnimFrame = null;
 
-const defaultTextOptions = {
-  _isSettingsOpen: false,
-  text: '',
-  fillColor: '#ffffff',
-  shadowColor: '#000000',
-  font: 'Pressuru',
-  fontSize: 40,
-  fontWeight: 'normal',
-  textAlign: 'center',
-  shadowBlur: 3,
-  borderWidth: 1,
-  offsetY: 0,
-  offsetX: 0,
-  rotate: 0,
-  allCaps: true
-};
-
-let textOptions = [
-  { ...defaultTextOptions }
-];
-
 const generateMeme = async () => {
   const dataUrl = canvas.toDataURL('image/png');
+  const filename = `${uid('meme')}.png`;
 
   // Prepare download link
   const downloadLink = dataUrl.replace('image/png', 'image/octet-stream');
-  downloadMemeBtn.download = `${uid('meme')}.png`;
+  downloadMemeBtn.download = filename;
   downloadMemeBtn.href = downloadLink;
-  downloadMemePreview.width = canvas.width;
-  downloadMemePreview.height = canvas.height;
+  downloadMemePreview.width = canvas.getDimensions().width;
+  downloadMemePreview.height = canvas.getDimensions().height;
   downloadMemePreview.src = downloadLink;
 
   // Prepare for sharing file
@@ -77,7 +64,7 @@ const generateMeme = async () => {
     try {
       const file = await fileFromUrl({
         url: dataUrl,
-        filename: `${uid('meme')}.png`,
+        filename,
         mimeType: 'image/png'
       }).catch(err => toastAlert(err.message, 'danger'));
 
@@ -95,11 +82,13 @@ const generateMeme = async () => {
   });
 };
 
-const onImageLoaded = evt => {
-  const MAX_WIDTH = 4000;
-  const MAX_HEIGHT = 3000;
-  let width = evt.target.width;
-  let height = evt.target.height;
+const setImageMaxDimensions = image => {
+  const maxImageDimensionsSelect = maxImageDimensionsForm['maxImageDimensions'];
+  const [maxWidthValue, maxHeightValue] = maxImageDimensionsSelect.value.split('x');
+  const MAX_WIDTH = Number(maxWidthValue) || 800;
+  const MAX_HEIGHT = Number(maxHeightValue) || 600;
+  let width = image.width;
+  let height = image.height;
 
   if (width > height) {
     if (width > MAX_WIDTH) {
@@ -113,43 +102,39 @@ const onImageLoaded = evt => {
     }
   }
 
-  canvas.width = width;
-  canvas.height = height;
-
-  selectedImage = evt.target;
-
-  drawCanvas(selectedImage, canvas, ctx, textOptions);
-
-  dropzoneEl.classList.add('dropzone--accepted');
-  generateMemeBtn.disabled = false;
-  canvas.hidden = false;
-  instructionsEl.hidden = true;
+  canvas.setDimensions({ width, height });
 };
 
-const removeText = index => {
-  textOptions = arrayRemove(textOptions, index);
-  inputsContainer.querySelectorAll('[data-section="textBox"]').forEach(el => el.remove());
-  textOptions.forEach((item, index) => inputsContainer.appendChild(createTextBox(index, item)));
-  drawCanvas(selectedImage, canvas, ctx, textOptions);
+const afterImageSelect = () => {
+  canvas.draw(selectedImage, Textbox.getAll()).show();
+  dropzoneEl.classList.add('dropzone--accepted');
+  dropzoneEl.disabled = true;
+  generateMemeBtn.disabled = false;
+  instructionsEl.hidden = true;
+  clearCanvasBtn.hidden = false;
+};
+
+const handleImageLoad = evt => {
+  selectedImage = evt.target;
+  setImageMaxDimensions(selectedImage);
+  afterImageSelect();
 };
 
 const handleSolidColorFormInput = evt => {
-  const DEFAULT_WIDTH = 600;
-  const DEFAULT_HEIGHT = 400;
+  const DEFAULT_WIDTH = 800;
+  const DEFAULT_HEIGHT = 600;
 
   if (evt.target === solidColorForm['canvasColor']) {
     selectedImage = evt.target.value;
   }
 
-  if (typeof selectedImage === 'string') {
-    canvas.width = Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH;
-    canvas.height = Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT;
+  if (isSolidColorSelected(selectedImage)) {
+    canvas.setDimensions({
+      width: Number(solidColorForm['canvasWidth'].value) || DEFAULT_WIDTH,
+      height: Number(solidColorForm['canvasHeight'].value) || DEFAULT_HEIGHT
+    });
 
-    drawCanvas(selectedImage, canvas, ctx, textOptions);
-
-    generateMemeBtn.disabled = false;
-    canvas.hidden = false;
-    instructionsEl.hidden = true;
+    afterImageSelect();
   }
 };
 
@@ -163,7 +148,7 @@ const handleFileSelect = file => {
 
   reader.addEventListener('load', function (evt) {
     const data = evt.target.result;
-    image.addEventListener('load', onImageLoaded);
+    image.addEventListener('load', handleImageLoad);
     image.src = data;
   });
 
@@ -174,26 +159,24 @@ const handleOpenVideoModalButtonClick = () => {
   videoModal.open = true;
 };
 
-const handleTextPropChange = (element, index, prop) => {
-  if (element.type === 'checkbox') {
-    textOptions[index][prop] = element.checked;
-  } else if (element.type === 'number') {
-    textOptions[index][prop] = Number(element.value);
-  } else {
-    textOptions[index][prop] = element.value;
+const handleTextPropChange = (element, textboxId, prop) => {
+  const textboxData = Textbox.getById(textboxId).getData();
+
+  switch (element.type) {
+    case 'checkbox':
+      textboxData[prop] = element.checked;
+      break;
+    case 'number':
+      textboxData[prop] = Number(element.value);
+      break;
+    default:
+      textboxData[prop] = element.value;
   }
 
-  drawCanvas(selectedImage, canvas, ctx, textOptions);
+  canvas.draw(selectedImage, Textbox.getAll());
 };
 
-const handleAddTextboxBtnClick = () => {
-  const textOptionsLength = textOptions.length;
-  const newTextBox = createTextBox(textOptionsLength, defaultTextOptions);
-
-  textOptions.push({ ...defaultTextOptions });
-  inputsContainer.appendChild(newTextBox);
-  newTextBox.querySelector('[data-input="text"]').focus();
-};
+const handleAddTextboxBtnClick = () => Textbox.create();
 
 const handleImageUploadFromURL = async evt => {
   evt.preventDefault();
@@ -227,42 +210,47 @@ const handleImageUploadFromURL = async evt => {
   }
 };
 
-const moveText = (offsetDir, sign, index) => () => {
-  const textBoxSection = document.querySelectorAll('[data-section="textBox"]')[index];
-  const offsetYInput = textBoxSection.querySelector('[data-input="offsetY"]');
-  const offsetXInput = textBoxSection.querySelector('[data-input="offsetX"]');
+const moveTextUsingArrowbuttons = (textboxId, direction) => () => {
+  const textboxEl = document.getElementById(textboxId);
+  const offsetYInput = textboxEl.querySelector('[data-input="offsetY"]');
+  const offsetXInput = textboxEl.querySelector('[data-input="offsetX"]');
+  const textbox = Textbox.getById(textboxId);
 
-  if (offsetDir === 'offsetY') {
-    if (sign === '-') {
-      textOptions[index].offsetY -= 1;
-    }
-
-    if (sign === '+') {
-      textOptions[index].offsetY += 1;
-    }
-
-    offsetYInput.value = textOptions[index].offsetY;
+  if (!textbox) {
+    return;
   }
 
-  if (offsetDir === 'offsetX') {
-    if (sign === '-') {
-      textOptions[index].offsetX -= 1;
-    }
+  const textboxData = textbox.getData();
 
-    if (sign === '+') {
-      textOptions[index].offsetX += 1;
-    }
+  direction = direction.toLowerCase();
 
-    offsetXInput.value = textOptions[index].offsetX;
+  switch (direction) {
+    case 'up':
+      textboxData.offsetY -= 1;
+      offsetYInput.value = textboxData.offsetY;
+      break;
+    case 'down':
+      textboxData.offsetY += 1;
+      offsetYInput.value = textboxData.offsetY;
+      break;
+    case 'left':
+      textboxData.offsetX -= 1;
+      offsetXInput.value = textboxData.offsetX;
+      break;
+    case 'right':
+      textboxData.offsetX += 1;
+      offsetXInput.value = textboxData.offsetX;
+      break;
   }
 
-  drawCanvas(selectedImage, canvas, ctx, textOptions);
+  canvas.draw(selectedImage, Textbox.getAll());
 
-  reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
+  reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxId, direction));
 };
 
 const handleUploadMethodChange = evt => {
   uploadMethodEls.forEach(el => el.hidden = el.id !== evt.target.value);
+  maxImageDimensionsForm.hidden = evt.target.value === 'solidColorForm';
 };
 
 const handleFileSelectClick = () => {
@@ -279,17 +267,17 @@ const handleDropFilesAccepted = evt => {
   }
 };
 
-const handleInputsContainerInput = evt => {
+const handleTextboxesContainerInput = evt => {
   const element = evt.target;
-  const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
+  const textboxId = element.closest('[data-section="textbox"]').id;
   let prop;
 
   if (element.matches('[data-input="text"]')) {
     prop = 'text';
   } else if (element.matches('[data-input="fillColor"]')) {
     prop = 'fillColor';
-  } else if (element.matches('[data-input="shadowColor"]')) {
-    prop = 'shadowColor';
+  } else if (element.matches('[data-input="strokeColor"]')) {
+    prop = 'strokeColor';
   } else if (element.matches('[data-input="font"]')) {
     prop = 'font';
   } else if (element.matches('[data-input="fontSize"]')) {
@@ -311,13 +299,13 @@ const handleInputsContainerInput = evt => {
   }
 
   if (prop) {
-    handleTextPropChange(element, index, prop);
+    handleTextPropChange(element, textboxId, prop);
   }
 };
 
-const handleInputsContainerChange = evt => {
+const handleTextboxesContainerChange = evt => {
   const element = evt.target;
-  const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
+  const textboxId = element.closest('[data-section="textbox"]').id;
   let prop;
 
   if (element.matches('[data-input="allCaps"]')) {
@@ -325,117 +313,107 @@ const handleInputsContainerChange = evt => {
   }
 
   if (prop) {
-    handleTextPropChange(element, index, prop);
+    handleTextPropChange(element, textboxId, prop);
   }
 };
 
-const handleInputsContainerClick = evt => {
+const handleTextboxesContainerClick = evt => {
   const element = evt.target;
 
   if (element.matches('[data-button="settings"]')) {
-    const textBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
-    const textBoxEls = document.querySelectorAll('[data-section="textBox"]');
+    const textboxEl = element.closest('[data-section="textbox"]');
+    const textboxSettingsEl = textboxEl?.querySelector('[data-section="settings"]');
 
-    textBoxEls.forEach((el, index) => {
-      const settingsEl = el.querySelector('[data-section="settings"]');
-
-      if (el.getAttribute('data-index') === textBoxIndex) {
-        settingsEl.hidden = !settingsEl.hidden;
-        textOptions[index]._isSettingsOpen = !textOptions[index]._isSettingsOpen;
-      } else {
-        settingsEl.hidden = true;
-        textOptions[index]._isSettingsOpen = false;
-      }
-    });
+    if (textboxSettingsEl) {
+      textboxSettingsEl.hidden = !textboxSettingsEl.hidden;
+    }
   }
 
   if (element.matches('[data-button="duplicate-text-box"')) {
-    const currentTextBoxIndex = element.closest('[data-section="textBox"]').getAttribute('data-index');
-
-    textOptions.push({
-      ...textOptions[currentTextBoxIndex],
-      _isSettingsOpen: false
-    });
-
-    const newTextBox = createTextBox(textOptions.length - 1, textOptions[textOptions.length - 1]);
-
-    inputsContainer.appendChild(newTextBox);
-    newTextBox.querySelector('[data-input="text"]').focus();
-    drawCanvas(selectedImage, canvas, ctx, textOptions);
+    const currentTextboxEl = element.closest('[data-section="textbox"]');
+    const currentTextboxData = Textbox.getById(currentTextboxEl.id);
+    Textbox.create({ ...currentTextboxData.data });
   }
 
   if (element.matches('[data-button="delete-text-box"]')) {
-    const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
+    const textboxId = element.closest('[data-section="textbox"]').id;
+    const textboxToDelete = Textbox.getById(textboxId);
 
-    if (textOptions[index].text.trim()) {
-      const textIndexInput = removeTextForm['text-index'];
+    if (textboxToDelete && textboxToDelete.data.text.trim()) {
+      const textboxIdInput = removeTextForm['textbox-id'];
 
-      if (textIndexInput) {
-        textIndexInput.value = index;
+      if (textboxIdInput) {
+        textboxIdInput.value = textboxId;
         removeConfirmationModal.open = true;
       }
     } else {
-      removeText(index);
+      Textbox.remove(textboxId);
     }
   }
 };
 
 const handleTextRemoveFormSubmit = evt => {
   evt.preventDefault();
-  const index = Number(evt.target['text-index'].value);
+  const textboxId = evt.target['textbox-id'].value;
 
-  if (index >= 0) {
-    removeText(index);
+  if (textboxId) {
+    Textbox.remove(textboxId);
     removeConfirmationModal.open = false;
   }
 };
 
-const handleInputsContainerPointerdown = evt => {
+const handleTextboxesContainerPointerdown = evt => {
   const element = evt.target;
-  const textBoxEl = element.closest('[data-section="textBox"]');
+  const textboxEl = element.closest('[data-section="textbox"]');
 
-  if (!textBoxEl) {
+  if (!textboxEl) {
     return;
   }
 
-  const index = Number(element.closest('[data-section="textBox"]').getAttribute('data-index'));
-  const isOffsetYButton = element.matches('[data-move="offsetY"]');
-  const isOffsetXButton = element.matches('[data-move="offsetX"]');
-
-  if (!isOffsetYButton && !isOffsetXButton) {
-    return;
+  if (element.matches('[data-action="move-text"]')) {
+    reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label')));
   }
-
-  const offsetDir = element.getAttribute('data-move');
-  const sign = element.getAttribute('data-sign');
-
-  reqAnimFrame = requestAnimationFrame(moveText(offsetDir, sign, index));
 };
 
-const handleInputsContainerPointerup = evt => {
+const handleTextboxesContainerPointerup = evt => {
   const element = evt.target;
-  const isOffsetYButton = element.matches('[data-move="offsetY"]');
-  const isOffsetXButton = element.matches('[data-move="offsetX"]');
 
-  if (!isOffsetYButton && !isOffsetXButton) {
-    return;
+  if (element.matches('[data-action="move-text"]')) {
+    cancelAnimationFrame && cancelAnimationFrame(reqAnimFrame);
+    reqAnimFrame = null;
   }
-
-  cancelAnimationFrame(reqAnimFrame);
-  reqAnimFrame = null;
 };
 
-const handleInputsContainerPointerout = evt => {
+const handleTextboxesContainerPointerout = evt => {
   const element = evt.target;
-  const isOffsetYButton = element.matches('[data-move="offsetY"]');
-  const isOffsetXButton = element.matches('[data-move="offsetX"]');
 
-  if (!isOffsetYButton && !isOffsetXButton || !reqAnimFrame) {
-    return;
+  if (element.matches('[data-action="move-text"]')) {
+    cancelAnimationFrame && cancelAnimationFrame(reqAnimFrame);
+    reqAnimFrame = null;
   }
+};
 
-  cancelAnimationFrame(reqAnimFrame);
-  reqAnimFrame = null;
+const handleTextboxesContainerKeyDown = evt => {
+  const element = evt.target;
+  const textboxEl = element.closest('[data-section="textbox"]');
+
+  if (element.matches('[data-action="move-text"]')) {
+    if (evt.key === ' ' || evt.key === 'Enter') {
+      reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
+      reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label')));
+    }
+  }
+};
+
+const handleTextboxesContainerKeyUp = evt => {
+  const element = evt.target;
+
+  if (element.matches('[data-action="move-text"]')) {
+    if (evt.key === ' ' || evt.key === 'Enter') {
+      reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
+      reqAnimFrame = null;
+    }
+  }
 };
 
 const handleGalleryClick = async evt => {
@@ -493,7 +471,7 @@ const handleCapturePhotoError = evt => {
 const handleCapturePhotoSuccess = evt => {
   videoModal.open = false;
   const image = new Image();
-  image.addEventListener('load', onImageLoaded);
+  image.addEventListener('load', handleImageLoad);
   image.src = evt.detail.dataURI;
 };
 
@@ -521,6 +499,70 @@ const handleModalClose = evt => {
   }
 };
 
+const handleEmojiPickerSelection = evt => {
+  const textboxEl = evt.target.closest('[data-section="textbox"]');
+
+  if (textboxEl) {
+    const input = textboxEl.querySelector('[data-input="text"]');
+    const emoji = evt.detail.unicode;
+
+    if (input) {
+      insertTextAtCursor(input, emoji);
+    }
+  }
+};
+
+const handleMaxImageDimensionsFormChange = evt => {
+  if (evt.target.matches('[name="maxImageDimensions"]')) {
+    storage.set('maxImageDimensions', evt.target.value);
+  }
+
+  if (!selectedImage || isSolidColorSelected(selectedImage)) {
+    return;
+  }
+
+  setImageMaxDimensions(selectedImage);
+  canvas.draw(selectedImage, Textbox.getAll());
+};
+
+const handleTextboxCreate = evt => {
+  const textbox = evt.detail.textbox;
+  const textboxEl = Textbox.createElement(textbox, shouldFocusOnTextboxCreate);
+
+  shouldFocusOnTextboxCreate = true;
+  textboxesContainer.appendChild(textboxEl);
+
+  if (textbox.getData().text) {
+    canvas.draw(selectedImage, Textbox.getAll());
+  }
+};
+
+const handleTextboxDelete = evt => {
+  const textboxEl = document.getElementById(evt.detail.id);
+  textboxEl && textboxEl.remove();
+
+  textboxesContainer.querySelectorAll('[data-section="textbox"]').forEach((el, idx) => {
+    el.querySelector('[data-input="text"]').setAttribute('placeholder', `Text #${idx + 1}`);
+  });
+
+  canvas.draw(selectedImage, Textbox.getAll());
+};
+
+const handleClearCanvas = evt => {
+  if (!selectedImage) {
+    return;
+  }
+
+  evt.stopPropagation();
+  selectedImage = null;
+  dropzoneEl.classList.remove('dropzone--accepted');
+  generateMemeBtn.disabled = true;
+  instructionsEl.hidden = false;
+  clearCanvasBtn.hidden = true;
+  dropzoneEl.disabled = false;
+  canvas.clear().hide();
+};
+
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButtonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
@@ -528,12 +570,14 @@ generateMemeBtn.addEventListener('click', generateMeme);
 downloadMemeBtn.addEventListener('click', () => downloadModal.open = false);
 imageUrlForm.addEventListener('submit', handleImageUploadFromURL);
 dropzoneEl.addEventListener('files-dropzone-drop-accepted', handleDropFilesAccepted);
-inputsContainer.addEventListener('input', handleInputsContainerInput);
-inputsContainer.addEventListener('change', handleInputsContainerChange);
-inputsContainer.addEventListener('click', handleInputsContainerClick);
-inputsContainer.addEventListener('pointerdown', handleInputsContainerPointerdown);
-inputsContainer.addEventListener('pointerup', handleInputsContainerPointerup);
-inputsContainer.addEventListener('pointerout', handleInputsContainerPointerout);
+textboxesContainer.addEventListener('input', handleTextboxesContainerInput);
+textboxesContainer.addEventListener('change', handleTextboxesContainerChange);
+textboxesContainer.addEventListener('click', handleTextboxesContainerClick);
+textboxesContainer.addEventListener('pointerdown', handleTextboxesContainerPointerdown);
+textboxesContainer.addEventListener('pointerup', handleTextboxesContainerPointerup);
+textboxesContainer.addEventListener('pointerout', handleTextboxesContainerPointerout);
+textboxesContainer.addEventListener('keydown', handleTextboxesContainerKeyDown);
+textboxesContainer.addEventListener('keyup', handleTextboxesContainerKeyUp);
 imageUploadMethodSelect.addEventListener('change', handleUploadMethodChange);
 galleryEl.addEventListener('click', handleGalleryClick);
 gallerySearchEl.addEventListener('input', handleGallerySearchInput);
@@ -543,18 +587,27 @@ document.addEventListener('capture-photo:error', handleCapturePhotoError);
 document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
 document.addEventListener('me-open', handleModalOpen);
 document.addEventListener('me-close', handleModalClose);
+document.addEventListener('emoji-click', handleEmojiPickerSelection);
+document.addEventListener('textbox-create', handleTextboxCreate);
+document.addEventListener('textbox-remove', handleTextboxDelete);
 removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
+maxImageDimensionsForm.addEventListener('change', handleMaxImageDimensionsFormChange);
+clearCanvasBtn.addEventListener('click', handleClearCanvas);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
 });
 
-textOptions.forEach((item, index) => {
-  inputsContainer.appendChild(createTextBox(index, item));
-});
+Textbox.create();
 
 dropzoneEl.accept = ACCEPTED_MIME_TYPES;
 
 customFonts.forEach(({ name, path, style, weight }) => {
   loadCustomFont(name, path, { style, weight });
 });
+
+if (maxImageDimensionsFromStorage) {
+  maxImageDimensionsSelect.value = maxImageDimensionsFromStorage;
+}
+
+maxImageDimensionsSelect.disabled = false;
