@@ -1,5 +1,6 @@
 import { uid } from './utils/uid.js';
 import { customFonts } from './custom-fonts.js';
+import { MAX_SHADOW_BLUR_SIZE, MAX_STROKE_WIDTH, MAX_ROTATE } from './constants.js';
 
 const defaultTextboxData = {
   id: '',
@@ -10,8 +11,8 @@ const defaultTextboxData = {
   fontSize: 40,
   fontWeight: 'normal',
   textAlign: 'center',
-  shadowBlur: 3,
-  borderWidth: 1,
+  shadowBlur: 0,
+  strokeWidth: 1.5,
   offsetY: 0,
   offsetX: 0,
   rotate: 0,
@@ -67,7 +68,7 @@ class Textbox {
     }
 
     const data = textbox.getData();
-    const { id, text, fillColor, strokeColor, fontSize, shadowBlur, borderWidth, offsetX, offsetY, rotate } = data;
+    const { id, text, fillColor, strokeColor, fontSize, shadowBlur, strokeWidth, offsetX, offsetY, rotate } = data;
 
     const template = /* html */`
     <div class="d-flex align-items-center">
@@ -139,12 +140,12 @@ class Textbox {
       <div class="row g-2">
         <div class="col-4 mb-3">
           <label for="shadowWidthInput_${id}" class="mb-1 d-block text-truncate">Shadow size:</label>
-          <input class="form-control" type="number" min="0" max="100" value="${shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${id}">
+          <input class="form-control" type="number" min="0" max="${MAX_SHADOW_BLUR_SIZE}" value="${shadowBlur}" data-input="shadowBlur" id="shadowWidthInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
-          <label class="mb-1 d-block text-truncate" for="borderWidthInput_${id}">Border width:</label>
-          <input class="form-control" type="number" min="0" max="100" value="${borderWidth}" data-input="borderWidth" id="borderWidthInput_${id}">
+          <label class="mb-1 d-block text-truncate" for="strokeWidthInput_${id}">Outline size:</label>
+          <input class="form-control" type="number" min="0" max="${MAX_STROKE_WIDTH}" step="0.5" value="${strokeWidth}" data-input="strokeWidth" id="strokeWidthInput_${id}">
         </div>
 
         <div class="col-4 mb-3">
@@ -170,7 +171,7 @@ class Textbox {
 
         <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="textRotateInput_${id}">Rotate:</label>
-          <input class="form-control" type="number" value="${rotate}" data-input="rotate" id="textRotateInput_${id}" min="-360" max="360">
+          <input class="form-control" type="number" value="${rotate}" data-input="rotate" id="textRotateInput_${id}" min="-360" max="${MAX_ROTATE}">
         </div>
 
         <div class="col-12">

@@ -1,4 +1,5 @@
 import { isSolidColorSelected } from './utils/is-solid-color-selected.js';
+import { MAX_SHADOW_BLUR_SIZE, MAX_STROKE_WIDTH, MAX_ROTATE } from './constants.js';
 
 export class Canvas {
   #canvas = null;
@@ -82,20 +83,25 @@ export class Canvas {
       if (shadowBlur !== 0) {
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
-        ctx.shadowBlur = shadowBlur;
+        ctx.shadowBlur = Math.min(shadowBlur, MAX_SHADOW_BLUR_SIZE);
         ctx.shadowColor = data.strokeColor;
       }
 
       ctx.translate(xPos + data.offsetX, lineHeight * multiplier + data.offsetY);
-      ctx.rotate(data.rotate * Math.PI / 180);
-      // first draw each line with shadow
+      ctx.rotate(Math.min(data.rotate, MAX_ROTATE) * Math.PI / 180);
+
+      // First draw each line with shadow.
       textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-      // since shadows of multiline text may be drawn over letters of neighbour lines
+
+      // Since shadows of multiline text may be drawn over letters of neighbour lines
       // (when shadow blur is big enough), re-draw text without shadows.
-      ctx.shadowBlur = 0;
-      textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-      if (data.borderWidth > 0) {
-        ctx.lineWidth = data.borderWidth;
+      if (shadowBlur !== 0) {
+        ctx.shadowBlur = 0;
+        textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
+      }
+
+      if (data.strokeWidth > 0) {
+        ctx.lineWidth = Math.min(data.strokeWidth, MAX_STROKE_WIDTH);
         textLines.forEach((text, index) => ctx.strokeText(text, 0, index * lineHeight));
       }
 

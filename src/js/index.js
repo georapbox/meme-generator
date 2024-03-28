@@ -294,8 +294,8 @@ const handleTextboxesContainerInput = evt => {
     prop = 'offsetX';
   } else if (element.matches('[data-input="rotate"]')) {
     prop = 'rotate';
-  } else if (element.matches('[data-input="borderWidth"]')) {
-    prop = 'borderWidth';
+  } else if (element.matches('[data-input="strokeWidth"]')) {
+    prop = 'strokeWidth';
   }
 
   if (prop) {
