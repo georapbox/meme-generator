@@ -3,7 +3,8 @@
   --body-color: #212529;
   --move-btn-width: 60px;
   --move-btn-height: 34px;
-  --focus-ring: 0 0 0 0.2rem #268fff80;
+  --focus-ring: 0 0 0 0.2rem var(--bs-focus-ring-color);
+  --focus-ring-error: 0 0 0 0.2rem rgba(var(--bs-danger-rgb), 0.4);
 
   accent-color: var(--bs-primary);
   font-size: 14px;
@@ -46,6 +47,15 @@ details summary:focus-visible {
 .page-title {
   font-weight: 300;
   margin-bottom: 0;
+}
+
+.form-control:out-of-range {
+  border-color: var(--bs-form-invalid-border-color);
+  color: var(--bs-form-invalid-color);
+}
+
+.form-control:out-of-range:focus {
+  box-shadow: var(--focus-ring-error);
 }
 
 /* Canvas */
