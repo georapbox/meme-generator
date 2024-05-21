@@ -80,9 +80,11 @@ details summary:focus-visible {
 .textboxes-container .meme-text {
   min-width: 0;
   min-height: calc(1.5em + 0.75rem + 2px);
-  max-height: 200px;
-  height: calc(1.5em + 0.75rem + 2px);
+  max-height: 60px;
   margin: 0.5rem;
+  overflow-x: hidden; /* Fix for Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=33654 */
+  scrollbar-width: thin;
+  field-sizing: content;
 }
 
 #maxImageDimensionsForm select:disabled {
