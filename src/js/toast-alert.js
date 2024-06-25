@@ -13,7 +13,7 @@ export const toastAlert = (message = '', type = 'info') => {
     type = 'info';
   }
 
-  const template = /* html */`
+  const template = /* html */ `
     ${message}
     <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
   `;

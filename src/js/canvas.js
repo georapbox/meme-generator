@@ -69,7 +69,7 @@ export class Canvas {
 
       ctx.save();
 
-      ctx.font = `${data.fontWeight} ${data.fontSize * canvas.width / 1000}px ${data.font}`;
+      ctx.font = `${data.fontWeight} ${(data.fontSize * canvas.width) / 1000}px ${data.font}`;
       ctx.fillStyle = data.fillColor;
       ctx.textAlign = data.textAlign;
       ctx.strokeStyle = data.strokeColor;
@@ -88,7 +88,7 @@ export class Canvas {
       }
 
       ctx.translate(xPos + data.offsetX, lineHeight * multiplier + data.offsetY);
-      ctx.rotate(Math.min(data.rotate, MAX_ROTATE) * Math.PI / 180);
+      ctx.rotate((Math.min(data.rotate, MAX_ROTATE) * Math.PI) / 180);
 
       // First draw each line with shadow.
       textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));

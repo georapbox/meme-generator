@@ -29,11 +29,13 @@ class Textbox {
 
     textboxes.set(id, this);
 
-    document.dispatchEvent(new CustomEvent(`textbox-create`, {
-      bubbles: true,
-      composed: true,
-      detail: { textbox: this }
-    }));
+    document.dispatchEvent(
+      new CustomEvent(`textbox-create`, {
+        bubbles: true,
+        composed: true,
+        detail: { textbox: this }
+      })
+    );
   }
 
   getData() {
@@ -55,11 +57,13 @@ class Textbox {
   static remove(id) {
     textboxes.delete(id);
 
-    document.dispatchEvent(new CustomEvent(`textbox-remove`, {
-      bubbles: true,
-      composed: true,
-      detail: { id }
-    }));
+    document.dispatchEvent(
+      new CustomEvent(`textbox-remove`, {
+        bubbles: true,
+        composed: true,
+        detail: { id }
+      })
+    );
   }
 
   static createElement(textbox, autoFocus = true) {
@@ -68,9 +72,20 @@ class Textbox {
     }
 
     const data = textbox.getData();
-    const { id, text, fillColor, strokeColor, fontSize, shadowBlur, strokeWidth, offsetX, offsetY, rotate } = data;
+    const {
+      id,
+      text,
+      fillColor,
+      strokeColor,
+      fontSize,
+      shadowBlur,
+      strokeWidth,
+      offsetX,
+      offsetY,
+      rotate
+    } = data;
 
-    const template = /* html */`
+    const template = /* html */ `
     <div class="d-flex align-items-center">
       <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
       <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
@@ -202,8 +217,10 @@ class Textbox {
     div.setAttribute('data-section', 'textbox');
     div.className = 'bg-light border shadow-sm mb-3 rounded';
     div.innerHTML = template;
-    div.querySelectorAll('select').forEach(el => el.value = data[el.dataset.input]);
-    div.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = data[el.dataset.input]);
+    div.querySelectorAll('select').forEach(el => (el.value = data[el.dataset.input]));
+    div
+      .querySelectorAll('input[type="checkbox"]')
+      .forEach(el => (el.checked = data[el.dataset.input]));
 
     const textboxEl = fragment.appendChild(div);
 

@@ -201,7 +201,7 @@ const handleImageUploadFromURL = async evt => {
     if (file) {
       handleFileSelect(file);
     }
-  } catch (err) {
+  } catch {
     toastAlert(`Failed to load image from "${imageUrl}".`, 'danger');
   } finally {
     submitButton.disabled = false;
@@ -249,7 +249,7 @@ const moveTextUsingArrowbuttons = (textboxId, direction) => () => {
 };
 
 const handleUploadMethodChange = evt => {
-  uploadMethodEls.forEach(el => el.hidden = el.id !== evt.target.value);
+  uploadMethodEls.forEach(el => (el.hidden = el.id !== evt.target.value));
   maxImageDimensionsForm.hidden = evt.target.value === 'solidColorForm';
 };
 
@@ -371,7 +371,9 @@ const handleTextboxesContainerPointerdown = evt => {
   }
 
   if (element.matches('[data-action="move-text"]')) {
-    reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label')));
+    reqAnimFrame = requestAnimationFrame(
+      moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label'))
+    );
   }
 };
 
@@ -400,7 +402,9 @@ const handleTextboxesContainerKeyDown = evt => {
   if (element.matches('[data-action="move-text"]')) {
     if (evt.key === ' ' || evt.key === 'Enter') {
       reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
-      reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label')));
+      reqAnimFrame = requestAnimationFrame(
+        moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label'))
+      );
     }
   }
 };
@@ -433,7 +437,7 @@ const handleGalleryClick = async evt => {
     if (file) {
       handleFileSelect(file);
     }
-  } catch (err) {
+  } catch {
     toastAlert(`Failed to load image: "${img.alt}".`, 'danger');
   }
 };
@@ -459,8 +463,12 @@ const handleCapturePhotoError = evt => {
   const error = evt.detail.error;
   let errorMessage = 'An error occurred while trying to capture photo.';
 
-  if (error instanceof Error && (error.name === 'NotAllowedError' || error.name === 'NotFoundError')) {
-    errorMessage += ' Make sure you have a camera connected and you have granted the appropriate permissions.';
+  if (
+    error instanceof Error &&
+    (error.name === 'NotAllowedError' || error.name === 'NotFoundError')
+  ) {
+    errorMessage +=
+      ' Make sure you have a camera connected and you have granted the appropriate permissions.';
   }
 
   toastAlert(errorMessage, 'danger');
@@ -567,7 +575,7 @@ fileSelectBtn.addEventListener('click', handleFileSelectClick);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButtonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
 generateMemeBtn.addEventListener('click', generateMeme);
-downloadMemeBtn.addEventListener('click', () => downloadModal.open = false);
+downloadMemeBtn.addEventListener('click', () => (downloadModal.open = false));
 imageUrlForm.addEventListener('submit', handleImageUploadFromURL);
 dropzoneEl.addEventListener('files-dropzone-drop-accepted', handleDropFilesAccepted);
 textboxesContainer.addEventListener('input', handleTextboxesContainerInput);
