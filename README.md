@@ -1,16 +1,21 @@
-<p align="center">
-  <img src="src/assets/app-icons/logo.png" width="150" height="150" alt="Meme Generator">
-</p>
-
-<h1 align="center">Meme Generator</h1>
+# Meme Generator
 
 A Progressive Web App (PWA) for creating memes.
 
-The application is built with web technologies such as HTML, CSS, and JavaScript. It uses the [Canvas API](https://developer.mozilla.org/docs/Web/API/Canvas_API) to draw the meme text on the image. Processing the image and text is done client-side, so no data is sent to any server.
+## About
+
+This is a web application that allows users to create memes by adding text to images.
+The application is built with web technologies such as HTML, CSS, and JavaScript.
+It uses the [Canvas API](https://developer.mozilla.org/docs/Web/API/Canvas_API) to draw the meme text on the image. 
+Processing the image and text is done client-side, so no data is sent to any server.
+
+## Live demo
+
+👉 [Meme Generator](https://georapbox.github.io/meme-generator/)
 
 ## Features
 
-Create a meme with by:
+Some of the key features of the application include creating memes by:
 - Selecting an image from your device
 - Selecting an image from the web (by URL)
 - Selecting an image from the gallery
@@ -19,7 +24,9 @@ Create a meme with by:
 
 ## Screenshots
 
-![meme](src/assets/app-icons/screenshots/screenshot.png)
+The following screenshots show the application in action:
+
+![meme](screenshots/screenshot.png)
 
 ## Development
 
@@ -34,13 +41,13 @@ Below are the instructions for setting up the development environment.
 
 Clone the repository to your local machine:
 
-```bash
+```sh
 git clone git@github.com:georapbox/meme-generator.git
 ```
 
 Navigate to the project's directory and install the dependencies:
 
-```bash
+```sh
 npm install
 ```
 
@@ -48,7 +55,7 @@ npm install
 
 To run the application in development mode, run the following command:
 
-```bash
+```sh
 npm start -- --open
 ```
 
@@ -58,7 +65,7 @@ This will start the development server and open the application in your default 
 
 To build the application for production, run the following command:
 
-```bash
+```sh
 npm run build
 ```
 
@@ -68,7 +75,7 @@ This will create a `dist` directory containing the production build of the appli
 
 To deploy the application, run the following command:
 
-```bash
+```sh
 npm run deploy
 ```
 
@@ -76,4 +83,4 @@ This will build the application first and then deploy it to GitHub Pages in the 
 
 ## License
 
-[The MIT License (MIT)](https://georapbox.mit-license.org/@2019)
+[The MIT License (MIT)](https://github.com/georapbox/meme-generator/blob/master/LICENSE)
