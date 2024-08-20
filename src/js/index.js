@@ -47,6 +47,21 @@ let shouldFocusOnTextboxCreate = false;
 let selectedImage = null;
 let reqAnimFrame = null;
 
+const renderAcceptedImageFormats = (acceptedMimeTypes, rootEl) => {
+  if (!rootEl) {
+    return;
+  }
+
+  const extensions = acceptedMimeTypes.map(mimeType => mimeType.split('/')[1]);
+  const str = `Supported image formats: ${extensions.join(', ')}`;
+  const div = document.createElement('div');
+  const small = document.createElement('small');
+
+  small.textContent = str;
+  div.appendChild(small);
+  rootEl.appendChild(small);
+};
+
 const generateMeme = async () => {
   const dataUrl = canvas.toDataURL('image/png');
   const filename = `${uid('meme')}.png`;
@@ -609,6 +624,8 @@ galleryEl.querySelectorAll('button > img')?.forEach(image => {
 Textbox.create();
 
 dropzoneEl.accept = ACCEPTED_MIME_TYPES;
+
+renderAcceptedImageFormats(ACCEPTED_MIME_TYPES, instructionsEl);
 
 customFonts.forEach(({ name, path, style, weight }) => {
   loadCustomFont(name, path, { style, weight });
