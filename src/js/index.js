@@ -1,8 +1,8 @@
 import 'emoji-picker-element';
 import insertTextAtCursor from 'insert-text-at-cursor';
+import { CapturePhoto } from '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
 import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
 import '@georapbox/web-share-element/dist/web-share-defined.js';
-import '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
 import '@georapbox/modal-element/dist/modal-element-defined.js';
 import '@georapbox/files-dropzone-element/dist/files-dropzone-defined.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +20,10 @@ import { Canvas } from './canvas.js';
 const canvas = Canvas.createInstance(document.getElementById('canvas'));
 const videoModal = document.getElementById('videoModal');
 const downloadModal = document.getElementById('downloadModal');
+const capturePhotoEl = document.querySelector('capture-photo');
+const cameraSelect = document.getElementById('cameraSelect');
+const capturePhotoButton = document.getElementById('capturePhotoButton');
+const torchButton = document.getElementById('torchButton');
 const dropzoneEl = document.querySelector('files-dropzone');
 const instructionsEl = document.getElementById('instructions');
 const imageUploadMethodSelect = document.getElementById('imageUploadMethodSelect');
@@ -500,20 +504,16 @@ const handleCapturePhotoSuccess = evt => {
 
 const handleModalOpen = evt => {
   if (evt.target.id === 'videoModal') {
-    const capturePhotoComponent = videoModal.querySelector('capture-photo');
-
-    if (capturePhotoComponent && typeof capturePhotoComponent.startVideoStream === 'function') {
-      capturePhotoComponent.startVideoStream();
+    if (capturePhotoEl && typeof capturePhotoEl.startVideoStream === 'function') {
+      capturePhotoEl.startVideoStream();
     }
   }
 };
 
 const handleModalClose = evt => {
   if (evt.target.id === 'videoModal') {
-    const capturePhotoComponent = videoModal.querySelector('capture-photo');
-
-    if (capturePhotoComponent && typeof capturePhotoComponent.stopVideoStream === 'function') {
-      capturePhotoComponent.stopVideoStream();
+    if (capturePhotoEl && typeof capturePhotoEl.stopVideoStream === 'function') {
+      capturePhotoEl.stopVideoStream();
     }
   }
 
@@ -586,6 +586,101 @@ const handleClearCanvas = evt => {
   canvas.clear().hide();
 };
 
+const toggleTorchButtonStatus = (options = {}) => {
+  const defaults = {
+    el: document.getElementById('torchButton'),
+    isTorchOn: false
+  };
+  const { el, isTorchOn } = { ...defaults, ...options };
+  const iconPaths = el.querySelectorAll('svg path');
+
+  if (iconPaths.length !== 2) {
+    return;
+  }
+
+  iconPaths[0].style.display = isTorchOn ? 'none' : 'block';
+  iconPaths[1].style.display = isTorchOn ? 'block' : 'none';
+  el.setAttribute('aria-label', `Turn ${isTorchOn ? 'off' : 'on'} flash`);
+};
+
+const handleTorchButtonClick = evt => {
+  if (capturePhotoEl === null) {
+    return;
+  }
+
+  capturePhotoEl.torch = !capturePhotoEl.torch;
+
+  toggleTorchButtonStatus({
+    el: evt.currentTarget,
+    isTorchOn: capturePhotoEl.hasAttribute('torch')
+  });
+};
+
+const handleCapturePhotoVideoPlay = async evt => {
+  const trackCapabilities = evt.target.getTrackCapabilities();
+
+  if (trackCapabilities?.torch) {
+    torchButton?.removeAttribute('hidden');
+
+    if (capturePhotoEl?.hasAttribute('torch')) {
+      toggleTorchButtonStatus({ el: torchButton, isTorchOn: true });
+    }
+  }
+
+  const videoInputDevices = await CapturePhoto.getVideoInputDevices();
+
+  videoInputDevices.forEach((device, index) => {
+    const option = document.createElement('option');
+    option.value = device.deviceId;
+    option.textContent = device.label || `Camera ${index + 1}`;
+    cameraSelect.appendChild(option);
+  });
+
+  if (videoInputDevices.length > 1) {
+    cameraSelect?.removeAttribute('hidden');
+  }
+};
+
+const handleCameraSelectChange = evt => {
+  if (
+    capturePhotoEl === null ||
+    typeof capturePhotoEl.restartVideoStream !== 'function' ||
+    capturePhotoEl.hasAttribute('loading')
+  ) {
+    return;
+  }
+
+  // const trackCapabilities = capturePhotoEl.getTrackCapabilities();
+
+  // if (trackCapabilities?.torch) {
+  //   torchButton?.removeAttribute('hidden');
+  // }
+
+  const videoDeviceId = evt.target.value || undefined;
+  capturePhotoEl.restartVideoStream(videoDeviceId);
+};
+
+const handleCapturePhotoButtonClick = () => {
+  if (
+    capturePhotoEl === null ||
+    typeof capturePhotoEl.capture !== 'function' ||
+    capturePhotoEl.hasAttribute('loading')
+  ) {
+    return;
+  }
+
+  capturePhotoEl.capture();
+};
+
+document.addEventListener('web-share:error', handleWebShareError);
+document.addEventListener('capture-photo:video-play', handleCapturePhotoVideoPlay, { once: true });
+document.addEventListener('capture-photo:error', handleCapturePhotoError);
+document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
+document.addEventListener('me-open', handleModalOpen);
+document.addEventListener('me-close', handleModalClose);
+document.addEventListener('emoji-click', handleEmojiPickerSelection);
+document.addEventListener('textbox-create', handleTextboxCreate);
+document.addEventListener('textbox-remove', handleTextboxDelete);
 fileSelectBtn.addEventListener('click', handleFileSelectClick);
 openVideoModalBtn.addEventListener('click', handleOpenVideoModalButtonClick);
 addTextboxBtn.addEventListener('click', handleAddTextboxBtnClick);
@@ -605,17 +700,12 @@ imageUploadMethodSelect.addEventListener('change', handleUploadMethodChange);
 galleryEl.addEventListener('click', handleGalleryClick);
 gallerySearchEl.addEventListener('input', handleGallerySearchInput);
 solidColorForm.addEventListener('input', handleSolidColorFormInput);
-document.addEventListener('web-share:error', handleWebShareError);
-document.addEventListener('capture-photo:error', handleCapturePhotoError);
-document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
-document.addEventListener('me-open', handleModalOpen);
-document.addEventListener('me-close', handleModalClose);
-document.addEventListener('emoji-click', handleEmojiPickerSelection);
-document.addEventListener('textbox-create', handleTextboxCreate);
-document.addEventListener('textbox-remove', handleTextboxDelete);
 removeTextForm.addEventListener('submit', handleTextRemoveFormSubmit);
 maxImageDimensionsForm.addEventListener('change', handleMaxImageDimensionsFormChange);
 clearCanvasBtn.addEventListener('click', handleClearCanvas);
+cameraSelect.addEventListener('change', handleCameraSelectChange);
+capturePhotoButton.addEventListener('click', handleCapturePhotoButtonClick);
+torchButton.addEventListener('click', handleTorchButtonClick);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
