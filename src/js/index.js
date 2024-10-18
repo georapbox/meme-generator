@@ -650,12 +650,6 @@ const handleCameraSelectChange = evt => {
     return;
   }
 
-  // const trackCapabilities = capturePhotoEl.getTrackCapabilities();
-
-  // if (trackCapabilities?.torch) {
-  //   torchButton?.removeAttribute('hidden');
-  // }
-
   const videoDeviceId = evt.target.value || undefined;
   capturePhotoEl.restartVideoStream(videoDeviceId);
 };
