@@ -108,14 +108,19 @@ details summary:focus-visible {
   align-items: center;
   justify-content: center;
   padding: 0.375rem;
-  opacity: 0;
-  visibility: hidden;
   transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
 }
 
-.dropzone:hover .clear-canvas-button {
-  opacity: 1;
-  visibility: visible;
+@media (hover: hover) {
+  .clear-canvas-button {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .dropzone:hover .clear-canvas-button {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 /* Misc */
@@ -261,70 +266,41 @@ button[data-button="delete-text-box"] {
 }
 
 /* capture-photo */
-capture-photo:not(:defined) {
-  display: none;
+capture-photo {
+  position: relative;
+  overflow: hidden;
 }
 
-capture-photo {
-  overflow: hidden;
+capture-photo::part(capture-button) {
+  display: none;
 }
 
 capture-photo::part(video) {
   width: 100%;
-  background-color: #000000;
-}
-
-capture-photo::part(actions-container) {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  padding: 1rem 0;
-}
-
-capture-photo::part(capture-button),
-capture-photo::part(facing-mode-button) {
-  text-indent: -9999px;
-  overflow: hidden;
-  border-radius: 50%;
-  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.30);
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-capture-photo::part(capture-button) {
-  width: 70px;
-  height: 70px;
-  background-image: url(../assets/icons/aperture.svg);
-  background-size: 90%;
-  background-color: #c2c3c7;
-  border: 5px solid #ffffff;
-}
-
-capture-photo::part(facing-mode-button) {
-  margin-right: calc(-50px - 2rem); /* facing mode button width + actions buttons gap */
-  width: 50px;
-  height: 50px;
-  background-image: url(../assets/icons/camera-reverse.svg);
-  background-size: 60%;
-  background-color: #ffffff;
-  border: 0;
+  border-radius: calc(var(--bs-border-radius) / 2);
 }
 
 capture-photo[loading]::part(video) {
+  background-color: #000000;
   background-image: url(../assets/icons/spinner.svg);
   background-size: 60px;
   background-position: center center;
   background-repeat: no-repeat;
 }
 
-capture-photo[loading]::part(capture-button),
-capture-photo[loading]::part(facing-mode-button) {
-  opacity: 0.6;
-  pointer-events: none;
+capture-photo [slot="actions"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+capture-photo[loading] [slot="actions"] {
+  display: none !important;
 }
 
 /* Modal */
@@ -340,8 +316,17 @@ modal-element {
   --me-width: 600px;
 }
 
+#videoModal::part(footer) {
+  padding-block: 0;
+}
+
+#videoModal:has(capture-photo[loading]) #capturePhotoButton {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
 #downloadModal {
-  --me-width: 900px;
+  --me-width: 800px;
 }
 
 modal-element::part(base):focus-visible {
