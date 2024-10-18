@@ -1,5 +1,4 @@
 :root {
-  --body-bg-color: #eae9e9;
   --body-color: #212529;
   --move-btn-width: 60px;
   --move-btn-height: 34px;
@@ -16,7 +15,6 @@
 
 body {
   overflow-x: hidden;
-  background-color: var(--body-bg-color);
 }
 
 [hidden] {
@@ -143,6 +141,20 @@ details summary:focus-visible {
   padding: 1rem;
   text-align: center;
   text-wrap: balance;
+  background-color: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
+}
+
+.instructions__image {
+  width: 60px;
+  height: 60px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-image: url(../assets/icons/add-image-light.svg);
+}
+
+:root[data-bs-theme="dark"] .instructions__image {
+  content: url(../assets/icons/add-image-dark.svg);
 }
 
 .errors-container {
@@ -179,8 +191,12 @@ button[data-button="delete-text-box"] {
 }
 
 button[data-button="duplicate-text-box"] {
-  background-image: url(../assets/icons/duplicate.svg);
+  background-image: url(../assets/icons/duplicate-light.svg);
   background-size: 70%;
+}
+
+:root[data-bs-theme="dark"] button[data-button="duplicate-text-box"] {
+  background-image: url(../assets/icons/duplicate-dark.svg);
 }
 
 button[data-button="delete-text-box"] {
@@ -308,8 +324,11 @@ capture-photo[loading] [slot="actions"] {
 modal-element {
   --me-width: fit-content;
   --me-border-radius: var(--bs-border-radius);
-  --me-border-width: 0;
+  --me-border-width: 1px;
+  --me-border-color: var(--bs-border-color);
   --me-box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.30);
+  --me-backdrop-background: rgba(0, 0, 0, 0.7);
+  --me-backdrop-filter: blur(2px);
 }
 
 #videoModal {
@@ -335,11 +354,11 @@ modal-element::part(base):focus-visible {
 
 modal-element [slot="header"] {
   margin: 0;
-  color: var(--body-color);
+  color: var(--bs-body-color);
 }
 
 modal-element::part(close) {
-  color: var(--body-color);
+  color: var(--bs-body-color);
   border-radius: var(--bs-border-radius);
   transition: box-shadow 0.15s ease-in-out;
 }
@@ -404,14 +423,14 @@ modal-element [slot="footer"] {
 /* Emoji picker */
 .emoji-picker-details {
   margin-bottom: 0.5rem;
-  background-color: var(--bs-gray-200);
+  background-color: var(--bs-body-bg);
   border-radius: var(--bs-border-radius);
+  border: 1px solid var(--bs-border-color);
 }
 
 .emoji-picker-details > summary {
   padding: 0.5rem 1rem;
-  background-color: var(--bs-gray-300);
-  border: 1px solid var(--bs-gray-300);
+  background-color: var(--bs-body-bg);
   border-radius: var(--bs-border-radius);
   cursor: pointer;
 }
@@ -423,7 +442,7 @@ modal-element [slot="footer"] {
 
 emoji-picker {
   --border-color: var(--bs-border-color);
-  --background: #ffffff;
+  --background: var(--bs-bg);
   --input-border-color: var(--bs-border-color);
   --input-border-radius: var(--bs-border-radius);
   --input-padding: 0.375rem 0.75rem;
@@ -431,10 +450,10 @@ emoji-picker {
   --outline-size: 4px;
   --indicator-color: var(--bs-primary);
   --button-hover-background: var(--bs-gray-300);
+  --input-font-color: var(--bs-body-color);
 
   width: 100%;
   height: 255px;
-  border: 0;
   padding: 0 0.5rem 0.5rem 0.5rem;
 }
 
