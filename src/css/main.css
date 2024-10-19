@@ -395,6 +395,10 @@ modal-element [slot="footer"] {
 }
 
 @media screen and (min-width: 768px) {
+  .meme-column {
+    border-inline-end: 1px solid var(--bs-border-color);
+  }
+
   .dropzone {
     position: sticky;
     top: 0.25rem;
