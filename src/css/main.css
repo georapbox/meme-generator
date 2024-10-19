@@ -461,6 +461,25 @@ emoji-picker {
   padding: 0 0.5rem 0.5rem 0.5rem;
 }
 
+/* Theme toggle */
+theme-toggle {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+theme-toggle::part(base) {
+  padding: 0.5rem;
+  border-radius: var(--bs-border-radius);
+  font-size: 1.1429rem;
+  transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+theme-toggle::part(base):focus-visible {
+  outline: 0;
+  box-shadow: var(--focus-ring);
+}
+
 /* Utils */
 
 .text-underline {

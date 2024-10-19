@@ -1,10 +1,37 @@
 (function () {
-  const updateTheme = matches => {
-    document.documentElement.setAttribute('data-bs-theme', matches ? 'dark' : 'light');
-  };
+  function getStoredTheme() {
+    return window.localStorage.getItem('meme-generator/theme') || 'system';
+  }
 
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  updateTheme(mediaQuery.matches);
+  function getDeviceTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
 
-  mediaQuery.addEventListener('change', e => updateTheme(e.matches));
+  function applyTheme(theme) {
+    const themeMap = {
+      dark: 'dark',
+      light: 'light',
+      system: getDeviceTheme()
+    };
+
+    document.documentElement.setAttribute('data-bs-theme', themeMap[theme] || themeMap.system);
+  }
+
+  function handleMatchMediaChange(evt) {
+    if (getStoredTheme() !== 'system') {
+      return;
+    }
+
+    applyTheme(evt.matches ? 'dark' : 'light');
+  }
+
+  try {
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', handleMatchMediaChange);
+
+    applyTheme(getStoredTheme());
+  } catch (err) {
+    console.error(err);
+  }
 })();
