@@ -4,21 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="theme-color" content="#eae9e9">
+  <meta name="theme-color" content="#f8f9fa">
   <meta name="description" content="Meme generator tool to easily create memes bu uploading images or taking a photo.">
   <title>Meme Generator</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" sizes="192x192" href="assets/app-icons/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/app-icons/ios/180.png">
-  <script src="./js/register-service-worker.js" type="module"></script>
-  <script src="./js/index.js" type="module"></script>
+  <script src="js/register-service-worker.js" type="module"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/index.js" type="module"></script>
 </head>
-<body>
+<body class="bg-body-tertiary">
   <noscript>
     <div class="alert alert-danger text-center rounded-0" role="alert">
       This app requires JavaScript to be enabled in your browser.
     </div>
   </noscript>
+
+  <theme-toggle storage-key="meme-generator/theme" no-label></theme-toggle>
 
   <main>
     <div class="errors-container">
@@ -30,17 +33,19 @@
     </div>
 
     <header class="site-header">
-      <img src="assets/logo.png" width="90" height="90" alt="Logo" class="d-block rounded-circle border" aria-hidden="true">
+      <img src="assets/logo.png" width="90" height="90" alt="Logo" class="d-block rounded-circle border shadow-sm" aria-hidden="true">
       <h1 class="page-title">Meme Generator</h1>
-      <p class="mb-0">
+      <p class="mb-0 d-inline-flex gap-2 align-items-center">
         <svg aria-hidden="true" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
-        Source code on <a href="https://github.com/georapbox/meme-generator" class="text-underline text-dark" target="_blank" rel="noopener noreferrer">Github</a>
+        <span>
+          Source code on <a href="https://github.com/georapbox/meme-generator" class="text-underline" target="_blank" rel="noopener noreferrer">Github</a>
+        </span>
       </p>
     </header>
 
     <div class="container">
-      <div class="row mx-0 mb-5 py-4 bg-white border border-light rounded shadow">
-        <div class="col-lg-8 col-md-7 mb-3 mb-md-0">
+      <div class="row mx-0 mb-5 bg-body rounded border shadow">
+        <div class="meme-column col-lg-8 col-md-7 py-3">
           <files-dropzone class="dropzone">
             <canvas id="canvas" class="canvas border shadow-sm" hidden></canvas>
 
@@ -51,7 +56,7 @@
             </button>
 
             <div id="instructions" class="instructions">
-              <img src="assets/icons/add-image.svg" width="60" height="60" alt="add image icon" aria-hidden="true">
+              <div class="instructions__image"></div>
               <div>
                 <p class="mb-0">Drag & Drop an image here or click to select an image from your device.</p>
                 <p class="m-0 text-muted"><em><small>All uploaded images are processed locally in your browser. No data is sent to any server.</small></em></p>
@@ -60,11 +65,11 @@
           </files-dropzone>
         </div>
 
-        <div class="col-lg-4 col-md-5">
+        <div class="col-lg-4 col-md-5 pt-0 pt-md-3 pb-3">
           <details class="mb-4" open>
             <summary><strong>Image selection options</strong></summary>
 
-            <div class="bg-light py-4 px-3 border shadow-sm rounded">
+            <div class="bg-body-tertiary py-3 px-2 border shadow-sm rounded">
               <div class="mb-3">
                 <label for="imageUploadMethodSelect" class="visually-hidden">Image selection method</label>
 
@@ -217,8 +222,8 @@
               </form>
 
               <form id="maxImageDimensionsForm" class="mt-3">
-                <label for="maxImageDimensions" class="form-label d-flex align-items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--bs-primary)" viewBox="0 0 16 16" style="cursor: help;">
+                <label for="maxImageDimensions" class="form-label d-flex align-items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--bs-link-color)" viewBox="0 0 16 16" style="cursor: help;">
                     <title>Select the maximum dimensions for the image. Images will be resized to fit within these dimensions while maintaining their aspect ratio if they exceed the specified dimensions.</title>
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
                     <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
@@ -242,7 +247,7 @@
             <div id="textboxesContainer" class="textboxes-container"></div>
 
             <div class="d-flex justify-content-end mt-3">
-              <button class="btn btn-outline-dark d-flex align-items-center" id="addTextboxBtn">
+              <button class="btn btn-secondary d-flex align-items-center" id="addTextboxBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="18" height="18" aria-hidden="true">
                   <path fill="currentColor" d="M416 277.333H277.333V416h-42.666V277.333H96v-42.666h138.667V96h42.666v138.667H416v42.666z" />
                 </svg>
@@ -259,20 +264,20 @@
 
       <div class="row mb-5">
         <div class="col text-center">
-          Licensed under <a class="text-underline text-dark" href="https://github.com/georapbox/meme-generator/blob/master/LICENSE" target="_blank" rel="noopener">The MIT License (MIT)</a>
+          Licensed under <a class="text-underline" href="https://github.com/georapbox/meme-generator/blob/master/LICENSE" target="_blank" rel="noopener">The MIT License (MIT)</a>
         </div>
       </div>
     </div>
 
     <modal-element id="videoModal" static-backdrop>
-      <h5 slot="header">Capture image</h5>
+      <h2 slot="header" class="h5">Capture image</h2>
       <capture-photo no-image>
         <div slot="actions">
           <select id="cameraSelect" class="form-select text-truncate text-capitalize" aria-label="Select camera" hidden>
             <option value="" disabled selected>--Select camera--</option>
           </select>
 
-          <button type="button" id="torchButton" class="btn bg-white border" aria-label="Turn on flash" hidden>
+          <button type="button" id="torchButton" class="btn bg-body border" aria-label="Turn on flash" hidden>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1.25em" height="1.25em" aria-hidden="true">
               <path d="M315.27 33L96 304h128l-31.51 173.23a2.36 2.36 0 002.33 2.77h0a2.36 2.36 0 001.89-.95L416 208H288l31.66-173.25a2.45 2.45 0 00-2.44-2.75h0a2.42 2.42 0 00-1.95 1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><!-- torch disabled -->
               <path d="M432 448a15.92 15.92 0 01-11.31-4.69l-352-352a16 16 0 0122.62-22.62l352 352A16 16 0 01432 448zM294.34 84.28l-22.08 120.84a16 16 0 006.17 15.71 16.49 16.49 0 009.93 3.17h94.12l-38.37 47.42a4 4 0 00.28 5.34l17.07 17.07a4 4 0 005.94-.31l60.8-75.16a16.37 16.37 0 003.3-14.36 16 16 0 00-15.5-12H307.19L335.4 37.63c.05-.3.1-.59.13-.89A18.45 18.45 0 00302.73 23l-92.58 114.46a4 4 0 00.28 5.35l17.07 17.06a4 4 0 005.94-.31zM217.78 427.57l22-120.71a16 16 0 00-6.19-15.7 16.54 16.54 0 00-9.92-3.16h-94.1l38.36-47.42a4 4 0 00-.28-5.34l-17.07-17.07a4 4 0 00-5.93.31L83.8 293.64A16.37 16.37 0 0080.5 308 16 16 0 0096 320h108.83l-28.09 154.36v.11a18.37 18.37 0 0032.5 14.53l92.61-114.46a4 4 0 00-.28-5.35l-17.07-17.06a4 4 0 00-5.94.31z" fill="currentColor" style="display: none;"/><!-- torch enabled -->
@@ -289,7 +294,7 @@
     </modal-element>
 
     <modal-element id="downloadModal">
-      <h5 slot="header">Download Meme</h5>
+      <h2 slot="header" class="h5">Download Meme</h2>
 
       <img class="img-thumbnail d-block mx-auto" id="downloadMemePreview" alt="meme preview">
 
@@ -309,12 +314,12 @@
     </modal-element>
 
     <modal-element id="removeConfirmationModal">
-      <h5 slot="header">Remove text</h5>
-      <p>Are you sure you want to remove this text box?</p>
+      <h2 slot="header" class="h5">Remove text</h2>
+      <p class="m-0">Are you sure you want to remove this text box?</p>
       <footer slot="footer" class="text-end justify-content-end">
         <form id="removeTextForm">
           <input type="hidden" name="textbox-id">
-          <button type="button" class="btn btn-outline-secondary" data-me-close>Cancel</button>
+          <button type="button" class="btn btn-secondary" data-me-close>Cancel</button>
           <button type="submit" class="btn btn-danger">Remove</button>
         </form>
       </footer>

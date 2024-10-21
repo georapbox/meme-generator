@@ -215,7 +215,7 @@ class Textbox {
 
     div.setAttribute('id', id);
     div.setAttribute('data-section', 'textbox');
-    div.className = 'bg-light border shadow-sm mb-3 rounded';
+    div.className = 'bg-body-tertiary border shadow-sm mb-3 rounded';
     div.innerHTML = template;
     div.querySelectorAll('select').forEach(el => (el.value = data[el.dataset.input]));
     div
