@@ -1,0 +1,2 @@
+!function(){function e(){return window.localStorage.getItem("meme-generator/theme")||"system"}function t(e){let t={dark:"dark",light:"light",system:window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"};document.documentElement.setAttribute("data-bs-theme",t[e]||t.system)}try{window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(r){"system"===e()&&t(r.matches?"dark":"light")}),t(e())}catch(e){console.error(e)}}();
+//# sourceMappingURL=index.d970621e.js.map
