@@ -51,6 +51,9 @@ const maxImageDimensionsFromStorage = storage.get('maxImageDimensions');
 let shouldFocusOnTextboxCreate = false;
 let selectedImage = null;
 let reqAnimFrame = null;
+let isDragging = false;
+let currentTextbox = null;
+let offsetX, offsetY;
 
 const renderAcceptedImageFormats = (acceptedMimeTypes, rootEl) => {
   if (!rootEl) {
@@ -66,6 +69,116 @@ const renderAcceptedImageFormats = (acceptedMimeTypes, rootEl) => {
   div.appendChild(small);
   rootEl.appendChild(small);
 };
+
+function getMousePos(canvas, event) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
+  };
+}
+
+
+function isMouseInTextbox(relativeX, relativeY, textbox,multiplier) {
+  
+  ctx=canvas.getCanvas().getContext('2d');
+  const metrics = ctx.measureText(textbox.data.text);
+  const width = metrics.width*2+ textbox.data.fontSize; // This will give you the width of the text
+
+  $canvas_discrepancy_plus=20;
+  $padding_top=14;
+  relativeX=relativeX;
+  relativeY=relativeY;
+  const xPos = canvas.getCanvas().width / 2;
+  const adjustedOffsetX = xPos+textbox.data.offsetX-width; // Accounting for the left margin
+  let adjustedOffsetY=textbox.data.offsetY;
+  //const adjustedOffsetY = textbox.data.offsetY+$padding_top; // Adjust if needed
+ 
+  const lineHeight = ctx.measureText('M').width + textbox.data.fontSize / 2;
+  const height = lineHeight*multiplier; // Use the calculated line height or adjust as necessary
+  adjustedOffsetY=adjustedOffsetY+height-$padding_top;
+  
+
+  
+
+  textbox.data.width = width; // Assign calculated width
+  textbox.data.height = height; // Assign calculated height
+  const isInTextbox = (
+    relativeX >= adjustedOffsetX &&
+    relativeX <= adjustedOffsetX + (width*2) &&
+    relativeY >= adjustedOffsetY &&
+    relativeY <= adjustedOffsetY + height
+);
+  return isInTextbox;
+}
+
+
+
+
+
+
+// Canvas mouse event listeners
+canvas.getCanvas().addEventListener("mousedown", (e) => {
+  const rect = canvas.getCanvas().getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+  ctx=canvas.getCanvas().getContext('2d');
+  const transform = ctx.getTransform();
+  // Check if any textbox is clicked
+  let multiplier = 0;
+  Textbox.getAll().forEach((textbox) => {
+    multiplier += 1;
+    if (isMouseInTextbox(mouseX, mouseY, textbox,multiplier)) {
+      isDragging = true;
+      draggedTextbox = textbox;
+
+      const centerX = canvas.getCanvas().width / 2;
+      const centerY = canvas.getCanvas().height / 2;
+      startX = mouseX - centerX - textbox.data.offsetX;
+      startY = mouseY - centerY - textbox.data.offsetY;
+    }
+  });
+});
+
+
+
+canvas.getCanvas().addEventListener("mousemove", (e) => {
+  if (isDragging && draggedTextbox) {
+    const rect = canvas.getCanvas().getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Update the text box offset relative to the center of the canvas
+    const centerX = canvas.getCanvas().width / 2;
+    const centerY = canvas.getCanvas().height / 2;
+    draggedTextbox.data.offsetX = mouseX - centerX - startX;
+    draggedTextbox.data.offsetY = mouseY - centerY - startY;
+
+    // Redraw the canvas with updated textbox position
+    canvas.draw(selectedImage, Textbox.getAll());
+  }
+});
+
+
+
+
+canvas.getCanvas().addEventListener('mouseup', () => {
+ 
+  isDragging = false;
+  currentTextbox = null;
+});
+
+canvas.getCanvas().addEventListener('mouseleave', () => {
+  
+  isDragging = false;
+  currentTextbox = null;
+});
+
+
+
+
+
+
 
 const generateMeme = async () => {
   const dataUrl = canvas.toDataURL('image/png');
