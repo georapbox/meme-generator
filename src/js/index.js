@@ -288,39 +288,31 @@ const handleDropFilesAccepted = evt => {
 };
 
 const handleTextboxesContainerInput = evt => {
+  const inputMap = {
+    text: 'text',
+    fillColor: 'fillColor',
+    strokeColor: 'strokeColor',
+    font: 'font',
+    fontSize: 'fontSize',
+    fontWeight: 'fontWeight',
+    textAlign: 'textAlign',
+    shadowBlur: 'shadowBlur',
+    offsetY: 'offsetY',
+    offsetX: 'offsetX',
+    rotate: 'rotate',
+    strokeWidth: 'strokeWidth',
+    backgroundOffset: 'backgroundOffset',
+    backgroundColor: 'backgroundColor'
+  };
   const element = evt.target;
+  const prop = inputMap[element.dataset.input];
+
+  if (!prop) {
+    return;
+  }
+
   const textboxId = element.closest('[data-section="textbox"]').id;
-  let prop;
-
-  if (element.matches('[data-input="text"]')) {
-    prop = 'text';
-  } else if (element.matches('[data-input="fillColor"]')) {
-    prop = 'fillColor';
-  } else if (element.matches('[data-input="strokeColor"]')) {
-    prop = 'strokeColor';
-  } else if (element.matches('[data-input="font"]')) {
-    prop = 'font';
-  } else if (element.matches('[data-input="fontSize"]')) {
-    prop = 'fontSize';
-  } else if (element.matches('[data-input="fontWeight"]')) {
-    prop = 'fontWeight';
-  } else if (element.matches('[data-input="textAlign"]')) {
-    prop = 'textAlign';
-  } else if (element.matches('[data-input="shadowBlur"]')) {
-    prop = 'shadowBlur';
-  } else if (element.matches('[data-input="offsetY"]')) {
-    prop = 'offsetY';
-  } else if (element.matches('[data-input="offsetX"]')) {
-    prop = 'offsetX';
-  } else if (element.matches('[data-input="rotate"]')) {
-    prop = 'rotate';
-  } else if (element.matches('[data-input="strokeWidth"]')) {
-    prop = 'strokeWidth';
-  }
-
-  if (prop) {
-    handleTextPropChange(element, textboxId, prop);
-  }
+  handleTextPropChange(element, textboxId, prop);
 };
 
 const handleTextboxesContainerChange = evt => {
@@ -342,7 +334,7 @@ const handleTextboxesContainerClick = evt => {
 
   if (element.matches('[data-button="settings"]')) {
     const textboxEl = element.closest('[data-section="textbox"]');
-    const textboxSettingsEl = textboxEl?.querySelector('[data-section="settings"]');
+    const textboxSettingsEl = textboxEl?.querySelector('[data-section="advanced-settings"]');
 
     if (textboxSettingsEl) {
       textboxSettingsEl.hidden = !textboxSettingsEl.hidden;
@@ -391,9 +383,7 @@ const handleTextboxesContainerPointerdown = evt => {
   }
 
   if (element.matches('[data-action="move-text"]')) {
-    reqAnimFrame = requestAnimationFrame(
-      moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label'))
-    );
+    reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label')));
   }
 };
 
@@ -422,9 +412,7 @@ const handleTextboxesContainerKeyDown = evt => {
   if (element.matches('[data-action="move-text"]')) {
     if (evt.key === ' ' || evt.key === 'Enter') {
       reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
-      reqAnimFrame = requestAnimationFrame(
-        moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label'))
-      );
+      reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label')));
     }
   }
 };
@@ -483,12 +471,8 @@ const handleCapturePhotoError = evt => {
   const error = evt.detail.error;
   let errorMessage = 'An error occurred while trying to capture photo.';
 
-  if (
-    error instanceof Error &&
-    (error.name === 'NotAllowedError' || error.name === 'NotFoundError')
-  ) {
-    errorMessage +=
-      ' Make sure you have a camera connected and you have granted the appropriate permissions.';
+  if (error instanceof Error && (error.name === 'NotAllowedError' || error.name === 'NotFoundError')) {
+    errorMessage += ' Make sure you have a camera connected and you have granted the appropriate permissions.';
   }
 
   toastAlert(errorMessage, 'danger');

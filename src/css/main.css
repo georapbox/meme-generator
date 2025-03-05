@@ -63,7 +63,11 @@ details summary:focus-visible {
 }
 
 /* Inputs */
-.textboxes-container input[type="color"],
+input[type="color"]::-webkit-color-swatch {
+  border: 0;
+}
+
+[data-section="basic-settings"] input[type="color"],
 .settings-button,
 .duplicate-button {
   min-width: 30px;

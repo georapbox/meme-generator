@@ -70,35 +70,56 @@ export class Canvas {
       ctx.save();
 
       ctx.font = `${data.fontWeight} ${(data.fontSize * canvas.width) / 1000}px ${data.font}`;
-      ctx.fillStyle = data.fillColor;
       ctx.textAlign = data.textAlign;
       ctx.strokeStyle = data.strokeColor;
 
-      const lineHeight = ctx.measureText('M').width + data.fontSize / 2;
       const xPos = canvas.width / 2;
       const shadowBlur = data.shadowBlur;
       const text = data.allCaps === true ? data.text.toUpperCase() : data.text;
       const textLines = text.split('\n');
+      const textMetrics = ctx.measureText(textLines[0]);
+      const lineHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent + data.fontSize / 4;
 
+      ctx.translate(xPos + data.offsetX, lineHeight * multiplier + data.offsetY);
+      ctx.rotate((Math.min(data.rotate, MAX_ROTATE) * Math.PI) / 180);
+
+      if (data.backgroundOffset > -1) {
+        ctx.fillStyle = data.backgroundColor;
+        textLines.forEach((line, index) => {
+          if (line) {
+            const textMetrics = ctx.measureText(line);
+            const textWidth = textMetrics.width;
+            const textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
+
+            let xOffset = 0;
+            if (data.textAlign === 'left') {
+              xOffset = 0; // Background starts from the anchor point (centered in canvas)
+            } else if (data.textAlign === 'right') {
+              xOffset = -textWidth; // Background shifts left to align with right-aligned text
+            } else {
+              xOffset = -textWidth / 2; // Background remains centered
+            }
+
+            ctx.fillRect(
+              xOffset - data.backgroundOffset,
+              index * lineHeight - textHeight - data.backgroundOffset,
+              textWidth + data.backgroundOffset * 2,
+              textHeight + data.backgroundOffset * 2
+            );
+          }
+        });
+      }
+
+      ctx.save();
       if (shadowBlur !== 0) {
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.shadowBlur = Math.min(shadowBlur, MAX_SHADOW_BLUR_SIZE);
         ctx.shadowColor = data.strokeColor;
       }
-
-      ctx.translate(xPos + data.offsetX, lineHeight * multiplier + data.offsetY);
-      ctx.rotate((Math.min(data.rotate, MAX_ROTATE) * Math.PI) / 180);
-
-      // First draw each line with shadow.
+      ctx.fillStyle = data.fillColor;
       textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-
-      // Since shadows of multiline text may be drawn over letters of neighbour lines
-      // (when shadow blur is big enough), re-draw text without shadows.
-      if (shadowBlur !== 0) {
-        ctx.shadowBlur = 0;
-        textLines.forEach((text, index) => ctx.fillText(text, 0, index * lineHeight));
-      }
+      ctx.restore();
 
       if (data.strokeWidth > 0) {
         ctx.lineWidth = Math.min(data.strokeWidth, MAX_STROKE_WIDTH);

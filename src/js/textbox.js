@@ -16,7 +16,9 @@ const defaultTextboxData = {
   offsetY: 0,
   offsetX: 0,
   rotate: 0,
-  allCaps: true
+  allCaps: true,
+  backgroundOffset: -1,
+  backgroundColor: '#000000'
 };
 
 const textboxes = new Map();
@@ -82,11 +84,13 @@ class Textbox {
       strokeWidth,
       offsetX,
       offsetY,
-      rotate
+      rotate,
+      backgroundOffset,
+      backgroundColor
     } = data;
 
     const template = /* html */ `
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center" data-section="basic-settings">
       <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
       <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
 
@@ -94,16 +98,16 @@ class Textbox {
 
       <div class="d-flex align-items-center pe-2">
         <label for="fillColorInput" class="visually-hidden">Fill color</label>
-        <input class="form-control" type="color" value="${fillColor}" id="fillColorInput" data-input="fillColor" title="Fill color">
+        <input class="form-control" type="color" value="${fillColor}" id="fillColorInput_${id}" data-input="fillColor" title="Fill color">
 
         <label for="strokeColorInput" class="visually-hidden">Outline color</label>
-        <input class="form-control" type="color" value="${strokeColor}" id="strokeColorInput" data-input="strokeColor" title="Outline color">
+        <input class="form-control" type="color" value="${strokeColor}" id="strokeColorInput_${id}" data-input="strokeColor" title="Outline color">
 
         <button type="button" class="btn btn-secondary settings-button" data-button="settings" title="Settings"></button>
       </div>
     </div>
 
-    <div class="p-2" data-section="settings" hidden>
+    <div class="p-2" data-section="advanced-settings" hidden>
       <div class="row g-2">
         <div class="col-12">
           <details class="emoji-picker-details">
@@ -175,6 +179,18 @@ class Textbox {
 
       <div class="row g-2">
         <div class="col-4 mb-3">
+          <label class="mb-1 d-block text-truncate" for="backgroundOffsetInput_${id}">Background offset:</label>
+          <input class="form-control" type="number" value="${backgroundOffset}" data-input="backgroundOffset" id="backgroundOffsetInput_${id}" min="-1" step="1">
+        </div>
+
+        <div class="col-4 mb-3">
+          <label class="mb-1 d-block text-truncate" for="backgroundColorInput_${id}">Background color:</label>
+          <input class="form-control" type="color" value="${backgroundColor}" data-input="backgroundColor" id="backgroundColorInput_${id}" style="min-height: 33px;">
+        </div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-4 mb-3">
           <label class="mb-1 d-block text-truncate" for="offsetYInput_${id}">Vertical offset:</label>
           <input class="form-control" type="number" value="${offsetY}" data-input="offsetY" id="offsetYInput_${id}">
         </div>
@@ -218,9 +234,7 @@ class Textbox {
     div.className = 'bg-body-tertiary border shadow-sm mb-3 rounded';
     div.innerHTML = template;
     div.querySelectorAll('select').forEach(el => (el.value = data[el.dataset.input]));
-    div
-      .querySelectorAll('input[type="checkbox"]')
-      .forEach(el => (el.checked = data[el.dataset.input]));
+    div.querySelectorAll('input[type="checkbox"]').forEach(el => (el.checked = data[el.dataset.input]));
 
     const textboxEl = fragment.appendChild(div);
 
