@@ -301,8 +301,8 @@ const handleTextboxesContainerInput = evt => {
     offsetX: 'offsetX',
     rotate: 'rotate',
     strokeWidth: 'strokeWidth',
-    backgroundOffset: 'backgroundOffset',
-    backgroundColor: 'backgroundColor'
+    textBackgroundEnabled: 'textBackgroundEnabled',
+    textBackgroundColor: 'textBackgroundColor'
   };
   const element = evt.target;
   const prop = inputMap[element.dataset.input];

@@ -17,8 +17,8 @@ const defaultTextboxData = {
   offsetX: 0,
   rotate: 0,
   allCaps: true,
-  backgroundOffset: -1,
-  backgroundColor: '#000000'
+  textBackgroundEnabled: false,
+  textBackgroundColor: '#000000'
 };
 
 const textboxes = new Map();
@@ -85,8 +85,7 @@ class Textbox {
       offsetX,
       offsetY,
       rotate,
-      backgroundOffset,
-      backgroundColor
+      textBackgroundColor
     } = data;
 
     const template = /* html */ `
@@ -115,7 +114,9 @@ class Textbox {
             <emoji-picker class="light"></emoji-picker>
           </details>
         </div>
+      </div>
 
+      <div class="row g-2">
         <div class="col-4 mb-3">
           <label for="fontInput_${id}" class="mb-1 d-block text-truncate">Font: </label>
 
@@ -169,23 +170,11 @@ class Textbox {
 
         <div class="col-4 mb-3">
           <label for="textAlignInput_${id}" class="mb-1 d-block text-truncate">Text align:</label>
-          <select class="form-select" data-input="textAlign" id="textAlignInput_${id}" value="right">
+          <select class="form-select" data-input="textAlign" id="textAlignInput_${id}">
             <option value="left">Left</option>
             <option value="center">Center</option>
             <option value="right">Right</option>
           </select>
-        </div>
-      </div>
-
-      <div class="row g-2">
-        <div class="col-4 mb-3">
-          <label class="mb-1 d-block text-truncate" for="backgroundOffsetInput_${id}">Background offset:</label>
-          <input class="form-control" type="number" value="${backgroundOffset}" data-input="backgroundOffset" id="backgroundOffsetInput_${id}" min="-1" step="1">
-        </div>
-
-        <div class="col-4 mb-3">
-          <label class="mb-1 d-block text-truncate" for="backgroundColorInput_${id}">Background color:</label>
-          <input class="form-control" type="color" value="${backgroundColor}" data-input="backgroundColor" id="backgroundColorInput_${id}" style="min-height: 33px;">
         </div>
       </div>
 
@@ -216,10 +205,26 @@ class Textbox {
       </div>
 
       <div class="row g-2">
-        <div class="col-lg-12">
+        <div class="col-12">
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="allCapsCheckbox_${id}" data-input="allCaps">
             <label class="form-check-label" for="allCapsCheckbox_${id}">ALL CAPS</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-12">
+          <div class="d-flex align-items-center gap-3">
+            <div class="form-check">
+              <label class="form-check-label" for="textBackgroundEnabledInput_${id}">Enable text background</label>
+              <input class="form-check-input" type="checkbox" role="switch" data-input="textBackgroundEnabled" id="textBackgroundEnabledInput_${id}">
+            </div>
+
+            <div>
+              <label class="visually-hidden" for="textBackgroundColorInput_${id}">Background color:</label>
+              <input class="border rounded p-0" type="color" value="${textBackgroundColor}" data-input="textBackgroundColor" id="textBackgroundColorInput_${id}">
+            </div>
           </div>
         </div>
       </div>

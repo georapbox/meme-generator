@@ -76,35 +76,29 @@ export class Canvas {
       const xPos = canvas.width / 2;
       const shadowBlur = data.shadowBlur;
       const text = data.allCaps === true ? data.text.toUpperCase() : data.text;
-      const textLines = text.split('\n');
+      const textLines = text.split('\n').filter(line => line.trim() !== '');
       const textMetrics = ctx.measureText(textLines[0]);
-      const lineHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent + data.fontSize / 4;
+      const textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
+      const bgOffset = data.textBackgroundEnabled ? textHeight / 4 : 0;
+      const lineHeight = textHeight + data.fontSize / 4 + bgOffset;
 
       ctx.translate(xPos + data.offsetX, lineHeight * multiplier + data.offsetY);
       ctx.rotate((Math.min(data.rotate, MAX_ROTATE) * Math.PI) / 180);
 
-      if (data.backgroundOffset > -1) {
-        ctx.fillStyle = data.backgroundColor;
+      if (data.textBackgroundEnabled) {
+        ctx.fillStyle = data.textBackgroundColor;
         textLines.forEach((line, index) => {
           if (line) {
             const textMetrics = ctx.measureText(line);
             const textWidth = textMetrics.width;
             const textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
-
-            let xOffset = 0;
-            if (data.textAlign === 'left') {
-              xOffset = 0; // Background starts from the anchor point (centered in canvas)
-            } else if (data.textAlign === 'right') {
-              xOffset = -textWidth; // Background shifts left to align with right-aligned text
-            } else {
-              xOffset = -textWidth / 2; // Background remains centered
-            }
+            const xOffset = data.textAlign === 'left' ? 0 : data.textAlign === 'right' ? -textWidth : -textWidth / 2;
 
             ctx.fillRect(
-              xOffset - data.backgroundOffset,
-              index * lineHeight - textHeight - data.backgroundOffset,
-              textWidth + data.backgroundOffset * 2,
-              textHeight + data.backgroundOffset * 2
+              xOffset - bgOffset,
+              index * lineHeight - textHeight - bgOffset,
+              textWidth + bgOffset * 2,
+              textHeight + bgOffset * 2
             );
           }
         });
