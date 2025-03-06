@@ -29,6 +29,27 @@ details summary:focus-visible {
   transition: box-shadow 0.15s ease-in-out;
 }
 
+details > summary {
+  margin-block-end: 0.5rem;
+}
+
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  details::details-content {
+    transition: height 0.2s ease, content-visibility 0.2s allow-discrete;
+    height: 0;
+    overflow: clip;
+  }
+
+  details[open]::details-content {
+    height: auto;
+    padding-bottom: 0.5em;
+  }
+}
+
 .container {
   max-width: 1500px;
 }
@@ -63,7 +84,11 @@ details summary:focus-visible {
 }
 
 /* Inputs */
-.textboxes-container input[type="color"],
+input[type="color"]::-webkit-color-swatch {
+  border: 0;
+}
+
+[data-section="basic-settings"] input[type="color"],
 .settings-button,
 .duplicate-button {
   min-width: 30px;
@@ -168,14 +193,6 @@ details summary:focus-visible {
 
 .errors-container .alert {
   pointer-events: all;
-}
-
-details > summary {
-  transition: margin 0.1s ease-out;
-}
-
-details[open] > summary {
-  margin-bottom: 0.5rem;
 }
 
 button[data-button="duplicate-text-box"],
@@ -434,6 +451,7 @@ modal-element [slot="footer"] {
 
 .emoji-picker-details > summary {
   padding: 0.5rem 1rem;
+  margin-block-end: 0;
   background-color: var(--bs-body-bg);
   border-radius: var(--bs-border-radius);
   cursor: pointer;

@@ -16,7 +16,9 @@ const defaultTextboxData = {
   offsetY: 0,
   offsetX: 0,
   rotate: 0,
-  allCaps: true
+  allCaps: true,
+  textBackgroundEnabled: false,
+  textBackgroundColor: '#000000'
 };
 
 const textboxes = new Map();
@@ -82,11 +84,12 @@ class Textbox {
       strokeWidth,
       offsetX,
       offsetY,
-      rotate
+      rotate,
+      textBackgroundColor
     } = data;
 
     const template = /* html */ `
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center" data-section="basic-settings">
       <button type="button" class="btn btn-link" data-button="duplicate-text-box" title="Duplicate text box"></button>
       <button type="button" class="btn btn-link" data-button="delete-text-box" title="Remove text box"></button>
 
@@ -94,16 +97,16 @@ class Textbox {
 
       <div class="d-flex align-items-center pe-2">
         <label for="fillColorInput" class="visually-hidden">Fill color</label>
-        <input class="form-control" type="color" value="${fillColor}" id="fillColorInput" data-input="fillColor" title="Fill color">
+        <input class="form-control" type="color" value="${fillColor}" id="fillColorInput_${id}" data-input="fillColor" title="Fill color">
 
         <label for="strokeColorInput" class="visually-hidden">Outline color</label>
-        <input class="form-control" type="color" value="${strokeColor}" id="strokeColorInput" data-input="strokeColor" title="Outline color">
+        <input class="form-control" type="color" value="${strokeColor}" id="strokeColorInput_${id}" data-input="strokeColor" title="Outline color">
 
         <button type="button" class="btn btn-secondary settings-button" data-button="settings" title="Settings"></button>
       </div>
     </div>
 
-    <div class="p-2" data-section="settings" hidden>
+    <div class="p-2" data-section="advanced-settings" hidden>
       <div class="row g-2">
         <div class="col-12">
           <details class="emoji-picker-details">
@@ -111,7 +114,9 @@ class Textbox {
             <emoji-picker class="light"></emoji-picker>
           </details>
         </div>
+      </div>
 
+      <div class="row g-2">
         <div class="col-4 mb-3">
           <label for="fontInput_${id}" class="mb-1 d-block text-truncate">Font: </label>
 
@@ -165,7 +170,7 @@ class Textbox {
 
         <div class="col-4 mb-3">
           <label for="textAlignInput_${id}" class="mb-1 d-block text-truncate">Text align:</label>
-          <select class="form-select" data-input="textAlign" id="textAlignInput_${id}" value="right">
+          <select class="form-select" data-input="textAlign" id="textAlignInput_${id}">
             <option value="left">Left</option>
             <option value="center">Center</option>
             <option value="right">Right</option>
@@ -200,10 +205,26 @@ class Textbox {
       </div>
 
       <div class="row g-2">
-        <div class="col-lg-12">
+        <div class="col-12">
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="allCapsCheckbox_${id}" data-input="allCaps">
             <label class="form-check-label" for="allCapsCheckbox_${id}">ALL CAPS</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-2">
+        <div class="col-12">
+          <div class="d-flex align-items-center gap-3">
+            <div class="form-check">
+              <label class="form-check-label" for="textBackgroundEnabledInput_${id}">Enable text background</label>
+              <input class="form-check-input" type="checkbox" role="switch" data-input="textBackgroundEnabled" id="textBackgroundEnabledInput_${id}">
+            </div>
+
+            <div>
+              <label class="visually-hidden" for="textBackgroundColorInput_${id}">Background color:</label>
+              <input class="border rounded p-0" type="color" value="${textBackgroundColor}" data-input="textBackgroundColor" id="textBackgroundColorInput_${id}">
+            </div>
           </div>
         </div>
       </div>
@@ -218,9 +239,7 @@ class Textbox {
     div.className = 'bg-body-tertiary border shadow-sm mb-3 rounded';
     div.innerHTML = template;
     div.querySelectorAll('select').forEach(el => (el.value = data[el.dataset.input]));
-    div
-      .querySelectorAll('input[type="checkbox"]')
-      .forEach(el => (el.checked = data[el.dataset.input]));
+    div.querySelectorAll('input[type="checkbox"]').forEach(el => (el.checked = data[el.dataset.input]));
 
     const textboxEl = fragment.appendChild(div);
 
