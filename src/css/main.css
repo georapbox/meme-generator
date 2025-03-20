@@ -239,7 +239,7 @@ button[data-button="delete-text-box"] {
 
 .gallery > button > img {
   display: block;
-  min-width: 88px;
+  width: 88px;
   height: 88px;
   border-radius: var(--bs-border-radius);
   object-fit: cover;
