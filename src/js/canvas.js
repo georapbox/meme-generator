@@ -9,6 +9,9 @@ export class Canvas {
     this.#canvas = canvasEl;
     this.#ctx = this.#canvas.getContext('2d');
   }
+  getCanvas() {
+    return this.#canvas;
+}
 
   get width() {
     return this.#canvas.width;
