@@ -275,6 +275,9 @@ const handleUploadMethodChange = evt => {
 
 const handleFileSelectClick = () => {
   if (typeof dropzoneEl.openFileDialog === 'function') {
+    // NOTE: Always enable dropzone before opening dialog
+    // in case it was previously disabled after image selection.
+    dropzoneEl.disabled = false;
     dropzoneEl.openFileDialog();
   }
 };
