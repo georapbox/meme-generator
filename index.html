@@ -20,8 +20,10 @@
       <img src=logo.1a1fa44b.png width=90 height=90 alt=Logo class="border d-block rounded-circle shadow-sm" aria-hidden=true>
       <h1 class=page-title>Meme Generator</h1>
       <p class="align-items-center d-inline-flex gap-2 mb-0">
-        <svg width=20 height=20 fill=currentColor aria-hidden=true viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
-        
+        <svg aria-hidden=true width=20 height=20 fill=currentColor viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        <span>
+          Source code on <a href=https://github.com/georapbox/meme-generator class=text-underline target=_blank rel="noopener noreferrer">Github</a>
+        </span>
       </p>
     </header>
 
@@ -32,7 +34,7 @@
             <canvas id=canvas class="border canvas shadow-sm" hidden></canvas>
 
             <button type=button class="btn btn-danger clear-canvas-button shadow" id=clearCanvasBtn hidden aria-label="Clear canvas">
-              <svg xmlns:xmlns=http://www.w3.org/2000/svg width=1.5em height=1.5em aria-hidden=true viewBox="0 0 512 512"><path fill=currentColor d="M128 405.429C128 428.846 147.198 448 170.667 448h170.667C364.802 448 384 428.846 384 405.429V160H128ZM416 96h-80l-26.785-32H202.786L176 96H96v32h320Z"/></svg>
+              <svg xmlns:xmlns=http://www.w3.org/2000/svg viewBox="0 0 512 512" width=1.5em height=1.5em aria-hidden=true><path fill=currentColor d="M128 405.429C128 428.846 147.198 448 170.667 448h170.667C364.802 448 384 428.846 384 405.429V160H128v245.429zM416 96h-80l-26.785-32H202.786L176 96H96v32h320V96z"/></svg>
             </button>
 
             <div id=instructions class=instructions>
@@ -67,7 +69,7 @@
                   <input type=search class=form-control id=gallerySearch placeholder="Filter templates...">
                   <label for=gallerySearch class=visually-hidden>Filter templates</label>
                   <span class=input-group-text>
-                    <svg xmlns:xmlns=http://www.w3.org/2000/svg width=16 height=16 fill=currentColor aria-hidden=true viewBox="0 0 16 16"><path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5Zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2Z"/></svg>
+                    <svg xmlns:xmlns=http://www.w3.org/2000/svg width=16 height=16 fill=currentColor viewBox="0 0 16 16" aria-hidden=true><path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/></svg>
                   </span>
                 </div>
 
@@ -211,7 +213,7 @@
 
               <form id=maxImageDimensionsForm class=mt-3>
                 <label for=maxImageDimensions class="align-items-center d-flex form-label gap-2">
-                  <svg xmlns:xmlns=http://www.w3.org/2000/svg width=16 height=16 fill=var(--bs-link-color) style=cursor:help viewBox="0 0 16 16"><title>Select the maximum dimensions for the image. Images will be resized to fit within these dimensions while maintaining their aspect ratio if they exceed the specified dimensions.</title><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533ZM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg>
+                  <svg xmlns:xmlns=http://www.w3.org/2000/svg width=16 height=16 fill=var(--bs-link-color) viewBox="0 0 16 16" style=cursor:help><title>Select the maximum dimensions for the image. Images will be resized to fit within these dimensions while maintaining their aspect ratio if they exceed the specified dimensions.</title><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg>
                   Max image dimensions
                 </label>
                 <select name=maxImageDimensions id=maxImageDimensions class=form-select disabled>
@@ -232,7 +234,7 @@
 
             <div class="d-flex justify-content-end mt-3">
               <button class="align-items-center btn btn-secondary d-flex" id=addTextboxBtn>
-                <svg xmlns:xmlns=http://www.w3.org/2000/svg width=18 height=18 aria-hidden=true viewBox="0 0 512 512"><path fill=currentColor d="M416 277.333H277.333V416h-42.666V277.333H96v-42.666h138.667V96h42.666v138.667H416Z"/></svg>
+                <svg xmlns:xmlns=http://www.w3.org/2000/svg viewBox="0 0 512 512" width=18 height=18 aria-hidden=true><path fill=currentColor d="M416 277.333H277.333V416h-42.666V277.333H96v-42.666h138.667V96h42.666v138.667H416v42.666z"/></svg>
                 Add text
               </button>
             </div>
@@ -260,7 +262,7 @@
           </select>
 
           <button type=button id=torchButton class="bg-body border btn" aria-label="Turn on flash" hidden>
-            <svg xmlns:xmlns=http://www.w3.org/2000/svg width=1.25em height=1.25em aria-hidden=true viewBox="0 0 512 512"><path fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=32 d="M315.27 33 96 304h128l-31.51 173.23a2.36 2.36 0 0 0 2.33 2.77h0a2.36 2.36 0 0 0 1.89-.95L416 208H288l31.66-173.25a2.45 2.45 0 0 0-2.44-2.75h0a2.42 2.42 0 0 0-1.95 1"/><path fill=currentColor d="M432 448a15.92 15.92 0 0 1-11.31-4.69l-352-352a16 16 0 0 1 22.62-22.62l352 352A16 16 0 0 1 432 448M294.34 84.28l-22.08 120.84a16 16 0 0 0 6.17 15.71 16.5 16.5 0 0 0 9.93 3.17h94.12l-38.37 47.42a4 4 0 0 0 .28 5.34l17.07 17.07a4 4 0 0 0 5.94-.31l60.8-75.16a16.37 16.37 0 0 0 3.3-14.36 16 16 0 0 0-15.5-12H307.19L335.4 37.63c.05-.3.1-.59.13-.89A18.45 18.45 0 0 0 302.73 23l-92.58 114.46a4 4 0 0 0 .28 5.35l17.07 17.06a4 4 0 0 0 5.94-.31Zm-76.56 343.29 22-120.71a16 16 0 0 0-6.19-15.7 16.54 16.54 0 0 0-9.92-3.16h-94.1l38.36-47.42a4 4 0 0 0-.28-5.34l-17.07-17.07a4 4 0 0 0-5.93.31L83.8 293.64A16.37 16.37 0 0 0 80.5 308 16 16 0 0 0 96 320h108.83l-28.09 154.36v.11a18.37 18.37 0 0 0 32.5 14.53l92.61-114.46a4 4 0 0 0-.28-5.35l-17.07-17.06a4 4 0 0 0-5.94.31Z" style=display:none /></svg>
+            <svg xmlns:xmlns=http://www.w3.org/2000/svg viewBox="0 0 512 512" width=1.25em height=1.25em aria-hidden=true><path d="M315.27 33L96 304h128l-31.51 173.23a2.36 2.36 0 002.33 2.77h0a2.36 2.36 0 001.89-.95L416 208H288l31.66-173.25a2.45 2.45 0 00-2.44-2.75h0a2.42 2.42 0 00-1.95 1z" fill=none stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=32 /><path d="M432 448a15.92 15.92 0 01-11.31-4.69l-352-352a16 16 0 0122.62-22.62l352 352A16 16 0 01432 448zM294.34 84.28l-22.08 120.84a16 16 0 006.17 15.71 16.49 16.49 0 009.93 3.17h94.12l-38.37 47.42a4 4 0 00.28 5.34l17.07 17.07a4 4 0 005.94-.31l60.8-75.16a16.37 16.37 0 003.3-14.36 16 16 0 00-15.5-12H307.19L335.4 37.63c.05-.3.1-.59.13-.89A18.45 18.45 0 00302.73 23l-92.58 114.46a4 4 0 00.28 5.35l17.07 17.06a4 4 0 005.94-.31zM217.78 427.57l22-120.71a16 16 0 00-6.19-15.7 16.54 16.54 0 00-9.92-3.16h-94.1l38.36-47.42a4 4 0 00-.28-5.34l-17.07-17.07a4 4 0 00-5.93.31L83.8 293.64A16.37 16.37 0 0080.5 308 16 16 0 0096 320h108.83l-28.09 154.36v.11a18.37 18.37 0 0032.5 14.53l92.61-114.46a4 4 0 00-.28-5.35l-17.07-17.06a4 4 0 00-5.94.31z" fill=currentColor style=display:none /></svg>
           </button>
         </div>
       </capture-photo>
