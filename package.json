@@ -36,11 +36,11 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "dependencies": {
     "@georapbox/capture-photo-element": "~5.0.0",
-    "@georapbox/files-dropzone-element": "~2.1.0",
+    "@georapbox/files-dropzone-element": "~2.1.1",
     "@georapbox/modal-element": "~1.9.1",
     "@georapbox/theme-toggle-element": "~4.0.2",
     "@georapbox/web-share-element": "~3.1.1",
-    "bootstrap": "~5.3.7",
+    "bootstrap": "~5.3.8",
     "emoji-picker-element": "~1.26.3",
     "insert-text-at-cursor": "~0.3.0"
   }
