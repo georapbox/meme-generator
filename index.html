@@ -182,7 +182,7 @@
                   <input type=url name=imageUrl id=imageUrl autocomplete=off placeholder="Enter image URL" class="form-control w-100">
                 </div>
 
-                <button class="align-self-end btn btn-primary" style=min-width:75px>
+                <button type=submit class="align-self-end btn btn-primary" style=min-width:75px>
                   <div class=spinner hidden>
                     <span class="spinner-border spinner-border-sm" role=status aria-hidden=true></span>
                     <span class=visually-hidden>Loading...</span>
@@ -191,7 +191,7 @@
                 </button>
               </form>
 
-              <button class="align-items-center btn btn-primary d-flex gap-2 justify-content-center upload-method w-100" id=openVideoModalBtn hidden>
+              <button type=button class="align-items-center btn btn-primary d-flex gap-2 justify-content-center upload-method w-100" id=openVideoModalBtn hidden>
                 <img src=camera.bab8e6bf.svg width=20 height=20 alt="camera icon" aria-hidden=true>
                 Take Photo
               </button>
@@ -234,7 +234,7 @@
             <div id=textboxesContainer class=textboxes-container></div>
 
             <div class="d-flex justify-content-end mt-3">
-              <button class="align-items-center btn btn-secondary d-flex" id=addTextboxBtn>
+              <button type=button class="align-items-center btn btn-secondary d-flex" id=addTextboxBtn>
                 <svg xmlns:xmlns=http://www.w3.org/2000/svg viewBox="0 0 512 512" width=18 height=18 aria-hidden=true><path fill=currentColor d="M416 277.333H277.333V416h-42.666V277.333H96v-42.666h138.667V96h42.666v138.667H416v42.666z"/></svg>
                 Add text
               </button>
@@ -302,7 +302,7 @@
         <form id=removeTextForm>
           <input type=hidden name=textbox-id>
           <button type=button class="btn btn-secondary" data-me-close>Cancel</button>
-          <button class="btn btn-danger">Remove</button>
+          <button type=submit class="btn btn-danger">Remove</button>
         </form>
       </footer>
     </modal-element>
