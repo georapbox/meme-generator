@@ -660,6 +660,26 @@ const handlethemeChange = evt => {
   document.documentElement.setAttribute('data-bs-theme', theme === 'system' ? deviceTheme : theme);
 };
 
+const handleBeforeunload = evt => {
+  if (changesHaveOccurred()) {
+    evt.preventDefault();
+    return (evt.returnValue = '');
+  }
+};
+
+function changesHaveOccurred() {
+  let hasChanges = selectedImage !== null;
+
+  for (const v of Textbox.getAll().values()) {
+    if (!Textbox.hasDefaultValues(v.data)) {
+      hasChanges = true;
+      break;
+    }
+  }
+
+  return hasChanges;
+}
+
 document.addEventListener('tt-theme-change', handlethemeChange);
 document.addEventListener('web-share:error', handleWebShareError);
 document.addEventListener('capture-photo:video-play', handleCapturePhotoVideoPlay, { once: true });
@@ -695,6 +715,7 @@ clearCanvasBtn.addEventListener('click', handleClearCanvas);
 cameraSelect.addEventListener('change', handleCameraSelectChange);
 capturePhotoButton.addEventListener('click', handleCapturePhotoButtonClick);
 torchButton.addEventListener('click', handleTorchButtonClick);
+window.addEventListener('beforeunload', handleBeforeunload);
 
 galleryEl.querySelectorAll('button > img')?.forEach(image => {
   image.setAttribute('title', image.getAttribute('alt'));
