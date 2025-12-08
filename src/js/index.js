@@ -663,7 +663,7 @@ const handlethemeChange = evt => {
 const handleBeforeunload = evt => {
   if (changesHaveOccurred()) {
     evt.preventDefault();
-    return (evt.returnValue = '');
+    evt.returnValue = true; // Included for legacy support, e.g. Chrome/Edge < 119
   }
 };
 
