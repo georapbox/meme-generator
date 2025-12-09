@@ -11,11 +11,41 @@ import OpenSansRegular from 'url:../assets/fonts/OpenSans/OpenSans-Regular.ttf';
 import OpenSansBold from 'url:../assets/fonts/OpenSans/OpenSans-Bold.ttf';
 
 export const customFonts = [
-  { name: 'Pressuru', label: 'Pressuru', path: Pressuru, style: 'normal', weight: '400' },
-  { name: 'Oswald-Regular', label: 'Oswald', path: OswaldRegular, style: 'normal', weight: '400' },
-  { name: 'Oswald-Bold', label: 'Oswald Bold', path: OswaldBold, style: 'normal', weight: '700' },
-  { name: 'Roboto-Regular', label: 'Roboto', path: RobotoRegular, style: 'normal', weight: '400' },
-  { name: 'Roboto-Bold', label: 'Roboto Bold', path: RobotoBold, style: 'normal', weight: '700' },
+  {
+    name: 'Pressuru',
+    label: 'Pressuru',
+    path: Pressuru,
+    style: 'normal',
+    weight: '400'
+  },
+  {
+    name: 'Oswald-Regular',
+    label: 'Oswald',
+    path: OswaldRegular,
+    style: 'normal',
+    weight: '400'
+  },
+  {
+    name: 'Oswald-Bold',
+    label: 'Oswald Bold',
+    path: OswaldBold,
+    style: 'normal',
+    weight: '700'
+  },
+  {
+    name: 'Roboto-Regular',
+    label: 'Roboto',
+    path: RobotoRegular,
+    style: 'normal',
+    weight: '400'
+  },
+  {
+    name: 'Roboto-Bold',
+    label: 'Roboto Bold',
+    path: RobotoBold,
+    style: 'normal',
+    weight: '700'
+  },
   {
     name: 'RobotoCondensed-Regular',
     label: 'Roboto Condensed',
