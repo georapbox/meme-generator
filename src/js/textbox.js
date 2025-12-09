@@ -44,6 +44,15 @@ class Textbox {
     return this.data;
   }
 
+  static hasDefaultValues(textboxData) {
+    for (const key of Object.keys(defaultTextboxData)) {
+      if (key !== 'id' && textboxData[key] !== defaultTextboxData[key]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   static create(data) {
     return new Textbox(data);
   }
