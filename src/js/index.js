@@ -6,6 +6,7 @@ import '@georapbox/theme-toggle-element/dist/theme-toggle-defined.js';
 import '@georapbox/web-share-element/dist/web-share-defined.js';
 import '@georapbox/modal-element/dist/modal-element-defined.js';
 import '@georapbox/files-dropzone-element/dist/files-dropzone-defined.js';
+import '@georapbox/alert-element/dist/alert-element-defined.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/main.css';
 import { ACCEPTED_MIME_TYPES } from './constants.js';
@@ -14,9 +15,9 @@ import { fileFromUrl } from './utils/file-from-url.js';
 import { storage } from './utils/storage.js';
 import { isSolidColorSelected } from './utils/is-solid-color-selected.js';
 import { customFonts, loadCustomFont } from './custom-fonts.js';
-import { toastAlert } from './toast-alert.js';
 import { Textbox } from './textbox.js';
 import { Canvas } from './canvas.js';
+import { toastify } from './toastify.js';
 
 const canvas = Canvas.createInstance(document.getElementById('canvas'));
 const videoModal = document.getElementById('videoModal');
@@ -143,7 +144,12 @@ async function generateMeme() {
         url: dataUrl,
         filename,
         mimeType: 'image/png'
-      }).catch(err => toastAlert(err.message, 'danger'));
+      }).catch(err => {
+        toastify(`<strong>Error preparing meme for sharing</strong><br><small>${err.message}</small>`, {
+          trustDangerousInnerHTML: true,
+          variant: 'danger'
+        });
+      });
 
       if (file && isWebShareSupported({ files: [file] })) {
         webShareComponent.shareFiles = [file];
@@ -263,6 +269,7 @@ async function handleImageUploadFromURL(evt) {
   const form = evt.target;
   const submitButton = form.querySelector('button[type="submit"]');
   const imageUrl = form['imageUrl'].value;
+  const errorMessage = `<strong>Error loading image</strong><br><small class="d-block text-truncate">Failed to fetch image from ${imageUrl || ''}.</small>`;
 
   if (!imageUrl.trim()) {
     return;
@@ -275,13 +282,15 @@ async function handleImageUploadFromURL(evt) {
   try {
     const file = await fileFromUrl({
       url: imageUrl
-    }).catch(err => toastAlert(err.message, 'danger'));
+    }).catch(() => {
+      toastify(errorMessage, { trustDangerousInnerHTML: true, variant: 'danger' });
+    });
 
     if (file) {
       handleFileSelect(file);
     }
   } catch {
-    toastAlert(`Failed to load image from "${imageUrl}".`, 'danger');
+    toastify(errorMessage, { trustDangerousInnerHTML: true, variant: 'danger' });
   } finally {
     submitButton.disabled = false;
     submitButton.querySelector('.spinner').hidden = true;
@@ -500,17 +509,20 @@ async function handleGalleryClick(evt) {
   }
 
   const img = button.querySelector('img');
+  const errorMessage = `<strong>Error loading image</strong><br><small>Failed to load image: "${img.alt || ''}".</small>`;
 
   try {
     const file = await fileFromUrl({
       url: img.src
-    }).catch(err => toastAlert(err.message, 'danger'));
+    }).catch(() => {
+      toastify(errorMessage, { trustDangerousInnerHTML: true, variant: 'danger' });
+    });
 
     if (file) {
       handleFileSelect(file);
     }
   } catch {
-    toastAlert(`Failed to load image: "${img.alt}".`, 'danger');
+    toastify(errorMessage, { trustDangerousInnerHTML: true, variant: 'danger' });
   }
 }
 
@@ -528,7 +540,10 @@ function handleGallerySearchInput(evt) {
 
 function handleWebShareError() {
   downloadModal.open = false;
-  toastAlert('There was an error while trying to share your meme.', 'danger');
+  toastify('<strong>Error sharing</strong><br><small>There was an error while trying to share your meme.</small>', {
+    trustDangerousInnerHTML: true,
+    variant: 'danger'
+  });
 }
 
 function handleCapturePhotoError(evt) {
@@ -539,7 +554,11 @@ function handleCapturePhotoError(evt) {
     errorMessage += ' Make sure you have a camera connected and you have granted the appropriate permissions.';
   }
 
-  toastAlert(errorMessage, 'danger');
+  toastify(`<strong>Error capturing photo</strong><br><small>${errorMessage}</small>`, {
+    trustDangerousInnerHTML: true,
+    variant: 'danger'
+  });
+
   videoModal.open = false;
   console.error(error);
 }

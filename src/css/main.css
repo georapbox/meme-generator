@@ -1,5 +1,4 @@
 :root {
-  --body-color: #212529;
   --move-btn-width: 60px;
   --move-btn-height: 34px;
   --focus-ring: 0 0 0 0.2rem var(--bs-focus-ring-color);
@@ -496,6 +495,24 @@ theme-toggle::part(base) {
 theme-toggle::part(base):focus-visible {
   outline: 0;
   box-shadow: var(--focus-ring);
+}
+
+/* Alert elements */
+alert-element {
+  --alert-border-color: var(--bs-secondary-bg);
+  --alert-bg-color: var(--bs-body-bg);
+  --alert-top-border-width: 0.25rem;
+  --alert-countdown-height: 0.25rem;
+}
+
+alert-element::part(close) {
+  font-size: 1.125rem;
+}
+
+alert-element::part(close):focus-visible {
+  outline: 0;
+  box-shadow: var(--focus-ring);
+  transition: box-shadow 0.15s ease-in-out;
 }
 
 /* Utils */
