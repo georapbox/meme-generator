@@ -480,16 +480,21 @@ emoji-picker {
 
 /* Theme toggle */
 theme-toggle {
+  --theme-toggle-border-radius: var(--bs-border-radius);
+  --theme-toggle-icon-size: 1.5rem;
+  --theme-toggle-color: var(--bs-body-color);
+  --theme-toggle-border-color: transparent;
+  --theme-toggle-background-color: transparent;
+  --theme-toggle-background-hover-color: transparent;
+  --theme-toggle-focus-ring-color: var(--bs-focus-ring-color);
+
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
+  top: 0.75rem;
+  right: 0.75rem;
 }
 
 theme-toggle::part(base) {
-  padding: 0.5rem;
-  border-radius: var(--bs-border-radius);
-  font-size: 1.1429rem;
-  transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: box-shadow 0.15s ease-in-out;
 }
 
 theme-toggle::part(base):focus-visible {

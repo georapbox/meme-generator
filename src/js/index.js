@@ -2,7 +2,7 @@ import 'emoji-picker-element';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { CapturePhoto } from '@georapbox/capture-photo-element/dist/capture-photo-defined.js';
 import { isWebShareSupported } from '@georapbox/web-share-element/dist/is-web-share-supported.js';
-import '@georapbox/theme-toggle-element/dist/theme-toggle-defined.js';
+import '@georapbox/theme-toggle/dist/theme-toggle-defined.js';
 import '@georapbox/web-share-element/dist/web-share-defined.js';
 import '@georapbox/modal-element/dist/modal-element-defined.js';
 import '@georapbox/files-dropzone-element/dist/files-dropzone-defined.js';
@@ -53,7 +53,6 @@ let shouldFocusOnTextboxCreate = false;
 let selectedImage = null;
 let reqAnimFrame = null;
 
-document.addEventListener('tt-theme-change', handlethemeChange);
 document.addEventListener('web-share:error', handleWebShareError);
 document.addEventListener('capture-photo:video-play', handleCapturePhotoVideoPlay, { once: true });
 document.addEventListener('capture-photo:error', handleCapturePhotoError);
@@ -732,12 +731,6 @@ function handleCapturePhotoButtonClick() {
   }
 
   capturePhotoEl.capture();
-}
-
-function handlethemeChange(evt) {
-  const theme = evt.detail.theme;
-  const deviceTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-bs-theme', theme === 'system' ? deviceTheme : theme);
 }
 
 function handleBeforeunload(evt) {
