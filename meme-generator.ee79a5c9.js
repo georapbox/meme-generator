@@ -1,0 +1,2 @@
+!function(){let e=window.matchMedia("(prefers-color-scheme: dark)");function t(t){document.documentElement.setAttribute("data-bs-theme","system"===t?e.matches?"dark":"light":t)}e.addEventListener("change",function(){t("system")}),document.addEventListener("theme-change",function(e){t(e.detail.resolvedTheme)}),t(function(){try{let e=window.localStorage.getItem("meme-generator/theme");return"light"===e||"dark"===e?e:"system"}catch{return"system"}}())}();
+//# sourceMappingURL=meme-generator.ee79a5c9.js.map
