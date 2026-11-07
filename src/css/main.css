@@ -369,7 +369,7 @@ modal-element::part(base):focus-visible {
   outline: 0;
 }
 
-modal-element [slot="header"] {
+modal-element [slot="title"] {
   margin: 0;
   color: var(--bs-body-color);
 }
