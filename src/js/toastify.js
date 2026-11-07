@@ -10,9 +10,10 @@
  */
 export function toastify(message, options = {}) {
   const defaults = {
-    duration: 5 * 1000,
+    duration: 5_000,
     variant: 'neutral',
     countdown: true,
+    announce: 'status',
     icon: ''
   };
 
@@ -52,6 +53,7 @@ export function toastify(message, options = {}) {
     duration: cfg.duration,
     variant: cfg.variant,
     countdown: cfg.countdown,
+    announce: cfg.announce,
     innerHTML: `${icon ? `<span slot="icon">${icon}</span>` : ''}${cfg.trustDangerousInnerHTML ? message : escapeHtml(message)}`
   });
 

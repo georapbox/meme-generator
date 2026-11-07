@@ -146,7 +146,8 @@ async function generateMeme() {
       }).catch(err => {
         toastify(`<strong>Error preparing meme for sharing</strong><br><small>${err.message}</small>`, {
           trustDangerousInnerHTML: true,
-          variant: 'danger'
+          variant: 'danger',
+          announce: 'alert'
         });
       });
 
@@ -282,14 +283,22 @@ async function handleImageUploadFromURL(evt) {
     const file = await fileFromUrl({
       url: imageUrl
     }).catch(() => {
-      toastify(errorMessage, { trustDangerousInnerHTML: true, variant: 'danger' });
+      toastify(errorMessage, {
+        trustDangerousInnerHTML: true,
+        variant: 'danger',
+        announce: 'alert'
+      });
     });
 
     if (file) {
       handleFileSelect(file);
     }
   } catch {
-    toastify(errorMessage, { trustDangerousInnerHTML: true, variant: 'danger' });
+    toastify(errorMessage, {
+      trustDangerousInnerHTML: true,
+      variant: 'danger',
+      announce: 'alert'
+    });
   } finally {
     submitButton.disabled = false;
     submitButton.querySelector('.spinner').hidden = true;
@@ -518,14 +527,22 @@ async function handleGalleryClick(evt) {
     const file = await fileFromUrl({
       url: img.src
     }).catch(() => {
-      toastify(errorMessage, { trustDangerousInnerHTML: true, variant: 'danger' });
+      toastify(errorMessage, {
+        trustDangerousInnerHTML: true,
+        variant: 'danger',
+        announce: 'alert'
+      });
     });
 
     if (file) {
       handleFileSelect(file);
     }
   } catch {
-    toastify(errorMessage, { trustDangerousInnerHTML: true, variant: 'danger' });
+    toastify(errorMessage, {
+      trustDangerousInnerHTML: true,
+      variant: 'danger',
+      announce: 'alert'
+    });
   }
 }
 
@@ -545,7 +562,8 @@ function handleWebShareError() {
   downloadModal.open = false;
   toastify('<strong>Error sharing</strong><br><small>There was an error while trying to share your meme.</small>', {
     trustDangerousInnerHTML: true,
-    variant: 'danger'
+    variant: 'danger',
+    announce: 'alert'
   });
 }
 
@@ -559,7 +577,8 @@ function handleCapturePhotoError(evt) {
 
   toastify(`<strong>Error capturing photo</strong><br><small>${errorMessage}</small>`, {
     trustDangerousInnerHTML: true,
-    variant: 'danger'
+    variant: 'danger',
+    announce: 'alert'
   });
 
   videoModal.open = false;
