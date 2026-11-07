@@ -42,7 +42,7 @@
     "parcel": "~2.16.3",
     "prettier": "~3.7.4",
     "rimraf": "~6.1.2",
-    "workbox-cli": "~7.4.0"
+    "workbox-cli": "~7.4.1"
   },
   "dependencies": {
     "@georapbox/alert-element": "~2.0.0",
