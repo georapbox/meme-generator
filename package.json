@@ -55,5 +55,16 @@
     "emoji-picker-element": "~1.28.1",
     "insert-text-at-cursor": "~0.3.0"
   },
-  "browserslist": "> 0.5%, last 2 versions, not dead"
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "engines": {
+    "node": ">=24",
+    "npm": ">=11.17.0"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.5.1": true,
+    "@swc/core@1.15.3": true,
+    "fsevents@2.3.3": true,
+    "lmdb@2.8.5": true,
+    "msgpackr-extract@3.0.3": true
+  }
 }
