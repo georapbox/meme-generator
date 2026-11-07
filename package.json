@@ -48,7 +48,7 @@
     "@georapbox/alert-element": "~1.2.2",
     "@georapbox/capture-photo-element": "~5.0.0",
     "@georapbox/files-dropzone-element": "~2.1.1",
-    "@georapbox/modal-element": "~1.10.0",
+    "@georapbox/modal-element": "~2.0.0",
     "@georapbox/theme-toggle": "~2.0.0",
     "@georapbox/web-share-element": "~3.1.1",
     "bootstrap": "~5.3.8",

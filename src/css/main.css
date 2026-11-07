@@ -4,6 +4,7 @@
   --focus-ring: 0 0 0 0.2rem var(--bs-focus-ring-color);
   --focus-ring-error: 0 0 0 0.2rem rgba(var(--bs-danger-rgb), 0.4);
 
+  scrollbar-gutter: stable;
   accent-color: var(--bs-primary);
   font-size: 14px;
 }
@@ -338,17 +339,17 @@ capture-photo[loading] [slot="actions"] {
 /* Modal */
 
 modal-element {
-  --me-width: fit-content;
-  --me-border-radius: var(--bs-border-radius);
-  --me-border-width: 1px;
-  --me-border-color: var(--bs-border-color);
-  --me-box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.30);
-  --me-backdrop-background: rgba(0, 0, 0, 0.7);
-  --me-backdrop-filter: blur(2px);
+  --modal-width: fit-content;
+  --modal-border-radius: var(--bs-border-radius);
+  --modal-border-width: 1px;
+  --modal-border-color: var(--bs-border-color);
+  --modal-box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.30);
+  --modal-backdrop-background: rgba(0, 0, 0, 0.7);
+  --modal-backdrop-filter: blur(2px);
 }
 
 #videoModal {
-  --me-width: 600px;
+  --modal-width: 600px;
 }
 
 #videoModal::part(footer) {
@@ -361,7 +362,7 @@ modal-element {
 }
 
 #downloadModal {
-  --me-width: 800px;
+  --modal-width: 800px;
 }
 
 modal-element::part(base):focus-visible {

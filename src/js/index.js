@@ -57,8 +57,8 @@ document.addEventListener('web-share:error', handleWebShareError);
 document.addEventListener('capture-photo:video-play', handleCapturePhotoVideoPlay, { once: true });
 document.addEventListener('capture-photo:error', handleCapturePhotoError);
 document.addEventListener('capture-photo:success', handleCapturePhotoSuccess);
-document.addEventListener('me-open', handleModalOpen);
-document.addEventListener('me-close', handleModalClose);
+document.addEventListener('modal-open', handleModalOpen);
+document.addEventListener('modal-close', handleModalClose);
 document.addEventListener('emoji-click', handleEmojiPickerSelection);
 document.addEventListener('textbox-create', handleTextboxCreate);
 document.addEventListener('textbox-remove', handleTextboxDelete);
@@ -463,7 +463,7 @@ function handleTextboxesContainerPointerup(evt) {
   const element = evt.target;
 
   if (element.matches('[data-action="move-text"]')) {
-    cancelAnimationFrame && cancelAnimationFrame(reqAnimFrame);
+    cancelAnimationFrame?.(reqAnimFrame);
     reqAnimFrame = null;
   }
 }
@@ -472,7 +472,7 @@ function handleTextboxesContainerPointerout(evt) {
   const element = evt.target;
 
   if (element.matches('[data-action="move-text"]')) {
-    cancelAnimationFrame && cancelAnimationFrame(reqAnimFrame);
+    cancelAnimationFrame?.(reqAnimFrame);
     reqAnimFrame = null;
   }
 }
@@ -483,7 +483,9 @@ function handleTextboxesContainerKeyDown(evt) {
 
   if (element.matches('[data-action="move-text"]')) {
     if (evt.key === ' ' || evt.key === 'Enter') {
-      reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
+      if (reqAnimFrame) {
+        cancelAnimationFrame(reqAnimFrame);
+      }
       reqAnimFrame = requestAnimationFrame(moveTextUsingArrowbuttons(textboxEl.id, element.getAttribute('aria-label')));
     }
   }
@@ -494,7 +496,9 @@ function handleTextboxesContainerKeyUp(evt) {
 
   if (element.matches('[data-action="move-text"]')) {
     if (evt.key === ' ' || evt.key === 'Enter') {
-      reqAnimFrame && cancelAnimationFrame(reqAnimFrame);
+      if (reqAnimFrame) {
+        cancelAnimationFrame(reqAnimFrame);
+      }
       reqAnimFrame = null;
     }
   }
@@ -629,7 +633,7 @@ function handleTextboxCreate(evt) {
 
 function handleTextboxDelete(evt) {
   const textboxEl = document.getElementById(evt.detail.id);
-  textboxEl && textboxEl.remove();
+  textboxEl?.remove();
 
   textboxesContainer.querySelectorAll('[data-section="textbox"]').forEach((el, idx) => {
     el.querySelector('[data-input="text"]').setAttribute('placeholder', `Text #${idx + 1}`);
