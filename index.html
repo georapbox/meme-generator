@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang=en><link rel=stylesheet href=meme-generator.ee69325f.css><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=theme-color content=#f8f9fa><meta name=description content="Meme generator tool to easily create memes bu uploading images or taking a photo."><title>Meme Generator</title><link rel=manifest href=manifest.webmanifest><link rel=icon sizes=192x192 href=favicon-192.1a1fa44b.png><link rel=apple-touch-icon href=180.2eef227d.png><script src=meme-generator.78f0689a.js type=module></script><script src=meme-generator.ee79a5c9.js></script><script src=meme-generator.41d1947e.js type=module></script><body class=bg-body-tertiary>
+<!DOCTYPE html><html lang=en><link rel=stylesheet href=meme-generator.696d4d82.css><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=theme-color content=#f8f9fa><meta name=description content="Meme generator tool to easily create memes bu uploading images or taking a photo."><title>Meme Generator</title><link rel=manifest href=manifest.webmanifest><link rel=icon sizes=192x192 href=favicon-192.1a1fa44b.png><link rel=apple-touch-icon href=180.2eef227d.png><script src=meme-generator.2e08ee13.js type=module></script><script src=meme-generator.648b0a54.js></script><script src=meme-generator.829c6ae5.js type=module></script><body class=bg-body-tertiary>
   <noscript>
     <div class="alert alert-danger text-center rounded-0" role="alert">
       This app requires JavaScript to be enabled in your browser.
@@ -255,7 +255,8 @@
     </div>
 
     <modal-element id=videoModal static-backdrop>
-      <h2 slot=header class=h5>Capture image</h2>
+      <h2 slot=title class="h5 m-0">Capture image</h2>
+
       <capture-photo no-image>
         <div slot=actions>
           <select id=cameraSelect class="form-select text-capitalize text-truncate" aria-label="Select camera" hidden>
@@ -267,6 +268,7 @@
           </button>
         </div>
       </capture-photo>
+
       <div slot=footer>
         <button type=button id=capturePhotoButton class="align-items-center btn btn-primary d-flex gap-2 justify-content-center my-3 w-100">
           <img src=camera.bab8e6bf.svg width=20 height=20 alt="camera icon" aria-hidden=true>
@@ -276,11 +278,11 @@
     </modal-element>
 
     <modal-element id=downloadModal>
-      <h2 slot=header class=h5>Download Meme</h2>
+      <h2 slot=title class="h5 m-0">Download Meme</h2>
 
       <img class="d-block img-thumbnail mx-auto" id=downloadMemePreview alt="meme preview">
 
-      <div slot=footer>
+      <div slot=footer class="d-flex flex-wrap gap-2">
         <a class="btn btn-primary" href=# download id=downloadMemeBtn>
           <img src=save.71098c73.svg width=20 height=20 alt="Generate meme" aria-hidden=true>
           Download
@@ -296,15 +298,17 @@
     </modal-element>
 
     <modal-element id=removeConfirmationModal>
-      <h2 slot=header class=h5>Remove text</h2>
-      <p class=m-0>Are you sure you want to remove this text box?</p>
-      <footer slot=footer class="justify-content-end text-end">
-        <form id=removeTextForm>
+      <h2 slot=title class="h5 m-0">Remove text</h2>
+
+      <p class="mb-3 mt-2">Are you sure you want to remove this text box?</p>
+
+      <div slot=footer class="justify-content-end text-end">
+        <form id=removeTextForm class="d-flex flex-wrap gap-2">
           <input type=hidden name=textbox-id>
-          <button type=button class="btn btn-secondary" data-me-close>Cancel</button>
+          <button type=button class="btn btn-secondary" commandfor=removeConfirmationModal command=--modal-close>Cancel</button>
           <button type=submit class="btn btn-danger">Remove</button>
         </form>
-      </footer>
+      </div>
     </modal-element>
   </main>
 
